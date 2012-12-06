@@ -14,8 +14,15 @@ object ApplicationBuild extends Build {
 
   val main = Project(id = "sprouch", base = new File("."), settings = Project.defaultSettings ++ Seq(
     (libraryDependencies ++= dependencies),
-    (resolvers ++= Seq("spray repo" at "http://repo.spray.io", "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/")),
+    (resolvers ++= Seq(
+        "spray repo" at "http://repo.spray.io",
+        "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
+    )),
     (testOptions in Test := Nil),
+    (publishTo := Some(Resolver.file(
+        "gh-pages",
+        new File("/home/k/workspaces/sprouch-pages/repository/")
+    ))),
     (version := "0.3")
   ))
 
