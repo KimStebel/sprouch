@@ -1,4 +1,4 @@
 sprouch
 =======
 
-asynchronous library for accessing couchdb based on sprouch
+asynchronous library for couchdb based on spray
