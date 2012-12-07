@@ -4,11 +4,11 @@ import Keys._
 object ApplicationBuild extends Build {
 
   val dependencies = Seq(
-    "org.scalatest" %% "scalatest" % "1.8" % "test",
-    "io.spray" % "spray-can" % "1.0-M5",
-    "io.spray" % "spray-client" % "1.0-M5",
-    "io.spray" %  "spray-json_2.9.2" % "1.2.2",
-    "com.typesafe.akka" % "akka-actor" % "2.0",
+    "org.scalatest" %% "scalatest" % "2.0.M5-B1" % "test",
+    "io.spray" % "spray-can" % "1.1-M6",
+    "io.spray" % "spray-client" % "1.1-M6",
+    "io.spray" %%  "spray-json" % "1.2.3",
+    "com.typesafe.akka" %% "akka-actor" % "2.1.0-RC3",
     "com.novocode" % "junit-interface" % "0.10-M1" % "test"
   )
 
@@ -23,7 +23,9 @@ object ApplicationBuild extends Build {
         "gh-pages",
         new File("/home/k/workspaces/sprouch-pages/repository/")
     ))),
-    (version := "0.3")
+    (version := "0.3"),
+    (scalaVersion := "2.10.0-RC3"),
+    (scalacOptions += "-language:_")
   ))
 
 }

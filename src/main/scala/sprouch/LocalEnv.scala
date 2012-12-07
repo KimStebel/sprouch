@@ -1,9 +1,9 @@
 package sprouch
 
 import akka.actor.ActorSystem
-import akka.util.Duration
-import akka.dispatch.Future
-import akka.dispatch.Await
+import scala.concurrent.duration.Duration
+import scala.concurrent.Future
+import scala.concurrent.Await
 
 /**
  * Convenience methods and values for the default config of a local CouchDb install.

@@ -8,12 +8,14 @@ import spray.http.HttpMethods.HEAD
 import spray.client.HttpConduit
 import HttpConduit.{Delete, Get, Put}
 import spray.httpx.SprayJsonSupport._
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.RootJsonFormat
 import spray.httpx.RequestBuilding.RequestBuilder
 import spray.http.HttpRequest
 import JsonProtocol._
 import spray.json.JsonFormat
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
   import pipelines._

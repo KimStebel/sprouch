@@ -2,10 +2,11 @@ package sprouch
 
 import org.scalatest.FunSuite
 import akka.actor.ActorSystem
-import akka.util.Duration
-import akka.dispatch.Await
-import akka.dispatch.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
+import scala.concurrent.duration.Duration
+import scala.concurrent.Future
+import scala.concurrent.Await
 
 case class Test(foo:Int, bar:String)
 

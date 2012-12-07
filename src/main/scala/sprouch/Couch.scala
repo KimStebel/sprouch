@@ -1,7 +1,7 @@
 package sprouch
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor._
-import akka.dispatch.Future
 import spray.can.client.HttpClient
 import spray.client.HttpConduit
 import HttpConduit._
@@ -16,8 +16,8 @@ import spray.util._
 import java.util.UUID
 import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
-
 import JsonProtocol._
+import scala.concurrent.Future
 
 trait UriBuilder {
   protected[this] def sep = "/"

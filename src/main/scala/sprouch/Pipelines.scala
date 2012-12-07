@@ -1,7 +1,8 @@
 package sprouch
 
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor._
-import akka.dispatch.Future
 import spray.can.client.HttpClient
 import spray.client.HttpConduit
 import HttpConduit._
@@ -20,6 +21,7 @@ import akka.actor.Props
 import akka.event.Logging
 import sprouch.JsonProtocol.ErrorResponseBody
 import sprouch.JsonProtocol.ErrorResponse
+import scala.concurrent.Future
 
 case class Config(
     actorSystem:ActorSystem,
@@ -33,7 +35,7 @@ private class Pipelines(config:Config) {
   import config._
   
   private val conduit = {
-    val ioBridge = new IOBridge(actorSystem).start()
+    val ioBridge = IOExtension(actorSystem).ioBridge
     val httpClient = actorSystem.actorOf(Props(new HttpClient(ioBridge)))
     actorSystem.actorOf(Props(new HttpConduit(httpClient, hostName, port, https)))
   }
@@ -50,8 +52,9 @@ private class Pipelines(config:Config) {
   }  
   
   def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = {
-    def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
-      hr => (hr match {
+  	
+  	def unmarshalEither[A:Unmarshaller](hr:HttpResponse):A = {
+      (hr match {
         case HttpResponse(status, _, _, _) if status.isSuccess => {
           Right(unmarshal[A](implicitly[Unmarshaller[A]])(hr))
         }
@@ -67,13 +70,15 @@ private class Pipelines(config:Config) {
         case Right(r) => r
       }
     }
-    addHeader("accept", "application/json") ~>
-    (userPass match {
-      case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
-      case None => (x:HttpRequest) => x
-    }) ~>
-    sendReceive(conduit) ~>
-    unmarshalEither[A]
+    
+    val p: HttpRequest => Future[HttpResponse] = {
+      (addHeader("accept", "application/json") ~>
+      (userPass match {
+        case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
+        case None => (x:HttpRequest) => x
+      }) ~>
+      sendReceive(conduit))
+    }
+    p.andThen(resp => resp.map(unmarshalEither[A]))
   }
-  
 }

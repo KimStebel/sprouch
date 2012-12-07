@@ -1,17 +1,16 @@
 package sprouch
 
 import org.scalatest.FunSuite
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import akka.actor.ActorSystem
-import akka.dispatch.Await
-import akka.util.Duration
 import java.util.UUID
 import spray.httpx.SprayJsonSupport._
 import spray.json._
-import akka.dispatch.Future
 import spray.httpx.marshalling.Marshaller
 import com.typesafe.config.ConfigFactory
+import scala.concurrent.Await
 
 @RunWith(classOf[JUnitRunner])
 class CouchSuite extends FunSuite with CouchSuiteHelpers {
@@ -89,7 +88,7 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
       val data = Test(0, "bar")
       for {
         firstDoc <- db.createDoc(data)
-        val foo1 = firstDoc.updateData(_.copy(foo = 1))
+        foo1 = firstDoc.updateData(_.copy(foo = 1))
         updatedDoc <- db.updateDoc(foo1)
         gottenDoc <- db.getDoc[Test](firstDoc.id)
         res <- db.deleteDoc(updatedDoc)
