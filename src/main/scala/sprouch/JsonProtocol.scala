@@ -45,7 +45,8 @@ trait JsonProtocol extends DefaultJsonProtocol {
   implicit def allDocsResponseFormat[A:RootJsonFormat] = jsonFormat3(AllDocsResponse[A])
   case class OkResponse(ok:Boolean)
   case class CreateResponse(ok:Boolean, id:String, rev:String)
-  case class ErrorResponse(error:String, reason:String)
+  case class ErrorResponse(status:Int, body:ErrorResponseBody)
+  case class ErrorResponseBody(error:String, reason:String)
   case object Empty
   
   implicit val emptyFormat = new RootJsonFormat[Empty.type] {
@@ -55,7 +56,7 @@ trait JsonProtocol extends DefaultJsonProtocol {
   implicit val getDbResponseFormat = jsonFormat10(GetDbResponse)
   implicit val okResponseFormat = jsonFormat1(OkResponse)
   implicit val createResponseFormat = jsonFormat3(CreateResponse)
-  implicit val errorResponseFormat = jsonFormat2(ErrorResponse)
+  implicit val errorResponseFormat = jsonFormat2(ErrorResponseBody)
   implicit def revedDocJsonFormat[A:RootJsonFormat]:RootJsonFormat[RevedDocument[A]] = new RevedDocFormat[A]
   implicit def newDocJsonFormat[A:RootJsonFormat]:RootJsonFormat[NewDocument[A]] = new NewDocFormat[A]  
   implicit object UuidJsonFormat extends RootJsonFormat[UUID] {

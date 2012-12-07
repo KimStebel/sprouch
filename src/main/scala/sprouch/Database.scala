@@ -40,17 +40,17 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   
   def delete() = {
-    val p = pipeline[ErrorResponse,OkResponse]
+    val p = pipeline[OkResponse]
     p(Delete(dbUri))
   }
   
-  def deleteDoc[A](doc:RevedDocument[A]):Future[Either[ErrorResponse,OkResponse]] = {
-    val p = pipeline[ErrorResponse,OkResponse]
+  def deleteDoc[A](doc:RevedDocument[A]):Future[OkResponse] = {
+    val p = pipeline[OkResponse]
     p(Delete(docUriRev(doc)))
   }
   
-  def getDoc[A:RootJsonFormat](id:String):Future[Either[ErrorResponse,RevedDocument[A]]] = {
-    val p = pipeline[ErrorResponse,RevedDocument[A]]
+  def getDoc[A:RootJsonFormat](id:String):Future[RevedDocument[A]] = {
+    val p = pipeline[RevedDocument[A]]
     p(Get(docUri(id)))
   }
   
@@ -65,49 +65,49 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       val query = if (options.isEmpty) "" else "?" + options.mkString("&")
       dbUri + "/_all_docs" + query
     }
-    val p = pipeline[ErrorResponse, AllDocsResponse[A]]
+    val p = pipeline[AllDocsResponse[A]]
     p(Get(uri))
   }
   
-  def createDoc[A:RootJsonFormat](doc:NewDocument[A]):Future[Either[ErrorResponse,RevedDocument[A]]] = {
-    val p = pipeline[ErrorResponse,CreateResponse]
+  def createDoc[A:RootJsonFormat](doc:NewDocument[A]):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse]
     val response = p(Put(docUri(doc), doc))
-    response.map(_.right.map(cr => doc.setRev(cr.rev)))
+    response.map(cr => doc.setRev(cr.rev))
   }
   
-  def createDoc[A:RootJsonFormat](data:A):Future[Either[ErrorResponse,RevedDocument[A]]] = {
+  def createDoc[A:RootJsonFormat](data:A):Future[RevedDocument[A]] = {
     createDoc(new NewDocument(data))
   }
 
-  def createDoc[A:RootJsonFormat](id:String, data:A):Future[Either[ErrorResponse,RevedDocument[A]]] = {
+  def createDoc[A:RootJsonFormat](id:String, data:A):Future[RevedDocument[A]] = {
     createDoc(new NewDocument(id, data, Map()))
   }
   
-  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[Either[ErrorResponse,RevedDocument[A]]] = {
-    val p = pipeline[ErrorResponse,CreateResponse]
+  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse]
     val response = p(Put(docUriRev(doc), doc))
-    response.map(_.right.map(cr => doc.setRev(cr.rev)))
+    response.map(cr => doc.setRev(cr.rev))
   }
   
-  def putAttachment[A](doc:RevedDocument[A], a:Attachment):Future[Either[ErrorResponse,RevedDocument[A]]] = {
-    val p = pipeline[ErrorResponse, CreateResponse]
-    p(Put(attachmentUriRev(doc, a), a.data)).map(_.right.map(cr => doc.setRev(cr.rev)))
+  def putAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse]
+    p(Put(attachmentUriRev(doc, a), a.data)).map(cr => doc.setRev(cr.rev))
   }
   
-  def getAttachment(doc:Document[_], id:String):Future[Either[ErrorResponse,Attachment]] = {
-    val p = pipeline[ErrorResponse, Array[Byte]]
-    p(Get(attachmentUri(doc, id))).map(_.right.map(array => new Attachment(id, array)))
+  def getAttachment(doc:Document[_], id:String):Future[Attachment] = {
+    val p = pipeline[Array[Byte]]
+    p(Get(attachmentUri(doc, id))).map(array => new Attachment(id, array))
   }
   
-  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):Future[Either[ErrorResponse,RevedDocument[A]]] = {
-    val p = pipeline[ErrorResponse, CreateResponse]
-    p(Delete(attachmentUriRev(doc, a))).map(_.right.map(cr => doc.setRev(cr.rev)))
+  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse]
+    p(Delete(attachmentUriRev(doc, a))).map(cr => doc.setRev(cr.rev))
   }
   
-  def createViews(views:NewDocument[Views]):Future[Either[ErrorResponse,RevedDocument[Views]]] = {
-    val p = pipeline[ErrorResponse,CreateResponse]
+  def createViews(views:NewDocument[Views]):Future[RevedDocument[Views]] = {
+    val p = pipeline[CreateResponse]
     val response = p(Put(viewsUri(views), views))
-    response.map(_.right.map(cr => views.setRev(cr.rev)))
+    response.map(cr => views.setRev(cr.rev))
   }
   
   def queryView[K:JsonFormat,V:JsonFormat](
@@ -122,8 +122,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       skip:Option[Int] = None,
       groupLevel:Option[Int] = None,
       stale:StaleOption = notStale
-  ):Future[Either[ErrorResponse,ViewResponse[K,V]]] = { 
-    val p = pipeline[ErrorResponse,ViewResponse[K,V]]
+  ):Future[ViewResponse[K,V]] = { 
+    val p = pipeline[ViewResponse[K,V]]
     val flagsWithImplicitGroup:Set[ViewQueryFlag] = flags ++ Set(group).filter(_ => !keys.isEmpty)
     val kvs = 
       flagsWithImplicitGroup.toList.map(f => keyValue(f.toString)(true)) ++
@@ -146,8 +146,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
         viewName,
         kvs)
     println("URI: " + uri)
-    val response = p(Get(uri))
-    response
+    p(Get(uri))
   }
 
 }

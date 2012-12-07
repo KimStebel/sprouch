@@ -26,20 +26,22 @@ trait UriBuilder {
   protected[this] def dbUri(dbName:String) = path(dbName)
 }
 
+case class SprouchException(error:ErrorResponse) extends Exception
+
 class Couch(config:Config) extends UriBuilder {
   
   private val myPipelines = new Pipelines(config)
-  private lazy val pipeline = myPipelines.pipeline[ErrorResponse, OkResponse]
-  private lazy val getDbPipeline = myPipelines.pipeline[ErrorResponse, GetDbResponse]
+  private lazy val pipeline = myPipelines.pipeline[OkResponse]
+  private lazy val getDbPipeline = myPipelines.pipeline[GetDbResponse]
   
-  def createDb(dbName:String):Future[Either[ErrorResponse,Database]] = {
-    pipeline(Put(dbUri(dbName))).map(_.right.map(_ => new Database(dbName, myPipelines)))
+  def createDb(dbName:String):Future[Database] = {
+    pipeline(Put(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
   }
-  def deleteDb(dbName:String):Future[Either[ErrorResponse,OkResponse]] = {
+  def deleteDb(dbName:String):Future[OkResponse] = {
     pipeline(Delete(dbUri(dbName)))
   }
-  def getDb(dbName:String):Future[Either[ErrorResponse,Database]] = {
-    getDbPipeline(Get(dbUri(dbName))).map(_.right.map(_ => new Database(dbName, myPipelines)))
+  def getDb(dbName:String):Future[Database] = {
+    getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
   }
 
 }

@@ -28,11 +28,10 @@ trait CouchSuiteHelpers {
   
   def withNewDb[A](f:Database => Future[A]):A = {
     val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
-    val res = c.createDb(dbName) flatMap { 
-      case Right(db) => {
+    val res = c.createDb(dbName) flatMap {
+      db => {
         f(db) andThen { case _ => db.delete() }
       }
-      case x => fail("failed to create db with name" + dbName + ": " + x)
     }
     await(res)
   }

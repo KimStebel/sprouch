@@ -15,17 +15,19 @@ import spray.json._
 import spray.util._
 import java.util.UUID
 import akka.event.Logging
-
 import akka.actor.Actor
 import akka.actor.Props
 import akka.event.Logging
+import sprouch.JsonProtocol.ErrorResponseBody
+import sprouch.JsonProtocol.ErrorResponse
 
 case class Config(
     actorSystem:ActorSystem,
     hostName:String = "localhost",
     port:Int = 5984,
     userPass:Option[(String,String)] = None,
-    https:Boolean = false)
+    https:Boolean = false
+)
 
 private class Pipelines(config:Config) {
   import config._
@@ -47,27 +49,31 @@ private class Pipelines(config:Config) {
     r
   }  
   
-  def pipeline[A,B](implicit ua: Unmarshaller[A], ub: Unmarshaller[B]): HttpRequest => Future[Either[A,B]] = {
-    def unmarshalEither[A,B](hr:HttpResponse)(implicit ua: Unmarshaller[A], ub: Unmarshaller[B]):Either[A,B] =
-      hr match {
+  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = {
+    def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
+      hr => (hr match {
         case HttpResponse(status, _, _, _) if status.isSuccess => {
-          Right(unmarshal[B](ub)(hr))
+          Right(unmarshal[A](implicitly[Unmarshaller[A]])(hr))
         }
-        case HttpResponse(_, _, _, _) => {
+        case HttpResponse(errorStatus, _, _, _) => {
           log.error(hr.toString)
-          Left(unmarshal[A](ua)(hr.copy(status = StatusCodes.OK)))
+          val ue = implicitly[Unmarshaller[ErrorResponseBody]]
+          val body = unmarshal[ErrorResponseBody](ue)(hr.copy(status = StatusCodes.OK))
+          Left(ErrorResponse(errorStatus.value, body))
         }
         
+      }) match {
+        case Left(e) => throw new SprouchException(e)
+        case Right(r) => r
       }
-  
+    }
     addHeader("accept", "application/json") ~>
     (userPass match {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
-    //logRequest ~> 
     sendReceive(conduit) ~>
-    //logResponse ~>
-    unmarshalEither[A,B]
+    unmarshalEither[A]
   }
+  
 }

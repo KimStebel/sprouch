@@ -17,7 +17,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = List(Test(foo=0, bar="a"),Test(1, "a"),Test(2, "b"), Test(3, "c"), Test(4, "c"))
       for {
-        docs <- Future.sequence(data.map(d => db.createDoc(d).map(_.right.get)))
+        docs <- Future.sequence(data.map(d => db.createDoc(d)))
         val sum = docs.map(_.data.foo).sum
         val mr = MapReduce(
             map = """
@@ -32,18 +32,12 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
             """)
         )
         val viewsDoc = new NewDocument("my views", Views(Map("sum" -> mr)))
-        val viewRes <- db.createViews(viewsDoc)
-        val view = assertGet(viewRes)
-        queryResE <- db.queryView[Null,Int]("my views", "sum")
-        val queryRes = assertGet(queryResE)
-        groupedResE <- db.queryView[String,Int]("my views", "sum", flags = ViewQueryFlag(group = true))
-        val groupedRes = assertGet(groupedResE)
-        keyResE <- db.queryView[Null,Int]("my views", "sum", key = Some("a"))
-        val keyRes = assertGet(keyResE)
-        keysResE <- db.queryView[String,Int]("my views", "sum", keys = List("a", "c"))
-        val keysRes = assertGet(keysResE)
-        rangeResE <- db.queryView[Null,Int]("my views", "sum", keyRange = Some("b" -> "c"))
-        val rangeRes = assertGet(rangeResE)
+        val view <- db.createViews(viewsDoc)
+        queryRes <- db.queryView[Null,Int]("my views", "sum")
+        groupedRes <- db.queryView[String,Int]("my views", "sum", flags = ViewQueryFlag(group = true))
+        keyRes <- db.queryView[Null,Int]("my views", "sum", key = Some("a"))
+        keysRes <- db.queryView[String,Int]("my views", "sum", keys = List("a", "c"))
+        rangeRes <- db.queryView[Null,Int]("my views", "sum", keyRange = Some("b" -> "c"))
         
       } yield {
         assert(queryRes.rows.head.value === sum)

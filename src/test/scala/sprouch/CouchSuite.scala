@@ -30,27 +30,27 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
       db <- c.getDb(dbName)
       deleteRes <- c.deleteDb(dbName)
     } yield {
-      List(deleteRes, createRes, db).foreach(res => assert(res.isRight, res))
+      deleteRes
     }
-    val r = Await.result(f, testDuration)
+    await(f)
   }
   
   test("create and get document with / in id") {
     withNewDb(db => {
       val doc = new NewDocument("abc/de", Test(0, ""))
       for {
-        createRes <- db.createDoc(doc)
-        getRes <- db.getDoc[Test]("abc/de")
+        _ <- db.createDoc(doc)
+        res <- db.getDoc[Test]("abc/de")
       } yield {
-        assert(createRes.isRight)
-        assert(getRes.isRight)
+        res
       }
     })
   }
   
   test("get nonexistant database fails") {
-    val getRes = await(c.getDb("does-not-exist"))
-    assert(getRes.isLeft)
+    intercept[SprouchException] { 
+      await(c.getDb("does-not-exist"))
+    }
   }
   
   test("retrieve range of documents") {
@@ -58,28 +58,28 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
     val res = withNewDb(db => {
       (1 to 20).map(n => {
         val doc = new NewDocument(idPrefix + n, Empty)
-        db.createDoc(doc).map(_.right.get)
+        db.createDoc(doc)
       }).foreach(f => {
         Await.result(f, testDuration)
       })
       db.allDocs[Empty.type](Some("12345"), Some("12346"))
     })
-    assert(res.right.get.total_rows === 20)
+    assert(res.total_rows === 20)
   }
   
   test("update document with older rev fails, current rev succeeds") {
     withNewDb(db => {
       val data = Test(0, "")
       for {
-        doc0 <- db.createDoc(data).map(_.right.get)
+        doc0 <- db.createDoc(data)
         update1 <- db.updateDoc(doc0.updateData(_.copy(foo=1)))
-        update2 <- db.updateDoc(doc0.updateData(_.copy(foo=2)))
-        update3 <- db.updateDoc(update1.right.get.updateData(_.copy(foo=2)))
+        update2 <- db.updateDoc(doc0.updateData(_.copy(foo=2))).failed
+        update3 <- db.updateDoc(update1.updateData(_.copy(foo=2)))
       } yield {
-        assert(update1.isRight)
-        assert(update2.isLeft)
-        assert(update3.isRight)
-        assert(update3.right.get.data.foo === 2)
+        assert(update3.data.foo === 2)
+        update2 match {
+          case SprouchException(ErrorResponse(status,_)) => assert(status === 409)
+        }
       }
     })
   }
@@ -88,15 +88,12 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "bar")
       for {
-        firstRes <- db.createDoc(data)
-        val _ = assert(firstRes.isRight, firstRes)
-        val firstDoc = firstRes.right.get
+        firstDoc <- db.createDoc(data)
         val foo1 = firstDoc.updateData(_.copy(foo = 1))
-        updatedDoc <- db.updateDoc(foo1).map(_.right.get)
-        gottenDoc <- db.getDoc[Test](firstDoc.id).map(_.right.get)
+        updatedDoc <- db.updateDoc(foo1)
+        gottenDoc <- db.getDoc[Test](firstDoc.id)
         res <- db.deleteDoc(updatedDoc)
       } yield {
-        assert(res.isRight, res)
         assert(firstDoc.data.foo == 0)
         assert(firstDoc.data.bar == "bar")
         assert(updatedDoc.data.foo == 1)
