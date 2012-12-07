@@ -1,7 +1,6 @@
 package sprouch
 
 import org.scalatest.FunSuite
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import akka.actor.ActorSystem
@@ -15,6 +14,7 @@ import scala.concurrent.Await
 @RunWith(classOf[JUnitRunner])
 class CouchSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
     
   test("ssl enabled") {
     val conf = ConfigFactory.load()

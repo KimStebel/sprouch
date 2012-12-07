@@ -1,6 +1,5 @@
 package sprouch
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor._
 import spray.can.client.HttpClient
 import spray.client.HttpConduit
@@ -29,7 +28,9 @@ trait UriBuilder {
 case class SprouchException(error:ErrorResponse) extends Exception
 
 class Couch(config:Config) extends UriBuilder {
-  
+  private val as = config.actorSystem
+  import as.dispatcher
+	
   private val myPipelines = new Pipelines(config)
   private lazy val pipeline = myPipelines.pipeline[OkResponse]
   private lazy val getDbPipeline = myPipelines.pipeline[GetDbResponse]

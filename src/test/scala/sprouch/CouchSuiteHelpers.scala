@@ -2,7 +2,6 @@ package sprouch
 
 import org.scalatest.FunSuite
 import akka.actor.ActorSystem
-import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.UUID
 import scala.concurrent.duration.Duration
 import scala.concurrent.Future
@@ -18,6 +17,7 @@ trait CouchSuiteHelpers {
   implicit val testFormat = jsonFormat2(Test)
   
   implicit val actorSystem = ActorSystem("MySystem")
+  import actorSystem.dispatcher
   val c = new Couch(Config(actorSystem, "localhost", 5984, None, false))
   val testDuration = Duration("10 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)

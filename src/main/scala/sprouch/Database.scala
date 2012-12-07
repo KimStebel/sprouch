@@ -14,11 +14,10 @@ import spray.httpx.RequestBuilding.RequestBuilder
 import spray.http.HttpRequest
 import JsonProtocol._
 import spray.json.JsonFormat
-import scala.concurrent.ExecutionContext.Implicits.global
-
 
 class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
   import pipelines._
+  import as.dispatcher
   
   private def dbUri:String = dbUri(name)
   private def docUri(doc:Document[_]):String = docUri(doc.id)

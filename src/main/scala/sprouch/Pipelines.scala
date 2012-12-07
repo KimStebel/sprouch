@@ -1,7 +1,5 @@
 package sprouch
 
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor._
 import spray.can.client.HttpClient
 import spray.client.HttpConduit
@@ -34,6 +32,9 @@ case class Config(
 private class Pipelines(config:Config) {
   import config._
   
+  val as = config.actorSystem
+  import as.dispatcher
+	
   private val conduit = {
     val ioBridge = IOExtension(actorSystem).ioBridge
     val httpClient = actorSystem.actorOf(Props(new HttpClient(ioBridge)))
