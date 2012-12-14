@@ -45,3 +45,7 @@ class Couch(config:Config) extends UriBuilder {
   }
 
 }
+
+object Couch {
+  def apply(config:Config) = new Couch(config)
+}
