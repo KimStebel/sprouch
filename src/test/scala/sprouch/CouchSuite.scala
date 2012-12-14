@@ -61,9 +61,9 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
       }).foreach(f => {
         Await.result(f, testDuration)
       })
-      db.allDocs[Empty.type](Some("12345"), Some("12346"))
+      db.allDocs[Empty.type](keyRange = Some(("12345", "12346")))
     })
-    assert(res.total_rows === 20)
+    assert(res.rows.size === 20)
   }
   
   test("update document with older rev fails, current rev succeeds") {

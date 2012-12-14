@@ -58,7 +58,8 @@ trait JsonProtocol extends DefaultJsonProtocol {
   implicit val createResponseFormat = jsonFormat3(CreateResponse)
   implicit val errorResponseFormat = jsonFormat2(ErrorResponseBody)
   implicit def revedDocJsonFormat[A:RootJsonFormat]:RootJsonFormat[RevedDocument[A]] = new RevedDocFormat[A]
-  implicit def newDocJsonFormat[A:RootJsonFormat]:RootJsonFormat[NewDocument[A]] = new NewDocFormat[A]  
+  implicit def newDocJsonFormat[A:RootJsonFormat]:RootJsonFormat[NewDocument[A]] = new NewDocFormat[A]
+  implicit def documentFormat[A:RootJsonFormat]:RootJsonFormat[Document[A]] = new AnyDocFormat[A]
   implicit object UuidJsonFormat extends RootJsonFormat[UUID] {
     def write(id:UUID) = JsString(id.toString)
     def read(value: JsValue) = value match {
@@ -100,6 +101,27 @@ trait JsonProtocol extends DefaultJsonProtocol {
     def this(data:A) = this(UUID.randomUUID.toString, data, Map())
     def revOpt = None
   }
+  
+  class AnyDocFormat[A:RootJsonFormat] extends DocFormat[A, Document[A]] {
+    override def otherFields(doc:Document[A]):Map[String, JsValue] = doc match {
+      case _:NewDocument[_] => Map()
+      case doc:RevedDocument[_] => {
+        val stringFormat = implicitly[JsonFormat[String]]
+        Map("_rev" -> stringFormat.write(doc.rev))
+      }
+    }
+    
+    override def makeB(fields:Map[String,JsValue], id:String, data:A, attachments:Map[String,AttachmentStub]) = {
+      val stringFormat = implicitly[JsonFormat[String]]
+      val rev = fields.get("_rev").map(stringFormat.read)
+      rev match {
+        case Some(_rev) => new RevedDocument(id, _rev, data, attachments)
+        case None => new NewDocument(id, data, attachments)
+      }
+      
+    }
+    
+  } 
   
   abstract class DocFormat[A:RootJsonFormat, B <: Document[A]] extends RootJsonFormat[B] {
     
@@ -157,4 +179,9 @@ trait JsonProtocol extends DefaultJsonProtocol {
       new NewDocument(id, data, attachments)
     
   }
+  
+  case class BulkPut[A](docs:Seq[Document[A]])
+  implicit def bulkPutFormat[A:RootJsonFormat] = jsonFormat1(BulkPut[A])
 }
+
+
