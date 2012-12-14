@@ -85,7 +85,7 @@ trait JsonProtocol extends DefaultJsonProtocol {
     def revOpt:Option[String]
     def attachments:Map[String, AttachmentStub]
     def setRev(rev:String):RevedDocument[A] = new RevedDocument(id, rev, data, attachments)
-    override def toString = "Document(id: " + id + revOpt.map(", rev: " +) + ", data: " + data + ")" 
+    override def toString = "Document(id: " + id + revOpt.map(", rev: " +).getOrElse("") + ", data: " + data + ")" 
   }
   class RevedDocument[+A](
       val id:String,
