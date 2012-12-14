@@ -73,6 +73,7 @@ private class Pipelines(config:Config) {
       case None => (x:HttpRequest) => x
     }) ~>
     sendReceive(conduit) ~>
+    //logResponse ~>
     unmarshalEither[A]
   }
   

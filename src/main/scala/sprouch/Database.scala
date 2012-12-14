@@ -6,7 +6,7 @@ import spray.httpx.unmarshalling.Unmarshaller
 import akka.actor.ActorRef
 import spray.http.HttpMethods.HEAD
 import spray.client.HttpConduit
-import HttpConduit.{Delete, Get, Put}
+import HttpConduit.{Post, Delete, Get, Put}
 import spray.httpx.SprayJsonSupport._
 import akka.dispatch.Future
 import spray.json.RootJsonFormat
@@ -38,6 +38,17 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       kvs:List[String]) = {
     path(name, "_design", designDocId, "_view", viewName) + query(kvs:_*)
   }
+  private def allDocsUri(kvs:List[String]) = {
+    path(name, "_all_docs") + query(kvs:_*)
+  }
+  private def bulkUri:String = path(name, "_bulk_docs") 
+  
+  def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]]):Future[Seq[RevedDocument[A]]] = {
+    val p = pipeline[Seq[CreateResponse]]
+    p(Post(bulkUri, BulkPut(docs))).map(crs => {
+      crs.zip(docs).map { case (cr, doc) => doc.setRev(cr.rev) }
+    })
+  }
   
   def delete() = {
     val p = pipeline[OkResponse]
@@ -52,21 +63,6 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   def getDoc[A:RootJsonFormat](id:String):Future[RevedDocument[A]] = {
     val p = pipeline[RevedDocument[A]]
     p(Get(docUri(id)))
-  }
-  
-  def allDocs[A:RootJsonFormat](from:Option[String] = None, to:Option[String] = None, limit:Option[Int] = None) = {
-    val uri = {
-      val options = List(
-          Some("include_docs=true"),
-          from.map(keyValue("startkey")),
-          to.map(keyValue("endkey")),
-          limit.map(keyValue("limit"))
-      ).flatten
-      val query = if (options.isEmpty) "" else "?" + options.mkString("&")
-      dbUri + "/_all_docs" + query
-    }
-    val p = pipeline[AllDocsResponse[A]]
-    p(Get(uri))
   }
   
   def createDoc[A:RootJsonFormat](doc:NewDocument[A]):Future[RevedDocument[A]] = {
@@ -148,5 +144,34 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     println("URI: " + uri)
     p(Get(uri))
   }
-
+  
+  def allDocs[V:RootJsonFormat](
+      flags:Set[ViewQueryFlag] = ViewQueryFlag.default,
+      key:Option[String] = None,
+      keys:Seq[String] = Nil,
+      keyRange:Option[(String,String)] = None,
+      limit:Option[Int] = None,
+      skip:Option[Int] = None,
+      stale:StaleOption = notStale
+  ):Future[AllDocsResponse[V]] = { 
+    val p = pipeline[AllDocsResponse[V]]
+    val flagsWithGroupWithoutReduce:Set[ViewQueryFlag] = (flags ++ Set(group).filter(_ => !keys.isEmpty) ++ Set(include_docs)) -- Set(reduce, group)
+    val kvs = 
+      flagsWithGroupWithoutReduce.toList.map(f => keyValue(f.toString)(true)) ++
+      (ViewQueryFlag.all.diff(Set(reduce, group))).diff(flagsWithGroupWithoutReduce).toList.map(f => keyValue(f.toString)(false)) ++ 
+      List(
+        key.map(keyValue("key")),
+        Option(keys).filter(!_.isEmpty).map(keyValue("keys")),
+        keyRange.map { case (from, _) => keyValue("startkey")(from) },
+        keyRange.map { case (_, to) => keyValue("endkey")(to) },
+        limit.map(keyValue("limit")),
+        skip.map(keyValue("skip")),
+        Option(stale).filter(notStale !=).map("stale=" +)
+      ).flatten
+    
+    val uri = allDocsUri(kvs)
+    println("AAAA"+uri)
+    p(Get(uri))
+  }
+  
 }
