@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>sprouch - sprouch</title>
+          <meta name="description" content="sprouch - sprouch" />
+          <meta name="keywords" content="sprouch sprouch" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../lib/template.js"></script>
+      <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../index.html';
+            var hash = 'sprouch.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../lib/package_big.png" />
+        
+        <h1>sprouch</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sprouch</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="sprouch.Attachment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AttachmentextendsProductwithSerializable"></a>
+      <a id="Attachment:Attachment"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Attachment.html"><span class="name">Attachment</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="data">data: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">case class holding the id and data of an attachment
+</p>
+    </li><li name="sprouch.AttachmentStub" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AttachmentStubextendsProductwithSerializable"></a>
+      <a id="AttachmentStub:AttachmentStub"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AttachmentStub.html"><span class="name">AttachmentStub</span></a><span class="params">(<span name="stub">stub: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="content_type">content_type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="length">length: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Contains metadata about the attachment, but not the attachment itself.</p>
+    </li><li name="sprouch.Config" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConfigextendsProductwithSerializable"></a>
+      <a id="Config:Config"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Config.html"><span class="name">Config</span></a><span class="params">(<span name="actorSystem">actorSystem: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>, <span name="hostName">hostName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;localhost&quot;</span></span>, <span name="port">port: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">5984</span></span>, <span name="userPass">userPass: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)] = <span class="symbol">scala.None</span></span>, <span name="https">https: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configuration data, default values should be valid for a default install of CouchDB.</p>
+    </li><li name="sprouch.Couch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CouchextendsUriBuilder"></a>
+      <a id="Couch:Couch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Couch.html"><span class="name">Couch</span></a><span class="result"> extends <span class="extype" name="sprouch.UriBuilder">UriBuilder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class that handles the connection to CouchDB.</p>
+    </li><li name="sprouch.Database" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DatabaseextendsUriBuilder"></a>
+      <a id="Database:Database"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Database.html"><span class="name">Database</span></a><span class="result"> extends <span class="extype" name="sprouch.UriBuilder">UriBuilder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Supports CRUD operations on documents and attachments,
+creating and querying views, bulk get, update, and delete operations.</p>
+    </li><li name="sprouch.Document" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Document[+A]extendsJsonProtocol.Id"></a>
+      <a id="Document[+A]:Document[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Document.html"><span class="name">Document</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="JsonProtocol$$Id.html" class="extype" name="sprouch.JsonProtocol.Id">Id</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">This trait represents documents in CouchDB.</p>
+    </li><li name="sprouch.MapReduce" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MapReduceextendsProductwithSerializable"></a>
+      <a id="MapReduce:MapReduce"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MapReduce.html"><span class="name">MapReduce</span></a><span class="params">(<span name="map">map: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="reduce">reduce: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class that holds the javascript functions for a view.</p>
+    </li><li name="sprouch.NewDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NewDocument[+A]extendsDocument[A]"></a>
+      <a id="NewDocument[+A]:NewDocument[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NewDocument.html"><span class="name">NewDocument</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Document.html" class="extype" name="sprouch.Document">Document</a>[<span class="extype" name="sprouch.NewDocument.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li name="sprouch.RevedDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RevedDocument[+A]extendsDocument[A]withJsonProtocol.Rev"></a>
+      <a id="RevedDocument[+A]:RevedDocument[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RevedDocument.html"><span class="name">RevedDocument</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Document.html" class="extype" name="sprouch.Document">Document</a>[<span class="extype" name="sprouch.RevedDocument.A">A</span>] with <a href="JsonProtocol$$Rev.html" class="extype" name="sprouch.JsonProtocol.Rev">Rev</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li name="sprouch.SprouchException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SprouchExceptionextendsExceptionwithProductwithSerializable"></a>
+      <a id="SprouchException:SprouchException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SprouchException.html"><span class="name">SprouchException</span></a><span class="params">(<span name="error">error: <a href="JsonProtocol$$ErrorResponse.html" class="extype" name="sprouch.JsonProtocol.ErrorResponse">ErrorResponse</a></span>)</span><span class="result"> extends <span class="extype" name="java.lang.Exception">Exception</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">This exception is thrown whenever CouchDB returns an HTTP error code.</p>
+    </li><li name="sprouch.StaleOption" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="StaleOptionextendsObject"></a>
+      <a id="StaleOption:StaleOption"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="StaleOption.html"><span class="name">StaleOption</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="sprouch.ViewQueryFlag" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ViewQueryFlagextendsObject"></a>
+      <a id="ViewQueryFlag:ViewQueryFlag"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ViewQueryFlag.html"><span class="name">ViewQueryFlag</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="sprouch.Views" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ViewsextendsProductwithSerializable"></a>
+      <a id="Views:Views"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Views.html"><span class="name">Views</span></a><span class="params">(<span name="views">views: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="MapReduce.html" class="extype" name="sprouch.MapReduce">MapReduce</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class that holds the views of a view document.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="sprouch.Couch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Couch"></a>
+      <a id="Couch:Couch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Couch$.html"><span class="name">Couch</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="sprouch.JsonProtocol" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonProtocol"></a>
+      <a id="JsonProtocol:JsonProtocol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$.html"><span class="name">JsonProtocol</span></a><span class="result"> extends <span class="extype" name="spray.json.DefaultJsonProtocol">DefaultJsonProtocol</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">contains classes needed to model the protocol used by CouchDB
+and implicit vals and defs of type JsonFormat to convert Scala types to and from JSON.</p>
+    </li><li name="sprouch.LocalEnv" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LocalEnv"></a>
+      <a id="LocalEnv:LocalEnv"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalEnv$.html"><span class="name">LocalEnv</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Convenience methods and values for the default config of a local CouchDb install.</p>
+    </li><li name="sprouch.StaleOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StaleOption"></a>
+      <a id="StaleOption:StaleOption"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="StaleOption$.html"><span class="name">StaleOption</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="sprouch.ViewQueryFlag" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ViewQueryFlag"></a>
+      <a id="ViewQueryFlag:ViewQueryFlag"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ViewQueryFlag$.html"><span class="name">ViewQueryFlag</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Boolean flags for querying views and _all_docs.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

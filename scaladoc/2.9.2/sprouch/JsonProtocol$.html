@@ -1,0 +1,1596 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>sprouch.JsonProtocol</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
+      <script type="text/javascript" src="../lib/jquery.js"></script>
+      <script type="text/javascript" src="../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../lib/template.js"></script>
+      <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../lib/object_big.png" />
+        <p id="owner"><a name="sprouch" class="extype" href="package.html">sprouch</a></p>
+        <h1>JsonProtocol</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JsonProtocol</span><span class="result"> extends <span name="spray.json.DefaultJsonProtocol" class="extype">DefaultJsonProtocol</span></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>contains classes needed to model the protocol used by CouchDB
+and implicit vals and defs of type JsonFormat to convert Scala types to and from JSON.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span name="spray.json.DefaultJsonProtocol" class="extype">DefaultJsonProtocol</span>, <span name="spray.json.AdditionalFormats" class="extype">AdditionalFormats</span>, <span name="spray.json.ProductFormats" class="extype">ProductFormats</span>, <span name="spray.json.CollectionFormats" class="extype">CollectionFormats</span>, <span name="spray.json.StandardFormats" class="extype">StandardFormats</span>, <span name="spray.json.BasicFormats" class="extype">BasicFormats</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="sprouch.JsonProtocol" class="in"><span>JsonProtocol</span></li><li name="spray.json.DefaultJsonProtocol" class="in"><span>DefaultJsonProtocol</span></li><li name="spray.json.AdditionalFormats" class="in"><span>AdditionalFormats</span></li><li name="spray.json.ProductFormats" class="in"><span>ProductFormats</span></li><li name="spray.json.CollectionFormats" class="in"><span>CollectionFormats</span></li><li name="spray.json.StandardFormats" class="in"><span>StandardFormats</span></li><li name="spray.json.BasicFormats" class="in"><span>BasicFormats</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="sprouch.JsonProtocol.AllDocsResponse" data-isabs="false">
+      <a id="AllDocsResponse:AllDocsResponse[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$AllDocsResponse.html"><span class="name">AllDocsResponse</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="total_rows">total_rows: Int</span>, <span name="offset">offset: Int</span>, <span name="rows">rows: Seq[AllDocsRow[A]]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.AllDocsRow" data-isabs="false">
+      <a id="AllDocsRow:AllDocsRow[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$AllDocsRow.html"><span class="name">AllDocsRow</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="id">id: String</span>, <span name="key">key: String</span>, <span name="value">value: Revision</span>, <span name="doc">doc: A</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.AnyDocFormat" data-isabs="false">
+      <a id="AnyDocFormat:AnyDocFormat[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$AnyDocFormat.html"><span class="name">AnyDocFormat</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends DocFormat[A, Document[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.BulkPut" data-isabs="false">
+      <a id="BulkPut:BulkPut[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$BulkPut.html"><span class="name">BulkPut</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="docs">docs: Seq[Document[A]]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.CreateResponse" data-isabs="false">
+      <a id="CreateResponse:CreateResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$CreateResponse.html"><span class="name">CreateResponse</span></a><span class="params">(<span name="ok">ok: Boolean</span>, <span name="id">id: String</span>, <span name="rev">rev: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.DocFormat" data-isabs="true">
+      <a id="DocFormat:DocFormat[A, B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$DocFormat.html"><span class="name">DocFormat</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B &lt;: Document[A]</span>]</span><span class="result"> extends RootJsonFormat[B]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.ErrorResponse" data-isabs="false">
+      <a id="ErrorResponse:ErrorResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$ErrorResponse.html"><span class="name">ErrorResponse</span></a><span class="params">(<span name="status">status: Int</span>, <span name="body">body: ErrorResponseBody</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.ErrorResponseBody" data-isabs="false">
+      <a id="ErrorResponseBody:ErrorResponseBody"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$ErrorResponseBody.html"><span class="name">ErrorResponseBody</span></a><span class="params">(<span name="error">error: String</span>, <span name="reason">reason: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.GetDbResponse" data-isabs="false">
+      <a id="GetDbResponse:GetDbResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$GetDbResponse.html"><span class="name">GetDbResponse</span></a><span class="params">(<span name="db_name">db_name: String</span>, <span name="doc_count">doc_count: Int</span>, <span name="doc_del_count">doc_del_count: Int</span>, <span name="update_seq">update_seq: Either[String, Int]</span>, <span name="purge_seq">purge_seq: Int</span>, <span name="compact_running">compact_running: Boolean</span>, <span name="disk_size">disk_size: Int</span>, <span name="instance_start_time">instance_start_time: String</span>, <span name="disk_format_version">disk_format_version: Int</span>, <span name="committed_update_seq">committed_update_seq: Option[Int]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.Id" data-isabs="true">
+      <a id="Id:Id"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$Id.html"><span class="name">Id</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.NewDocFormat" data-isabs="false">
+      <a id="NewDocFormat:NewDocFormat[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$NewDocFormat.html"><span class="name">NewDocFormat</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends DocFormat[A, NewDocument[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.OkResponse" data-isabs="false">
+      <a id="OkResponse:OkResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$OkResponse.html"><span class="name">OkResponse</span></a><span class="params">(<span name="ok">ok: Boolean</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.Rev" data-isabs="true">
+      <a id="Rev:Rev"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$Rev.html"><span class="name">Rev</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.RevedDocFormat" data-isabs="false">
+      <a id="RevedDocFormat:RevedDocFormat[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$RevedDocFormat.html"><span class="name">RevedDocFormat</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends DocFormat[A, RevedDocument[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.Revision" data-isabs="false">
+      <a id="Revision:Revision"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$Revision.html"><span class="name">Revision</span></a><span class="params">(<span name="rev">rev: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.ViewResponse" data-isabs="false">
+      <a id="ViewResponse:ViewResponse[K, V]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$ViewResponse.html"><span class="name">ViewResponse</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="rows">rows: List[ViewRow[K, V]]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.ViewRow" data-isabs="false">
+      <a id="ViewRow:ViewRow[K, V]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$ViewRow.html"><span class="name">ViewRow</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="key">key: K</span>, <span name="value">value: V</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol.Empty" data-isabs="false">
+      <a id="Empty:Empty"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$Empty$.html"><span class="name">Empty</span></a><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol.UuidJsonFormat" data-isabs="false">
+      <a id="UuidJsonFormat:UuidJsonFormat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonProtocol$$UuidJsonFormat$.html"><span class="name">UuidJsonFormat</span></a><span class="result"> extends RootJsonFormat[UUID]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#allDocsResponseFormat" data-isabs="false">
+      <a id="allDocsResponseFormat[A](RootJsonFormat[A]):RootJsonFormat[AllDocsResponse[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allDocsResponseFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.AllDocsResponse" class="extype" href="JsonProtocol$$AllDocsResponse.html">AllDocsResponse</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#allDocsRowFormat" data-isabs="false">
+      <a id="allDocsRowFormat[A](RootJsonFormat[A]):RootJsonFormat[AllDocsRow[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allDocsRowFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.AllDocsRow" class="extype" href="JsonProtocol$$AllDocsRow.html">AllDocsRow</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="spray.json.CollectionFormats#arrayFormat" data-isabs="false">
+      <a id="arrayFormat[T](JsonFormat[T],ClassManifest[T]):RootJsonFormat[Array[T]] { def write(array: Array[T]): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">arrayFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>, <span name="arg1">arg1: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.Array" class="extype">Array</span>[T]] { def write(array: Array[T]): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#attachmentStubFormat" data-isabs="false">
+      <a id="attachmentStubFormat:RootJsonFormat[AttachmentStub]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">attachmentStubFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.AttachmentStub" class="extype" href="AttachmentStub.html">AttachmentStub</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#bulkPutFormat" data-isabs="false">
+      <a id="bulkPutFormat[A](RootJsonFormat[A]):RootJsonFormat[BulkPut[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bulkPutFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.BulkPut" class="extype" href="JsonProtocol$$BulkPut.html">BulkPut</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#createResponseFormat" data-isabs="false">
+      <a id="createResponseFormat:RootJsonFormat[CreateResponse]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createResponseFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.CreateResponse" class="extype" href="JsonProtocol$$CreateResponse.html">CreateResponse</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#documentFormat" data-isabs="false">
+      <a id="documentFormat[A](RootJsonFormat[A]):RootJsonFormat[Document[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">documentFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.Document" class="extype" href="Document.html">Document</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="spray.json.StandardFormats#eitherFormat" data-isabs="false">
+      <a id="eitherFormat[A, B](JF[A],JF[B]):JF[Either[A, B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eitherFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>)</span><span class="result">: JF[<span name="scala.Either" class="extype">Either</span>[A, B]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#emptyFormat" data-isabs="false">
+      <a id="emptyFormat:RootJsonFormat[sprouch.JsonProtocol.Empty.type] { def write(e: sprouch.JsonProtocol.Empty.type): spray.json.JsObject }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">emptyFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[sprouch.JsonProtocol.Empty.type] { def write(e: sprouch.JsonProtocol.Empty.type): spray.json.JsObject }</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#errorResponseFormat" data-isabs="false">
+      <a id="errorResponseFormat:RootJsonFormat[ErrorResponseBody]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">errorResponseFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.ErrorResponseBody" class="extype" href="JsonProtocol$$ErrorResponseBody.html">ErrorResponseBody</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="prt" name="spray.json.ProductFormats#extractFieldNames" data-isabs="false">
+      <a id="extractFieldNames(ClassManifest[_]):Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">extractFieldNames</span><span class="params">(<span name="classManifest">classManifest: ClassManifest[_]</span>)</span><span class="result">: <span name="scala.Array" class="extype">Array</span>[String]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#getDbResponseFormat" data-isabs="false">
+      <a id="getDbResponseFormat:RootJsonFormat[GetDbResponse]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDbResponseFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.GetDbResponse" class="extype" href="JsonProtocol$$GetDbResponse.html">GetDbResponse</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#immIndexedSeqFormat" data-isabs="false">
+      <a id="immIndexedSeqFormat[T](JsonFormat[T]):RootJsonFormat[IndexedSeq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immIndexedSeqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.immutable.IndexedSeq" class="extype">IndexedSeq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#immIterableFormat" data-isabs="false">
+      <a id="immIterableFormat[T](JsonFormat[T]):RootJsonFormat[Iterable[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immIterableFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.immutable.Iterable" class="extype">Iterable</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#immLinearSeqFormat" data-isabs="false">
+      <a id="immLinearSeqFormat[T](JsonFormat[T]):RootJsonFormat[LinearSeq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immLinearSeqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.immutable.LinearSeq" class="extype">LinearSeq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#immSeqFormat" data-isabs="false">
+      <a id="immSeqFormat[T](JsonFormat[T]):RootJsonFormat[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immSeqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.immutable.Seq" class="extype">Seq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#immSetFormat" data-isabs="false">
+      <a id="immSetFormat[T](JsonFormat[T]):RootJsonFormat[Set[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immSetFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.immutable.Set" class="extype">Set</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#indexedSeqFormat" data-isabs="false">
+      <a id="indexedSeqFormat[T](JsonFormat[T]):RootJsonFormat[IndexedSeq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">indexedSeqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.IndexedSeq" class="extype">IndexedSeq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#iterableFormat" data-isabs="false">
+      <a id="iterableFormat[T](JsonFormat[T]):RootJsonFormat[Iterable[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">iterableFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.Iterable" class="extype">Iterable</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[T](JsonReader[T],JsonWriter[T]):JsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="reader">reader: <span name="spray.json.JsonReader" class="extype">JsonReader</span>[T]</span>, <span name="writer">writer: <span name="spray.json.JsonWriter" class="extype">JsonWriter</span>[T]</span>)</span><span class="result">: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) ⇒ T,String,String,String,String,String,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M],JF[N],JF[O]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>, <span name="k">k: String</span>, <span name="l">l: String</span>, <span name="m">m: String</span>, <span name="n">n: String</span>, <span name="o">o: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>, <span name="arg13">arg13: JF[N]</span>, <span name="arg14">arg14: JF[O]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, K, L, M, N, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M, N) ⇒ T,String,String,String,String,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M],JF[N]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>, <span name="k">k: String</span>, <span name="l">l: String</span>, <span name="m">m: String</span>, <span name="n">n: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>, <span name="arg13">arg13: JF[N]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, K, L, M, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M) ⇒ T,String,String,String,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>, <span name="k">k: String</span>, <span name="l">l: String</span>, <span name="m">m: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, K, L, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L) ⇒ T,String,String,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>, <span name="k">k: String</span>, <span name="l">l: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, K, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K) ⇒ T,String,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>, <span name="k">k: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, J, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J) ⇒ T,String,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>, <span name="j">j: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, I, T&lt;:Product]((A, B, C, D, E, F, G, H, I) ⇒ T,String,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>, <span name="i">i: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, H, T&lt;:Product]((A, B, C, D, E, F, G, H) ⇒ T,String,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>, <span name="h">h: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, G, T&lt;:Product]((A, B, C, D, E, F, G) ⇒ T,String,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>, <span name="g">g: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, F, T&lt;:Product]((A, B, C, D, E, F) ⇒ T,String,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>, <span name="f">f: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, E, T&lt;:Product]((A, B, C, D, E) ⇒ T,String,String,String,String,String)(JF[A],JF[B],JF[C],JF[D],JF[E]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>, <span name="e">e: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, D, T&lt;:Product]((A, B, C, D) ⇒ T,String,String,String,String)(JF[A],JF[B],JF[C],JF[D]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>, <span name="d">d: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, C, T&lt;:Product]((A, B, C) ⇒ T,String,String,String)(JF[A],JF[B],JF[C]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>, <span name="c">c: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, B, T&lt;:Product]((A, B) ⇒ T,String,String)(JF[A],JF[B]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B) ⇒ T</span>, <span name="a">a: String</span>, <span name="b">b: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat" data-isabs="false">
+      <a id="jsonFormat[A, T&lt;:Product]((A) ⇒ T,String)(JF[A]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat</span><span class="tparams">[<span name="A">A</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A) ⇒ T</span>, <span name="a">a: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat1" data-isabs="false">
+      <a id="jsonFormat1[A, T&lt;:Product]((A) ⇒ T)(JF[A],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat1</span><span class="tparams">[<span name="A">A</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat10" data-isabs="false">
+      <a id="jsonFormat10[A, B, C, D, E, F, G, H, I, J, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat10</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat11" data-isabs="false">
+      <a id="jsonFormat11[A, B, C, D, E, F, G, H, I, J, K, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat11</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat12" data-isabs="false">
+      <a id="jsonFormat12[A, B, C, D, E, F, G, H, I, J, K, L, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat12</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat13" data-isabs="false">
+      <a id="jsonFormat13[A, B, C, D, E, F, G, H, I, J, K, L, M, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat13</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>, <span name="arg13">arg13: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat14" data-isabs="false">
+      <a id="jsonFormat14[A, B, C, D, E, F, G, H, I, J, K, L, M, N, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M, N) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M],JF[N],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat14</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>, <span name="arg13">arg13: JF[N]</span>, <span name="arg14">arg14: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat15" data-isabs="false">
+      <a id="jsonFormat15[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, T&lt;:Product]((A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],JF[J],JF[K],JF[L],JF[M],JF[N],JF[O],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat15</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: JF[J]</span>, <span name="arg10">arg10: JF[K]</span>, <span name="arg11">arg11: JF[L]</span>, <span name="arg12">arg12: JF[M]</span>, <span name="arg13">arg13: JF[N]</span>, <span name="arg14">arg14: JF[O]</span>, <span name="arg15">arg15: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat2" data-isabs="false">
+      <a id="jsonFormat2[A, B, T&lt;:Product]((A, B) ⇒ T)(JF[A],JF[B],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat2</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat3" data-isabs="false">
+      <a id="jsonFormat3[A, B, C, T&lt;:Product]((A, B, C) ⇒ T)(JF[A],JF[B],JF[C],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat3</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat4" data-isabs="false">
+      <a id="jsonFormat4[A, B, C, D, T&lt;:Product]((A, B, C, D) ⇒ T)(JF[A],JF[B],JF[C],JF[D],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat4</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat5" data-isabs="false">
+      <a id="jsonFormat5[A, B, C, D, E, T&lt;:Product]((A, B, C, D, E) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat5</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat6" data-isabs="false">
+      <a id="jsonFormat6[A, B, C, D, E, F, T&lt;:Product]((A, B, C, D, E, F) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat6</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat7" data-isabs="false">
+      <a id="jsonFormat7[A, B, C, D, E, F, G, T&lt;:Product]((A, B, C, D, E, F, G) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat7</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat8" data-isabs="false">
+      <a id="jsonFormat8[A, B, C, D, E, F, G, H, T&lt;:Product]((A, B, C, D, E, F, G, H) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat8</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.ProductFormats#jsonFormat9" data-isabs="false">
+      <a id="jsonFormat9[A, B, C, D, E, F, G, H, I, T&lt;:Product]((A, B, C, D, E, F, G, H, I) ⇒ T)(JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G],JF[H],JF[I],ClassManifest[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jsonFormat9</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="T">T &lt;: <span name="scala.Product" class="extype">Product</span></span>]</span><span class="params">(<span name="construct">construct: (A, B, C, D, E, F, G, H, I) ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>, <span name="arg7">arg7: JF[H]</span>, <span name="arg8">arg8: JF[I]</span>, <span name="arg9">arg9: ClassManifest[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#lazyFormat" data-isabs="false">
+      <a id="lazyFormat[T](⇒ JsonFormat[T]):JsonFormat[T] { lazy val delegate: spray.json.JsonFormat[T] }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lazyFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="format">format: ⇒ <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T] { lazy val delegate: spray.json.JsonFormat[T] }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#lift" data-isabs="false">
+      <a id="lift[T&lt;:AnyRef](RootJsonReader[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="tparams">[<span name="T">T &lt;: AnyRef</span>]</span><span class="params">(<span name="reader">reader: <span name="spray.json.RootJsonReader" class="extype">RootJsonReader</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#lift" data-isabs="false">
+      <a id="lift[T&lt;:AnyRef](JsonReader[T]):JsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="tparams">[<span name="T">T &lt;: AnyRef</span>]</span><span class="params">(<span name="reader">reader: <span name="spray.json.JsonReader" class="extype">JsonReader</span>[T]</span>)</span><span class="result">: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#lift" data-isabs="false">
+      <a id="lift[T](RootJsonWriter[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="writer">writer: <span name="spray.json.RootJsonWriter" class="extype">RootJsonWriter</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#lift" data-isabs="false">
+      <a id="lift[T](JsonWriter[T]):JsonFormat[T] { def read(value: spray.json.JsValue): Nothing }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="writer">writer: <span name="spray.json.JsonWriter" class="extype">JsonWriter</span>[T]</span>)</span><span class="result">: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T] { def read(value: spray.json.JsValue): Nothing }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#linearSeqFormat" data-isabs="false">
+      <a id="linearSeqFormat[T](JsonFormat[T]):RootJsonFormat[LinearSeq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">linearSeqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.LinearSeq" class="extype">LinearSeq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#listFormat" data-isabs="false">
+      <a id="listFormat[T](JsonFormat[T]):RootJsonFormat[List[T]] { def write(list: List[T]): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">listFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[List[T]] { def write(list: List[T]): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#mapFormat" data-isabs="false">
+      <a id="mapFormat[K, V](JsonFormat[K],JsonFormat[V]):RootJsonFormat[Map[K, V]] { def write(m: Map[K,V]): spray.json.JsObject }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapFormat</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[K]</span>, <span name="arg1">arg1: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[V]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[Map[K, V]] { def write(m: Map[K,V]): spray.json.JsObject }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#mapReduceFormat" data-isabs="false">
+      <a id="mapReduceFormat:RootJsonFormat[MapReduce]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapReduceFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.MapReduce" class="extype" href="MapReduce.html">MapReduce</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#newDocJsonFormat" data-isabs="false">
+      <a id="newDocJsonFormat[A](RootJsonFormat[A]):RootJsonFormat[NewDocument[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newDocJsonFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.NewDocument" class="extype" href="NewDocument.html">NewDocument</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#nullFormat" data-isabs="false">
+      <a id="nullFormat:JsonFormat[Null]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nullFormat</span><span class="result">: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[<span name="scala.Null" class="extype">Null</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#okResponseFormat" data-isabs="false">
+      <a id="okResponseFormat:RootJsonFormat[OkResponse]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">okResponseFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.OkResponse" class="extype" href="JsonProtocol$$OkResponse.html">OkResponse</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="spray.json.StandardFormats#optionFormat" data-isabs="false">
+      <a id="optionFormat[T](JF[T]):OptionFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">optionFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[T]</span>)</span><span class="result">: <span name="spray.json.StandardFormats.OptionFormat" class="extype">OptionFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="prt" name="spray.json.ProductFormats#productElement2Field" data-isabs="false">
+      <a id="productElement2Field[T](String,Product,Int,List[(String, JsValue)])(JsonWriter[T]):List[(String, JsValue)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">productElement2Field</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="fieldName">fieldName: String</span>, <span name="p">p: <span name="scala.Product" class="extype">Product</span></span>, <span name="ix">ix: <span name="scala.Int" class="extype">Int</span></span>, <span name="rest">rest: List[(String, <span name="spray.json.JsValue" class="extype">JsValue</span>)]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="writer">writer: <span name="spray.json.JsonWriter" class="extype">JsonWriter</span>[T]</span>)</span><span class="result">: List[(String, <span name="spray.json.JsValue" class="extype">JsValue</span>)]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>ProductFormats</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#revedDocJsonFormat" data-isabs="false">
+      <a id="revedDocJsonFormat[A](RootJsonFormat[A]):RootJsonFormat[RevedDocument[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">revedDocJsonFormat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[A]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.RevedDocument" class="extype" href="RevedDocument.html">RevedDocument</a>[A]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#revisionFormat" data-isabs="false">
+      <a id="revisionFormat:RootJsonFormat[Revision]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">revisionFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.Revision" class="extype" href="JsonProtocol$$Revision.html">Revision</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#rootFormat" data-isabs="false">
+      <a id="rootFormat[T](JsonFormat[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rootFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="format">format: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#rootJsonFormat" data-isabs="false">
+      <a id="rootJsonFormat[T](RootJsonReader[T],RootJsonWriter[T]):RootJsonFormat[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rootJsonFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="reader">reader: <span name="spray.json.RootJsonReader" class="extype">RootJsonReader</span>[T]</span>, <span name="writer">writer: <span name="spray.json.RootJsonWriter" class="extype">RootJsonWriter</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[T]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.AdditionalFormats#safeReader" data-isabs="false">
+      <a id="safeReader[A](JsonReader[A]):JsonReader[Either[Exception, A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">safeReader</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonReader" class="extype">JsonReader</span>[A]</span>)</span><span class="result">: <span name="spray.json.JsonReader" class="extype">JsonReader</span>[<span name="scala.Either" class="extype">Either</span>[Exception, A]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AdditionalFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#seqFormat" data-isabs="false">
+      <a id="seqFormat[T](JsonFormat[T]):RootJsonFormat[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">seqFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.Seq" class="extype">Seq</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#setFormat" data-isabs="false">
+      <a id="setFormat[T](JsonFormat[T]):RootJsonFormat[Set[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<span name="scala.collection.Set" class="extype">Set</span>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple1Format" data-isabs="false">
+      <a id="tuple1Format[A](JF[A]):JF[(A)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple1Format</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>)</span><span class="result">: JF[(A)]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple2Format" data-isabs="false">
+      <a id="tuple2Format[A, B](JF[A],JF[B]):RootJsonFormat[(A, B)] { def write(t: (A, B)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple2Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B)] { def write(t: (A, B)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple3Format" data-isabs="false">
+      <a id="tuple3Format[A, B, C](JF[A],JF[B],JF[C]):RootJsonFormat[(A, B, C)] { def write(t: (A, B, C)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple3Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B, C)] { def write(t: (A, B, C)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple4Format" data-isabs="false">
+      <a id="tuple4Format[A, B, C, D](JF[A],JF[B],JF[C],JF[D]):RootJsonFormat[(A, B, C, D)] { def write(t: (A, B, C, D)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple4Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B, C, D)] { def write(t: (A, B, C, D)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple5Format" data-isabs="false">
+      <a id="tuple5Format[A, B, C, D, E](JF[A],JF[B],JF[C],JF[D],JF[E]):RootJsonFormat[(A, B, C, D, E)] { def write(t: (A, B, C, D, E)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple5Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B, C, D, E)] { def write(t: (A, B, C, D, E)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple6Format" data-isabs="false">
+      <a id="tuple6Format[A, B, C, D, E, F](JF[A],JF[B],JF[C],JF[D],JF[E],JF[F]):RootJsonFormat[(A, B, C, D, E, F)] { def write(t: (A, B, C, D, E, F)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple6Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B, C, D, E, F)] { def write(t: (A, B, C, D, E, F)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.StandardFormats#tuple7Format" data-isabs="false">
+      <a id="tuple7Format[A, B, C, D, E, F, G](JF[A],JF[B],JF[C],JF[D],JF[E],JF[F],JF[G]):RootJsonFormat[(A, B, C, D, E, F, G)] { def write(t: (A, B, C, D, E, F, G)): spray.json.JsArray }"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple7Format</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: JF[A]</span>, <span name="arg1">arg1: JF[B]</span>, <span name="arg2">arg2: JF[C]</span>, <span name="arg3">arg3: JF[D]</span>, <span name="arg4">arg4: JF[E]</span>, <span name="arg5">arg5: JF[F]</span>, <span name="arg6">arg6: JF[G]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[(A, B, C, D, E, F, G)] { def write(t: (A, B, C, D, E, F, G)): spray.json.JsArray }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>StandardFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#vectorFormat" data-isabs="false">
+      <a id="vectorFormat[T](JsonFormat[T]):RootJsonFormat[Vector[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vectorFormat</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[Vector[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="spray.json.CollectionFormats#viaList" data-isabs="false">
+      <a id="viaList[I&lt;:Iterable[T], T]((List[T]) ⇒ I)(JsonFormat[T]):RootJsonFormat[I]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">viaList</span><span class="tparams">[<span name="I">I &lt;: <span name="scala.collection.Iterable" class="extype">Iterable</span>[T]</span>, <span name="T">T</span>]</span><span class="params">(<span name="f">f: (List[T]) ⇒ I</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[T]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[I]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CollectionFormats</dd></dl></div>
+    </li><li visbl="pub" name="sprouch.JsonProtocol#viewResponseFormat" data-isabs="false">
+      <a id="viewResponseFormat[K, V](JsonFormat[K],JsonFormat[V]):RootJsonFormat[ViewResponse[K, V]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">viewResponseFormat</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[K]</span>, <span name="arg1">arg1: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[V]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.ViewResponse" class="extype" href="JsonProtocol$$ViewResponse.html">ViewResponse</a>[K, V]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#viewRowFormat" data-isabs="false">
+      <a id="viewRowFormat[K, V](JsonFormat[K],JsonFormat[V]):RootJsonFormat[ViewRow[K, V]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">viewRowFormat</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[K]</span>, <span name="arg1">arg1: <span name="spray.json.JsonFormat" class="extype">JsonFormat</span>[V]</span>)</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.JsonProtocol.ViewRow" class="extype" href="JsonProtocol$$ViewRow.html">ViewRow</a>[K, V]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="sprouch.JsonProtocol#viewsFormat" data-isabs="false">
+      <a id="viewsFormat:RootJsonFormat[Views]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">viewsFormat</span><span class="result">: <span name="spray.json.RootJsonFormat" class="extype">RootJsonFormat</span>[<a name="sprouch.Views" class="extype" href="Views.html">Views</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="spray.json.DefaultJsonProtocol" class="parent">
+              <h3>Inherited from <span name="spray.json.DefaultJsonProtocol" class="extype">DefaultJsonProtocol</span></h3>
+            </div><div name="spray.json.AdditionalFormats" class="parent">
+              <h3>Inherited from <span name="spray.json.AdditionalFormats" class="extype">AdditionalFormats</span></h3>
+            </div><div name="spray.json.ProductFormats" class="parent">
+              <h3>Inherited from <span name="spray.json.ProductFormats" class="extype">ProductFormats</span></h3>
+            </div><div name="spray.json.CollectionFormats" class="parent">
+              <h3>Inherited from <span name="spray.json.CollectionFormats" class="extype">CollectionFormats</span></h3>
+            </div><div name="spray.json.StandardFormats" class="parent">
+              <h3>Inherited from <span name="spray.json.StandardFormats" class="extype">StandardFormats</span></h3>
+            </div><div name="spray.json.BasicFormats" class="parent">
+              <h3>Inherited from <span name="spray.json.BasicFormats" class="extype">BasicFormats</span></h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
