@@ -24,7 +24,7 @@ object ApplicationBuild extends Build {
         "gh-pages",
         new File("/home/k/workspaces/sprouch-pages/repository/")
     ))),
-    (version := "0.5.1")
+    (version := "0.5.2")
   ))
 
 }
