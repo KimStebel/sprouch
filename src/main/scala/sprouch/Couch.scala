@@ -19,27 +19,42 @@ import java.net.URLEncoder.{encode => urlEncode}
 
 import JsonProtocol._
 
-trait UriBuilder {
+private[sprouch] trait UriBuilder {
   protected[this] def sep = "/"
   protected[this] def encode(s:String) = urlEncode(s, "UTF-8") 
   protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)  
   protected[this] def dbUri(dbName:String) = path(dbName)
 }
 
+/**
+ * This exception is thrown whenever CouchDB returns an HTTP error code. Details about the error are in the error field.
+ */
 case class SprouchException(error:ErrorResponse) extends Exception
 
+/**
+ * Class that handles the connection to CouchDB. It contains methods for creating, looking up and deleting databases.
+ */
 class Couch(config:Config) extends UriBuilder {
   
   private val myPipelines = new Pipelines(config)
   private lazy val pipeline = myPipelines.pipeline[OkResponse]
   private lazy val getDbPipeline = myPipelines.pipeline[GetDbResponse]
   
+  /**
+   * Creates a new database. Fails if the database already exists.
+   */
   def createDb(dbName:String):Future[Database] = {
     pipeline(Put(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
   }
+  /**
+   * Deletes a database and all containing documents.
+   */
   def deleteDb(dbName:String):Future[OkResponse] = {
     pipeline(Delete(dbUri(dbName)))
   }
+  /**
+   * Looks up a database by its name.
+   */
   def getDb(dbName:String):Future[Database] = {
     getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
   }
@@ -47,5 +62,8 @@ class Couch(config:Config) extends UriBuilder {
 }
 
 object Couch {
+  /**
+   * Factory method that creates instances of Couch from a Config instance.
+   */
   def apply(config:Config) = new Couch(config)
 }
