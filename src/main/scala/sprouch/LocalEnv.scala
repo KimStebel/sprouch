@@ -15,8 +15,18 @@ object LocalEnv {
   implicit val testFormat = jsonFormat2(Test)
   
   implicit val actorSystem = ActorSystem("MySystem")
-  val couch = new Couch(Config(actorSystem, "localhost", 5984, None, false))
+  
+  /**
+   * instance of Couch with default config
+   */
+  lazy val couch = new Couch(Config(actorSystem))
+  /**
+   * timeout for futures, default 10 seconds
+   */
   var testDuration = Duration("10 seconds")
+  /**
+   * convenience method to wait for future completion
+   */
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   implicit def extendFutureOfEither[A,B](f:Future[Either[A,B]]) = new {

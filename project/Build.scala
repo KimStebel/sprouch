@@ -13,6 +13,7 @@ object ApplicationBuild extends Build {
   )
 
   val main = Project(id = "sprouch", base = new File("."), settings = Project.defaultSettings ++ Seq(
+    (scalaVersion := "2.9.2"),
     (libraryDependencies ++= dependencies),
     (resolvers ++= Seq(
         "spray repo" at "http://repo.spray.io",
@@ -23,7 +24,7 @@ object ApplicationBuild extends Build {
         "gh-pages",
         new File("/home/k/workspaces/sprouch-pages/repository/")
     ))),
-    (version := "0.5"),
+    (version := "0.5.2"),
     (scalaVersion := "2.10.0-RC3"),
     (scalacOptions += "-language:_")
   ))

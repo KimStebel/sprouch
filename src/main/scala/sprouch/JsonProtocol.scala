@@ -13,29 +13,27 @@ import spray.json._
 import spray.util._
 import java.util.UUID
 
-trait Id {
-  val id:String
-}
-trait Rev {
-  val rev:String
-}
-
-object JsonProtocol extends JsonProtocol
-
-trait JsonProtocol extends DefaultJsonProtocol {
+/**
+ * contains classes needed to model the protocol used by CouchDB
+ * and implicit vals and defs of type JsonFormat to convert Scala types to and from JSON.
+ */
+object JsonProtocol extends DefaultJsonProtocol {
+  trait Id {
+    val id:String
+  }
+  trait Rev {
+    val rev:String
+  }
   implicit val nullFormat:JsonFormat[Null] = new JsonFormat[Null] {
     override def read(js:JsValue) = if (js == JsNull) null else throw new Exception("null expected")
     override def write(n:Null) = JsNull
   }
-  case class MapReduce(map:String, reduce:Option[String])
   implicit val mapReduceFormat = jsonFormat2(MapReduce)
-  case class Views(views:Map[String,MapReduce]) 
   implicit val viewsFormat = jsonFormat1(Views)
   case class ViewRow[K,V](key:K, value:V)
   implicit def viewRowFormat[K:JsonFormat,V:JsonFormat] = jsonFormat2(ViewRow[K,V])
   case class ViewResponse[K,V](rows:List[ViewRow[K,V]])
   implicit def viewResponseFormat[K:JsonFormat,V:JsonFormat] = jsonFormat1(ViewResponse[K,V])
-  case class AttachmentStub(stub:Boolean, content_type:String, length:Int)
   implicit val attachmentStubFormat = jsonFormat3(AttachmentStub)
   case class Revision(rev:String)
   implicit val revisionFormat = jsonFormat1(Revision)
@@ -80,28 +78,6 @@ trait JsonProtocol extends DefaultJsonProtocol {
     committed_update_seq:Option[Int]
   )
 
-  sealed trait Document[+A] extends Id {
-    def data:A
-    def revOpt:Option[String]
-    def attachments:Map[String, AttachmentStub]
-    def setRev(rev:String):RevedDocument[A] = new RevedDocument(id, rev, data, attachments)
-  }
-  class RevedDocument[+A](
-      val id:String,
-      val rev:String,
-      val data:A,
-      val attachments:Map[String,AttachmentStub]
-  ) extends Document[A] with Rev {
-    def updateData[B](f:A=>B) = new RevedDocument(id, rev, f(data), attachments)
-    def revOpt = Some(rev)
-  }
-  class NewDocument[+A](val id:String, val data:A, val attachments:Map[String,AttachmentStub]) 
-  extends Document[A] {
-    def this(id:String, data:A) = this(id, data, Map())
-    def this(data:A) = this(UUID.randomUUID.toString, data, Map())
-    def revOpt = None
-  }
-  
   class AnyDocFormat[A:RootJsonFormat] extends DocFormat[A, Document[A]] {
     override def otherFields(doc:Document[A]):Map[String, JsValue] = doc match {
       case _:NewDocument[_] => Map()

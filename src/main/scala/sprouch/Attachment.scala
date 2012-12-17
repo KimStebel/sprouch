@@ -1,7 +1,8 @@
 package sprouch
 
-import scala.Array.canBuildFrom
-
+/**
+  * case class holding the id and data of an attachment
+  */
 case class Attachment(id:String, data:Array[Byte]) {
   override def equals(a:Any) = a match {
     case a:Attachment => {
@@ -12,3 +13,8 @@ case class Attachment(id:String, data:Array[Byte]) {
     case _ => false
   }
 }
+
+/**
+ * Contains metadata about the attachment, but not the attachment itself.
+ */
+case class AttachmentStub(stub:Boolean, content_type:String, length:Int)

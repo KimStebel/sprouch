@@ -21,6 +21,15 @@ import sprouch.JsonProtocol.ErrorResponseBody
 import sprouch.JsonProtocol.ErrorResponse
 import scala.concurrent.Future
 
+/**
+ * Configuration data, default values should be valid for a default install of CouchDB.
+ * 
+ * @constructor
+ * 
+ * @param userPass Optional pair of username and password.
+ * @param https Whether to use https. If true, the config property spray.can.client.ssl-encryption
+ *  must be set to on, which is the default setting in the reference.conf of this library.
+ */
 case class Config(
     actorSystem:ActorSystem,
     hostName:String = "localhost",
@@ -29,7 +38,7 @@ case class Config(
     https:Boolean = false
 )
 
-private class Pipelines(config:Config) {
+private[sprouch] class Pipelines(config:Config) {
   import config._
   
   val as = config.actorSystem
