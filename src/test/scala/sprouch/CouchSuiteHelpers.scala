@@ -19,7 +19,7 @@ trait CouchSuiteHelpers {
   implicit val actorSystem = ActorSystem("MySystem")
   import actorSystem.dispatcher
   val c = new Couch(Config(actorSystem, "localhost", 5984, None, false))
-  val testDuration = Duration("10 seconds")
+  val testDuration = Duration("30 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   def assertGet[A](e:Either[_,A]):A = {

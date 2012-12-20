@@ -19,7 +19,9 @@ class BulkActions extends FunSuite with CouchSuiteHelpers {
         newData = bulkInserted.map(doc => doc.updateData(data => data.copy(foo=data.foo+1)))
         bulkUpdated <- db.bulkPut(newData)
         bulkGotten <- db.allDocs[Test](keys=data.map(_.id))
-      } yield bulkUpdated
+      } yield {
+        bulkGotten
+      }
     })
   }
 

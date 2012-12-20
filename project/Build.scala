@@ -23,9 +23,9 @@ object ApplicationBuild extends Build {
         "gh-pages",
         new File("/home/k/workspaces/sprouch-pages/repository/")
     ))),
-    (version := "0.5.2"),
     (scalaVersion := "2.10.0-RC3"),
     (scalacOptions += "-language:_")
+    (version := "0.5.3")
   ))
 
 }
