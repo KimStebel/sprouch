@@ -25,7 +25,7 @@ object ApplicationBuild extends Build {
     ))),
     (scalaVersion := "2.10.0-RC3"),
     (scalacOptions += "-language:_"),
-    (version := "0.5.3")
+    (version := "0.5.4")
   ))
 
 }

@@ -29,8 +29,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def docUri(doc:Document[_]):String = docUri(doc.id)
   private def docUri(id:String) = path(name, id)
   private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "?rev=" + doc.rev
-  private def attachmentUriRev(doc:RevedDocument[_], a:Attachment):String =
-    attachmentUri(doc, a.id) + "?rev=" + doc.rev
+  private def attachmentUriRev(doc:RevedDocument[_], aid:String):String =
+    attachmentUri(doc, aid) + "?rev=" + doc.rev
   private def attachmentUri(doc:Document[_], aid:String) = docUri(doc) + sep + encode(aid)
   private def viewsUri(views:Document[Views]) = path(name, "_design", views.id)
   private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) = key + "=" + encode(aFormat.write(value).toString)
@@ -121,7 +121,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     */
   def putAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse]
-    p(Put(attachmentUriRev(doc, a), a.data)).map(cr => doc.setRev(cr.rev))
+    p(Put(attachmentUriRev(doc, a.id), a.data)).map(cr => doc.setRev(cr.rev))
   }
   
   /**
@@ -135,9 +135,14 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Deletes an attachment.
     */
-  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
+  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = deleteAttachment(doc, a.id)
+  
+  /**
+    * Deletes an attachment.
+    */
+  def deleteAttachment[A](doc:RevedDocument[A], aid:String):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse]
-    p(Delete(attachmentUriRev(doc, a))).map(cr => doc.setRev(cr.rev))
+    p(Delete(attachmentUriRev(doc, aid))).map(cr => doc.setRev(cr.rev))
   }
   
   /**
@@ -233,7 +238,6 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       ).flatten
     
     val uri = allDocsUri(kvs)
-    println("AAAA"+uri)
     p(Get(uri))
   }
   
