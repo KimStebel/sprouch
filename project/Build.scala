@@ -24,7 +24,7 @@ object ApplicationBuild extends Build {
         new File("/home/k/workspaces/sprouch-pages/repository/")
     ))),
     (scalaVersion := "2.10.0-RC3"),
-    (scalacOptions += "-language:_")
+    (scalacOptions += "-language:_"),
     (version := "0.5.3")
   ))
 
