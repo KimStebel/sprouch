@@ -4,7 +4,17 @@ Sprouch
 Sprouch is an asynchronous library for couchdb based on spray.
 
 Features
--------
+--------
+
+- Support for Scala 2.9 and 2.10
+- Tested with CouchDB and BigCouch/Cloudant
+- Connection via HTTP or HTTPS
+- Authorization via HTTP Basic Auth 
+- CRUD operations
+- Javascript Views
+- Attachments
+- Bulk actions
+- more features planned: see tickets
 
 Documentation
 -------------
