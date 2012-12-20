@@ -45,3 +45,5 @@ Contribute!
 -----------
 
 Contributions are always welcome! Please drop me a line at kim.stebel@gmail.com if you want to help.
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/ffb2ae45f4a1c925fe8fc378a16c6708 "githalytics.com")](http://githalytics.com/KimStebel/sprouch)
