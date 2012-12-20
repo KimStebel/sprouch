@@ -8,6 +8,7 @@ Features
 
 - Support for Scala 2.9 and 2.10
 - Tested with CouchDB and BigCouch/Cloudant
+- Asynchronous _and_ synchronous APIs
 - Connection via HTTP or HTTPS
 - Authorization via HTTP Basic Auth 
 - CRUD operations
