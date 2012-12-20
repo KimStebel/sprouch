@@ -1,7 +1,7 @@
 Sprouch
 =======
 
-Sprouch is an asynchronous library for couchdb based on spray.
+Sprouch is an asynchronous Scala library for CouchDB/BigCouch based on Spray.
 
 Features
 --------
