@@ -15,11 +15,13 @@ class AttachmentsSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "")
       val a = new Attachment("123", Array[Byte](-1,0,1,2,3))
+      val attachmentWithSlash = new Attachment("ab/12////", Array[Byte](1,2,3))
       val a2 = a.copy(data=Array[Byte](1,2,3))
       for {
         doc <- db.createDoc(data)
         createRes <- db.putAttachment(doc, a)
-        updateRes <- db.putAttachment(createRes, a2)
+        createRes2 <- db.putAttachment(createRes, attachmentWithSlash)
+        updateRes <- db.putAttachment(createRes2, a2)
         getRes <- db.getAttachment(doc, a.id)
         doc2 <- db.getDoc[Test](doc.id)
         deleteRes <- db.deleteAttachment(updateRes, a2)
