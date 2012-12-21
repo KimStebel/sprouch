@@ -10,7 +10,6 @@ import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
 import spray.httpx.SprayJsonSupport._
 import spray.httpx.unmarshalling.Unmarshaller
-import spray.io._
 import spray.json._
 import spray.util._
 import java.util.UUID
@@ -20,6 +19,8 @@ import akka.actor.Props
 import akka.event.Logging
 import sprouch.JsonProtocol.ErrorResponseBody
 import sprouch.JsonProtocol.ErrorResponse
+import spray.io.IOBridge
+import spray.io.IOExtension
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
@@ -42,7 +43,7 @@ private[sprouch] class Pipelines(config:Config) {
   import config._
   
   private val conduit = {
-    val ioBridge = new IOBridge(actorSystem).start()
+    val ioBridge = IOExtension(actorSystem).ioBridge()
     val httpClient = actorSystem.actorOf(Props(new HttpClient(ioBridge)))
     actorSystem.actorOf(Props(new HttpConduit(httpClient, hostName, port, https)))
   }

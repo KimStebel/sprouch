@@ -5,10 +5,10 @@ object ApplicationBuild extends Build {
 
   val dependencies = Seq(
     "org.scalatest" %% "scalatest" % "1.8" % "test",
-    "io.spray" % "spray-can" % "1.0-M5",
-    "io.spray" % "spray-client" % "1.0-M5",
-    "io.spray" %  "spray-json_2.9.2" % "1.2.2",
-    "com.typesafe.akka" % "akka-actor" % "2.0",
+    "io.spray" % "spray-can" % "1.0-M7",
+    "io.spray" % "spray-client" % "1.0-M7",
+    "io.spray" %  "spray-json_2.9.2" % "1.2.3",
+    "com.typesafe.akka" % "akka-actor" % "2.0.4",
     "com.novocode" % "junit-interface" % "0.10-M1" % "test"
   )
 
