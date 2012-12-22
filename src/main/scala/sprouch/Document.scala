@@ -23,7 +23,11 @@ sealed trait Document[+A] extends Id {
    */
   def attachments:Map[String, AttachmentStub]
   private[sprouch] def setRev(rev:String):RevedDocument[A] = new RevedDocument(id, rev, data, attachments)
-  override def toString = "Document(id: " + id + revOpt.map(", rev: " +).getOrElse("") + ", data: " + data + ")" 
+  override def toString = "Document(id: " + id + revOpt.map(", rev: " +).getOrElse("") + ", data: " + data + ")"
+  override def equals(other:Any) = other match {
+    case r:RevedDocument[_] => r.id == id && r.revOpt == revOpt && r.data == data && r.attachments == attachments
+    case _ => false
+  }
 }
 /**
  * @see sprouch.Document[A]

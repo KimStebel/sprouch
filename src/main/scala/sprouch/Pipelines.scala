@@ -50,40 +50,45 @@ private[sprouch] class Pipelines(config:Config) {
   private val log = Logging(actorSystem, conduit)
   
   private val logRequest: HttpRequest => HttpRequest = r => {
-    log.info(r.toString)
+    log.info(r.toString + "\n")
     r
   }
   
   private val logResponse: HttpResponse => HttpResponse = r => {
-    log.info(r.toString)
+    log.info(r.toString + "\n")
     r
   }  
+  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A](None)
   
-  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = {
+  def pipeline[A:Unmarshaller](etag:Option[String]): HttpRequest => Future[A] = {
     def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
       hr => (hr match {
+        case HttpResponse(status, _, _, _) if status.value == 304 => {//not modified
+          throw new SprouchException(ErrorResponse(status.value, None))
+        }
         case HttpResponse(status, _, _, _) if status.isSuccess => {
-          Right(unmarshal[A](implicitly[Unmarshaller[A]])(hr))
+          unmarshal[A](implicitly[Unmarshaller[A]])(hr)
         }
         case HttpResponse(errorStatus, _, _, _) => {
           log.error(hr.toString)
           val ue = implicitly[Unmarshaller[ErrorResponseBody]]
           val body = unmarshal[ErrorResponseBody](ue)(hr.copy(status = StatusCodes.OK))
-          Left(ErrorResponse(errorStatus.value, body))
+          throw new SprouchException(ErrorResponse(errorStatus.value, Option(body)))
         }
-        
-      }) match {
-        case Left(e) => throw new SprouchException(e)
-        case Right(r) => r
-      }
+      })
     }
     addHeader("accept", "application/json") ~>
+    (etag match {
+      case Some(etag) => addHeader("If-None-Match", "\"" + etag + "\"") 
+      case None => (x:HttpRequest) => x
+    }) ~>
     (userPass match {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
+    logRequest ~>
     sendReceive(conduit) ~>
-    //logResponse ~>
+    logResponse ~>
     unmarshalEither[A]
   }
   
