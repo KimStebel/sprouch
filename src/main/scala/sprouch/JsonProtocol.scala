@@ -43,7 +43,7 @@ object JsonProtocol extends DefaultJsonProtocol {
   implicit def allDocsResponseFormat[A:RootJsonFormat] = jsonFormat3(AllDocsResponse[A])
   case class OkResponse(ok:Boolean)
   case class CreateResponse(ok:Option[Boolean], id:String, rev:String)
-  case class ErrorResponse(status:Int, body:ErrorResponseBody)
+  case class ErrorResponse(status:Int, body:Option[ErrorResponseBody])
   case class ErrorResponseBody(error:String, reason:String)
   case object Empty
   

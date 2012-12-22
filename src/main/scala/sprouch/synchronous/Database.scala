@@ -32,7 +32,9 @@ class Database private (d:sprouch.Database, timeout:Duration) {
   
   def deleteDoc[A](doc:RevedDocument[A]):OkResponse = await(d.deleteDoc(doc))
   
-  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc(id)) 
+  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc(id))
+  
+  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDoc(doc)) 
   
   def createDoc[A:RootJsonFormat](doc:NewDocument[A]):RevedDocument[A] = await(d.createDoc(doc))
   

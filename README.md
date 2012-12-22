@@ -30,7 +30,7 @@ Sbt
 ```scala
 resolvers += "sprouch repo" at "http://kimstebel.github.com/sprouch/repository"
 
-libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.3"
+libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.4"
 ```
 
 ### Scala 2.10 ###
@@ -38,7 +38,7 @@ libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.3"
 ```scala
 resolvers += "sprouch repo" at "http://kimstebel.github.com/sprouch/repository"
 
-libraryDependencies += "sprouch" % "sprouch_2.10.0-RC3" % "0.5.3"
+libraryDependencies += "sprouch" % "sprouch_2.10.0-RC3" % "0.5.4"
 ```
 
 Contribute!

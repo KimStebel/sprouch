@@ -85,6 +85,16 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   
   /**
+    * Retrives a document.
+    */
+  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
+    val p = pipeline[RevedDocument[A]](etag = Some(doc.rev))
+    p(Get(docUri(doc.id))).recover {
+      case SprouchException(e) if e.status == 304 => doc
+    }
+  }
+  
+  /**
     * Creates a new document with the id given in the doc parameter.
     */
   def createDoc[A:RootJsonFormat](doc:NewDocument[A]):Future[RevedDocument[A]] = {
