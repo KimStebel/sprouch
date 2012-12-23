@@ -77,7 +77,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   
   /**
-    * Retrives a document.
+    * Retrieves a document.
     */
   def getDoc[A:RootJsonFormat](id:String):Future[RevedDocument[A]] = {
     val p = pipeline[RevedDocument[A]]
@@ -85,7 +85,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   
   /**
-    * Retrives a document.
+    * Retrieves a document. If the document is still current, the document is not transmitted again and doc is returned.
     */
   def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
     val p = pipeline[RevedDocument[A]](etag = Some(doc.rev))
