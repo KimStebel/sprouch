@@ -24,6 +24,10 @@ object JsonProtocol extends DefaultJsonProtocol {
   trait Rev {
     val rev:String
   }
+  case class RevInfo(rev:String, status:String)
+  implicit val revInfoFormat = jsonFormat2(RevInfo)
+  case class RevsInfo(_revs_info:Seq[RevInfo])
+  implicit val revsInfoFormat = jsonFormat1(RevsInfo)
   implicit val nullFormat:JsonFormat[Null] = new JsonFormat[Null] {
     override def read(js:JsValue) = if (js == JsNull) null else throw new Exception("null expected")
     override def write(n:Null) = JsNull
