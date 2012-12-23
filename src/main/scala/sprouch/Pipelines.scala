@@ -86,9 +86,9 @@ private[sprouch] class Pipelines(config:Config) {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
-    logRequest ~>
+//  logRequest ~>
     sendReceive(conduit) ~>
-    logResponse ~>
+//  logResponse ~>
     unmarshalEither[A]
   }
   
