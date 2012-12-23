@@ -1,21 +1,12 @@
 package sprouch.synchronous
 
-import sprouch.Document
-import sprouch.RevedDocument
-import spray.json.RootJsonFormat
-import sprouch.JsonProtocol.OkResponse
-import sprouch.NewDocument
-import sprouch.Attachment
-import sprouch.Views
-import spray.json.JsonFormat
-import sprouch.ViewQueryFlag
-import sprouch.StaleOption
-import sprouch.StaleOption._
-import sprouch.JsonProtocol.ViewResponse
-import sprouch.JsonProtocol.AllDocsResponse
 import scala.concurrent.duration.Duration
 import scala.concurrent.Future
 import scala.concurrent.Await
+import spray.json.{JsonFormat, RootJsonFormat}
+import sprouch._
+import JsonProtocol._
+import StaleOption._
 
 /**
   * This is just a synchronous wrapper around sprouch.Database.
@@ -26,13 +17,15 @@ class Database private (d:sprouch.Database, timeout:Duration) {
   
   private def await[A](f:Future[A]) = Await.result(f, timeout) 
   
+  def revisions(doc:RevedDocument[_]):Seq[RevInfo] = await(d.revisions(doc))
+  
   def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]]):Seq[RevedDocument[A]] = await(d.bulkPut(docs)) 
   
   def delete():OkResponse = await(d.delete())
   
   def deleteDoc[A](doc:RevedDocument[A]):OkResponse = await(d.deleteDoc(doc))
   
-  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc(id))
+  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc[A](id))
   
   def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDoc(doc)) 
   

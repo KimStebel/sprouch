@@ -48,7 +48,16 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def allDocsUri(kvs:List[String]) = {
     path(name, "_all_docs") + query(kvs:_*)
   }
-  private def bulkUri:String = path(name, "_bulk_docs") 
+  private def bulkUri:String = path(name, "_bulk_docs")
+  private def revisionsUri(id:String) = docUri(id) + "?revs_info=true"
+  
+  /**
+   * Retrives old revisions of a document.
+   */
+  def revisions(doc:RevedDocument[_]):Future[Seq[RevInfo]] = {
+    val p = pipeline[RevsInfo]
+    p(Get(revisionsUri(doc.id))).map(_._revs_info)
+  }
   
   /**
     * Creates or updates Documents in Bulk.
