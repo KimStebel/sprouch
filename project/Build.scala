@@ -4,11 +4,11 @@ import Keys._
 object ApplicationBuild extends Build {
 
   val dependencies = Seq(
-    "org.scalatest" %% "scalatest" % "2.0.M5-B1" % "test",
+    "org.scalatest" % "scalatest_2.10.0-RC5" % "2.0.M5-B1",
     "io.spray" % "spray-can" % "1.1-M7",
     "io.spray" % "spray-client" % "1.1-M7",
-    "io.spray" %%  "spray-json" % "1.2.3",
-    "com.typesafe.akka" %% "akka-actor" % "2.1.0-RC6",
+    "io.spray" %  "spray-json_2.10.0-RC5" % "1.2.3",
+    "com.typesafe.akka" % "akka-actor_2.10.0-RC5" % "2.1.0-RC6",
     "com.novocode" % "junit-interface" % "0.10-M1" % "test"
   )
 
