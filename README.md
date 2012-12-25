@@ -18,7 +18,7 @@ Features
 
 Documentation
 -------------
-- Tutorial: http://sprouch.blogspot.de/2012/12/sprouch-tutorial-basics.html
+- Tutorial: http://sprouch.blogspot.com/
 - Scaladocs: http://kimstebel.github.com/sprouch/scaladoc/2.9.2/#package
 
 Sbt
