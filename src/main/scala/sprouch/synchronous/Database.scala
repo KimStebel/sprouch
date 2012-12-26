@@ -37,7 +37,7 @@ class Database private (d:sprouch.Database, timeout:Duration) {
   
   def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.updateDoc(doc)) 
   
-  def putAttachment[A](doc:RevedDocument[A], a:Attachment):RevedDocument[A] = await(d.putAttachment(doc, a))
+  def putAttachment[A:RootJsonFormat](doc:RevedDocument[A], a:Attachment):RevedDocument[A] = await(d.putAttachment(doc, a))
   
   def getAttachment(doc:Document[_], id:String):Attachment = await(d.getAttachment(doc, id)) 
   
