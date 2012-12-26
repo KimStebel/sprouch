@@ -21,7 +21,7 @@ import ViewQueryFlag._
   * Supports CRUD operations on documents and attachments,
   * creating and querying views, bulk get, update, and delete operations.  
   */
-class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
+class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder with AbstractDatabase {
   import pipelines._
   
   private def dbUri:String = dbUri(name)
@@ -71,7 +71,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Deletes the entire database.
     */
-  def delete() = {
+  def delete():Future[OkResponse] = {
     val p = pipeline[OkResponse]
     p(Delete(dbUri))
   }
