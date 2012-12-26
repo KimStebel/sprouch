@@ -1,7 +1,8 @@
 package sprouch
 
 import spray.json.RootJsonFormat
-import akka.dispatch.Future
+import scala.concurrent.Future
+
 package object dsl {
   implicit def dataToDslDoc[A:RootJsonFormat](data:A):DslNewDocument[A] = {
     new DslNewDocument(data)

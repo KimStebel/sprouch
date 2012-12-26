@@ -1,7 +1,7 @@
 package sprouch.dsl
 
 import sprouch._
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.RootJsonFormat
 import sprouch.JsonProtocol.OkResponse
 

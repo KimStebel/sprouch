@@ -10,6 +10,7 @@ import sprouch.dsl._
 @RunWith(classOf[JUnitRunner])
 class Dsl extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
   
   test("create, read, update, and delete docs with dsl") {
     withNewDb(implicit db => {
