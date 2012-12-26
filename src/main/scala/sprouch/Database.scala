@@ -137,9 +137,12 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Creates or updates an attachment.
     */
-  def putAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
+  def putAttachment[A:RootJsonFormat](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse]
-    p(Put(attachmentUriRev(doc, a.id), a.data)).map(cr => doc.setRev(cr.rev))
+    for {
+      _ <- p(Put(attachmentUriRev(doc, a.id), a.data))
+      doc2 <- getDoc[A](doc.id)
+    } yield doc2
   }
   
   /**
@@ -160,7 +163,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     */
   def deleteAttachment[A](doc:RevedDocument[A], aid:String):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse]
-    p(Delete(attachmentUriRev(doc, aid))).map(cr => doc.setRev(cr.rev))
+    p(Delete(attachmentUriRev(doc, aid))).map(cr => 
+      new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
   
   /**
