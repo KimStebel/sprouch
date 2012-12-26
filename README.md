@@ -1,17 +1,16 @@
-Sprouch
-=======
+Sprouch - Scala library for CouchDB/BigCouch
+============================================================
 
-Sprouch is an asynchronous Scala library for CouchDB/BigCouch based on Spray.
+Sprouch is an asynchronous CouchDB client based on Spray.
 
 Features
 --------
 
-- Support for Scala 2.9 and 2.10
+- Scala 2.9 and 2.10 supported
 - Tested with CouchDB and BigCouch/Cloudant
 - Asynchronous _and_ synchronous APIs
-- Connection via HTTP or HTTPS
-- Authorization via HTTP Basic Auth 
-- CRUD operations
+- Connection via HTTP or HTTPS, Authorization via HTTP Basic Auth 
+- CRUD operations on plain old Scala Classes
 - Javascript Views
 - Attachments
 - Bulk actions
@@ -19,7 +18,7 @@ Features
 
 Documentation
 -------------
-- Tutorial: http://sprouch.blogspot.de/2012/12/sprouch-tutorial-basics.html
+- Tutorial: http://sprouch.blogspot.com/
 - Scaladocs: http://kimstebel.github.com/sprouch/scaladoc/2.9.2/#package
 
 Sbt
