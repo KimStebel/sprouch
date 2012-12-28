@@ -18,7 +18,8 @@ trait CouchSuiteHelpers {
   
   implicit val actorSystem = ActorSystem("MySystem")
   val c = new Couch(Config(actorSystem, "localhost", 5984, None, false))
-  val testDuration = Duration("30 seconds")
+  val cSync = sprouch.synchronous.Couch(Config(actorSystem, "localhost", 5984, None, false))
+  implicit val testDuration = Duration("30 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   def assertGet[A](e:Either[_,A]):A = {
@@ -34,6 +35,14 @@ trait CouchSuiteHelpers {
       }
     }
     await(res)
+  }
+  
+  def withNewDbSync[A](f:sprouch.synchronous.Database => A):A = {
+  	val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
+    val db = cSync.createDb(dbName)
+    val res = f(db)
+    db.delete
+    res
   }
   
 }
