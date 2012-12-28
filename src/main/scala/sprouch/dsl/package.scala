@@ -9,10 +9,10 @@ package object dsl {
   implicit def dslDoc[A:RootJsonFormat](doc:RevedDocument[A]):DslRevedDocument[A] = {
     new DslRevedDocument(doc.id, doc.rev, doc.data, doc.attachments)
   }
-  def get[A](id:String)(implicit db:Database, rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
-    db.getDoc[A](id)
+  def get[A](id:String)(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
+    db.flatMap(_.getDoc[A](id))
   }
-  def get[A](doc:RevedDocument[A])(implicit db:Database, rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
-    db.getDoc[A](doc)
+  def get[A](doc:RevedDocument[A])(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
+    db.flatMap(_.getDoc[A](doc))
   }
 }

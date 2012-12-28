@@ -12,7 +12,7 @@ class Dsl extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   
   test("create, read, update, and delete docs with dsl") {
-    withNewDb(implicit db => {
+    withNewDbFuture(implicit dbf => {
       val data = Test(0, "")
       val data2 = Test(1, "")
       for {
@@ -33,7 +33,7 @@ class Dsl extends FunSuite with CouchSuiteHelpers {
     })
   }
   test("attachments with dsl") {
-    withNewDb(implicit db => {
+    withNewDbFuture(implicit dbf => {
       val data = Test(0, "")
       val attachmentData = Array[Byte](1,2,3,4)
       for {

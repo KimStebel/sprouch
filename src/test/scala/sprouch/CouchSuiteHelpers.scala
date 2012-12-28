@@ -37,6 +37,15 @@ trait CouchSuiteHelpers {
     await(res)
   }
   
+  def withNewDbFuture[A](f:Future[Database] => Future[A]):A = {
+    val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
+    val dbf = c.createDb(dbName)
+    val resf = f(dbf)
+    resf andThen { case _ => dbf.flatMap(_.delete()) }
+    await(resf)
+  }
+  
+  
   def withNewDbSync[A](f:sprouch.synchronous.Database => A):A = {
   	val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
     val db = cSync.createDb(dbName)
