@@ -37,7 +37,7 @@ libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.4"
 ```scala
 resolvers += "sprouch repo" at "http://kimstebel.github.com/sprouch/repository"
 
-libraryDependencies += "sprouch" % "sprouch_2.10.0-RC3" % "0.5.4"
+libraryDependencies += "sprouch" % "sprouch_2.10" % "0.5.5"
 ```
 
 Contribute!
