@@ -39,7 +39,6 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         keysRes <- db.queryView[String,Int]("my views", "sum", keys = List("a", "c"))
         rangeRes <- db.queryView[Null,Int]("my views", "sum", keyRange = Some("b" -> "c"))
         groupedRes2 <- db.queryView[String,Int]("my views", "sum", groupLevel = Some(1))
-    
       } yield {
         assert(queryRes.rows.head.value === sum)
         val expectedGrouped = data.groupBy(_.bar).map { case (k,v) => ViewRow(k, v.map(_.foo).sum) }
@@ -48,7 +47,6 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         assert(keysRes.rows.toSet === Set(ViewRow("a", 1), ViewRow("c", 7)))
         assert(rangeRes.rows.head.value === 9)
         assert(groupedRes === groupedRes2)
-   
       }
     })
   }
