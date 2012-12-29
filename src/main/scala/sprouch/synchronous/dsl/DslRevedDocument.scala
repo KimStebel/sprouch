@@ -3,8 +3,6 @@ package sprouch.synchronous.dsl
 import sprouch.synchronous._
 import spray.json.RootJsonFormat
 import sprouch.JsonProtocol.OkResponse
-import scala.concurrent.duration.Duration
-import scala.concurrent.Await
 import sprouch.{AttachmentStub, RevedDocument, Attachment}
 
 class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String, AttachmentStub]) 

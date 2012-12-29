@@ -1,7 +1,6 @@
 package sprouch.synchronous
 
 import spray.json.RootJsonFormat
-import scala.concurrent.Future
 import sprouch.RevedDocument
 
 package object dsl {

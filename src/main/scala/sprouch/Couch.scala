@@ -36,16 +36,16 @@ case class SprouchException(error:ErrorResponse) extends Exception
 class Couch(config:Config) extends UriBuilder {
   private val as = config.actorSystem
   import as.dispatcher
-	
-  private val myPipelines = new Pipelines(config)
-  private lazy val pipeline = myPipelines.pipeline[OkResponse]
-  private lazy val getDbPipeline = myPipelines.pipeline[GetDbResponse]
+  
+  private val pipelines = new Pipelines(config)
+  private lazy val pipeline = pipelines.pipeline[OkResponse]
+  private lazy val getDbPipeline = pipelines.pipeline[GetDbResponse]
   
   /**
    * Creates a new database. Fails if the database already exists.
    */
   def createDb(dbName:String):Future[Database] = {
-    pipeline(Put(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
+    pipeline(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
   /**
    * Deletes a database and all containing documents.
@@ -57,7 +57,7 @@ class Couch(config:Config) extends UriBuilder {
    * Looks up a database by its name.
    */
   def getDb(dbName:String):Future[Database] = {
-    getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, myPipelines))
+    getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
 
 }

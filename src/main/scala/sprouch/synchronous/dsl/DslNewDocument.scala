@@ -3,8 +3,6 @@ package sprouch.synchronous.dsl
 import sprouch.synchronous._
 import java.util.UUID
 import spray.json.RootJsonFormat
-import scala.concurrent.duration.Duration
-import scala.concurrent.Await
 import sprouch.NewDocument
 import sprouch.RevedDocument
 
