@@ -7,7 +7,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import scala.concurrent.Future
 
-@RunWith(classOf[JUnitRunner])
 class ViewsSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   
@@ -48,6 +47,34 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         assert(keysRes.rows.toSet === Set(ViewRow("a", 1), ViewRow("c", 7)))
         assert(rangeRes.rows.head.value === 9)
         assert(groupedRes === groupedRes2)
+      }
+    })
+  }
+test("map view") {
+    implicit val dispatcher = (actorSystem.dispatcher)
+        
+    withNewDb(db => {
+      val data = List(Test(foo=0, bar="a"),Test(1, "a"),Test(2, "b"), Test(3, "c"), Test(4, "c"))
+      val dataFutures = data.map(d => db.createDoc(d))
+      for {
+        docs <- Future.sequence(dataFutures)
+        sum = docs.map(_.data.foo).sum
+        mr = MapReduce(
+            map = """
+              function(doc) {
+                emit(doc.bar, doc.foo);
+              }
+            """,
+            reduce = None
+        )
+        viewsDoc = new NewDocument("my views", Views(Map("map" -> mr)))
+        view <- db.createViews(viewsDoc)
+        queryRes <- db.queryView[String,Int]("my views", "map",
+        		flags = ViewQueryFlag(descending = true, include_docs = true, reduce = false, group=false),
+        		limit = Some(10))
+      } yield {
+        assert(queryRes.rows.map(_.value).toSet === data.map(_.foo).toSet)
+      
       }
     })
   }
