@@ -16,6 +16,7 @@ import JsonProtocol._
 import spray.json.JsonFormat
 import StaleOption._
 import ViewQueryFlag._
+import scala.annotation.implicitNotFound
 
 /**
   * Supports CRUD operations on documents and attachments,

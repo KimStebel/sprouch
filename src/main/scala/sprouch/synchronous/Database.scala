@@ -7,12 +7,14 @@ import spray.json.{JsonFormat, RootJsonFormat}
 import sprouch._
 import JsonProtocol._
 import StaleOption._
+import scala.annotation.implicitNotFound
 
 /**
   * This is just a synchronous wrapper around sprouch.Database.
   * Please look there for documentation. All the methods are identical,
   * except that they return A instead of Future[A].  
   */
+@implicitNotFound("You need to get a database object first and store it in an implicit val.")
 class Database private (d:sprouch.Database, timeout:Duration) {
   
   private def await[A](f:Future[A]) = Await.result(f, timeout) 

@@ -14,5 +14,10 @@ class DslNewDocument[A:RootJsonFormat](id:String, data:A) extends NewDocument[A]
   
   def create(implicit db:Future[Database]):Future[RevedDocument[A]] = db.flatMap(_.createDoc(data))  
   def create(id:String)(implicit db:Future[Database]):Future[RevedDocument[A]] = db.flatMap(_.createDoc(id, data))
+}
 
+class DslNewDocSeq[A:RootJsonFormat](data:Seq[A]) {
+  def create(implicit db:Future[Database]):Future[Seq[RevedDocument[A]]] = {
+    db.flatMap(_.bulkPut(data.map(new NewDocument(_))))
+  }
 }
