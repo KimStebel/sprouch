@@ -207,7 +207,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     val flagsWithImplicitGroup:Set[ViewQueryFlag] = flags ++ Set(group).filter(_ => !keys.isEmpty)
     val kvs = 
       flagsWithImplicitGroup.toList.map(f => keyValue(f.toString)(true)) ++
-      ViewQueryFlag.all.diff(flagsWithImplicitGroup).toList.map(f => keyValue(f.toString)(false)) ++ 
+      (ViewQueryFlag.all -- Set(group).filter(_ => !flags.contains(reduce))).diff(flagsWithImplicitGroup).toList.map(f => keyValue(f.toString)(false)) ++ 
       List(
         key.map(keyValue("key")),
         Option(keys).filter(!_.isEmpty).map(keyValue("keys")),
