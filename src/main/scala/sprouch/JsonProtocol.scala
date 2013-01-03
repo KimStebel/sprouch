@@ -34,9 +34,15 @@ object JsonProtocol extends DefaultJsonProtocol {
   }
   implicit val mapReduceFormat = jsonFormat2(MapReduce)
   implicit val viewsFormat = jsonFormat1(Views)
-  case class ViewRow[K,V](key:K, value:V)
-  implicit def viewRowFormat[K:JsonFormat,V:JsonFormat] = jsonFormat2(ViewRow[K,V])
-  case class ViewResponse[K,V](rows:List[ViewRow[K,V]])
+  case class ViewRow[K,V](key:K, value:V, doc:Option[JsValue]) {
+    def docAs[A:JsonFormat] = doc.map(implicitly[JsonFormat[A]].read)
+  }
+  implicit def viewRowFormat[K:JsonFormat,V:JsonFormat] = jsonFormat3(ViewRow[K,V])
+  case class ViewResponse[K,V](rows:List[ViewRow[K,V]]) {
+    def docs[A:JsonFormat] = rows.flatMap(_.docAs[A])
+    def values = rows.map(_.value)
+    def keys = rows.map(_.key)
+  }
   implicit def viewResponseFormat[K:JsonFormat,V:JsonFormat] = jsonFormat1(ViewResponse[K,V])
   implicit val attachmentStubFormat = jsonFormat3(AttachmentStub)
   case class Revision(rev:String)
@@ -162,6 +168,17 @@ object JsonProtocol extends DefaultJsonProtocol {
   
   case class BulkPut[A](docs:Seq[Document[A]])
   implicit def bulkPutFormat[A:RootJsonFormat] = jsonFormat1(BulkPut[A])
+  
+  implicit val nothingFormat = new JsonFormat[Nothing] {
+    def read(js:JsValue) = throw new Exception("fields of type nothing should never be used")
+    def write(n:Nothing) = throw new Exception("fields of type nothing should never be used")
+  }
+  implicit def toJsValue[A:JsonFormat](a:A) = implicitly[JsonFormat[A]].write(a)
+  implicit def pairToJsPair[A:JsonFormat](ap:(A,A)) = {
+    val f = implicitly[JsonFormat[A]]
+    (f.write(ap._1),f.write(ap._2))
+  }
+  
 }
 
 

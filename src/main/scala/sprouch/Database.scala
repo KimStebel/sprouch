@@ -17,6 +17,7 @@ import spray.json.JsonFormat
 import StaleOption._
 import ViewQueryFlag._
 import scala.annotation.implicitNotFound
+import spray.json.JsValue
 
 /**
   * Supports CRUD operations on documents and attachments,
@@ -196,7 +197,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       flags:Set[ViewQueryFlag] = ViewQueryFlag.default,
       key:Option[String] = None,
       keys:List[String] = Nil,
-      keyRange:Option[(String,String)] = None,
+      keyRange:Option[(JsValue, JsValue)] = None,
       keyDocIdRange:Option[(String,String)] = None,
       limit:Option[Int] = None,
       skip:Option[Int] = None,

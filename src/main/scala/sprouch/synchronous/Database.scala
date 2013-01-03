@@ -8,6 +8,7 @@ import sprouch._
 import JsonProtocol._
 import StaleOption._
 import scala.annotation.implicitNotFound
+import spray.json.JsValue
 
 /**
   * This is just a synchronous wrapper around sprouch.Database.
@@ -55,7 +56,7 @@ class Database private (d:sprouch.Database, timeout:Duration) {
       flags:Set[ViewQueryFlag] = ViewQueryFlag.default,
       key:Option[String] = None,
       keys:List[String] = Nil,
-      keyRange:Option[(String,String)] = None,
+      keyRange:Option[(JsValue,JsValue)] = None,
       keyDocIdRange:Option[(String,String)] = None,
       limit:Option[Int] = None,
       skip:Option[Int] = None,
