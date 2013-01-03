@@ -20,7 +20,7 @@ Documentation
 -------------
 - Tutorials: http://sprouch.blogspot.com/
 - Scaladocs: http://kimstebel.github.com/sprouch/scaladoc/2.9.2/#package
-- For json serialization, Sprouch uses https://github.com/spray/spray-json
+- For json serialization Sprouch uses https://github.com/spray/spray-json
 
 Sbt
 ---
@@ -30,7 +30,7 @@ Sbt
 ```scala
 resolvers += "sprouch repo" at "http://kimstebel.github.com/sprouch/repository"
 
-libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.5"
+libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.7"
 ```
 
 ### Scala 2.10 ###
@@ -38,7 +38,7 @@ libraryDependencies += "sprouch" % "sprouch_2.9.2" % "0.5.5"
 ```scala
 resolvers += "sprouch repo" at "http://kimstebel.github.com/sprouch/repository"
 
-libraryDependencies += "sprouch" % "sprouch_2.10" % "0.5.5"
+libraryDependencies += "sprouch" % "sprouch_2.10" % "0.5.7"
 ```
 
 Contribute!
