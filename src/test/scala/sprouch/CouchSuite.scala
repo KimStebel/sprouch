@@ -61,7 +61,7 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
       }).foreach(f => {
         Await.result(f, testDuration)
       })
-      db.allDocs[Empty.type](keyRange = Some(("12345", "12346")))
+      db.allDocs[Empty.type](startKey = Some("12345"), endKey = Some("12346"))
     })
     assert(res.rows.size === 20)
   }
