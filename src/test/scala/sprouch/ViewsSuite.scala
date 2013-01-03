@@ -38,7 +38,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         groupedRes <- db.queryView[String,Int]("my views", "sum", flags = ViewQueryFlag(group = true))
         keyRes <- db.queryView[Null,Int]("my views", "sum", key = Some("a"))
         keysRes <- db.queryView[String,Int]("my views", "sum", keys = List("a", "c"))
-        rangeRes <- db.queryView[Null,Int]("my views", "sum", keyRange = Some("b" -> "c"))
+        rangeRes <- db.queryView[Null,Int]("my views", "sum", startKey = Some("b"), endKey = Some("c"))
         groupedRes2 <- db.queryView[String,Int]("my views", "sum", groupLevel = Some(1))
       } yield {
         assert(queryRes.rows.head.value === sum)
@@ -104,7 +104,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         viewsDoc = new NewDocument("my views", Views(Map("map" -> mr)))
         view <- db.createViews(viewsDoc)
         queryRes <- db.queryView[(String,Int),Int]("my views", "map",
-            flags = ViewQueryFlag(reduce = false, group=false), keyRange = Some(("a" -> 0) -> ("c" -> 4)))
+            flags = ViewQueryFlag(reduce = false, group=false), startKey = Some(("a" -> 0)), endKey = Some("c" -> 4))
       } yield {
         assert(queryRes.keys.toSet === data.map(d => d.bar -> d.foo).toSet)
         assert(queryRes.values.toSet === data.map(_.foo).toSet)
