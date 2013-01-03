@@ -5,6 +5,7 @@ import scala.concurrent.Future
 import spray.json.RootJsonFormat
 import sprouch.JsonProtocol.OkResponse
 import scala.concurrent.ExecutionContext
+import sprouch.JsonProtocol.AllDocsResponse
 
 class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String, AttachmentStub]) 
   extends RevedDocument[A](id, rev, data, attachments) {
@@ -21,4 +22,14 @@ class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String,
   def attachment(id:String)(implicit db:Future[Database], executionContext:ExecutionContext):Future[Attachment] = db.flatMap(_.getAttachment(this, id))
   def deleteAttachment(id:String)(implicit db:Future[Database], executionContext:ExecutionContext):Future[RevedDocument[A]] =
     db.flatMap(_.deleteAttachment(this, id))
+  def get(implicit db:Future[Database], rjf:RootJsonFormat[A], ec:ExecutionContext):Future[RevedDocument[A]] = db.flatMap(_.getDoc[A](this))
+}
+
+class DslRevedDocSeq[A:RootJsonFormat](data:Seq[RevedDocument[A]]) {
+  def update(implicit db:Future[Database], ec:ExecutionContext):Future[Seq[RevedDocument[A]]] = {
+    db.flatMap(_.bulkPut(data))
+  }
+  def get(implicit db:Future[Database], ec:ExecutionContext):Future[AllDocsResponse[A]] = {
+    db.flatMap(_.allDocs[A](keys = data.map(_.id)))
+  }
 }
