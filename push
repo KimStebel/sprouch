@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./update-repository-index &&
+git add . &&
+git commit -m 'added new version' &&
+git push
