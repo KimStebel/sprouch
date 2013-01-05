@@ -6,6 +6,7 @@ if [ -n "$version" ]; then
     sed -i "s/(version := \".*\")/(version := \"$version\")/" $buildFile &&
     git add $buildFile &&
     git commit -m "$version" &&
+    git push origin master &&
     sbt publish
 else
     echo "version argument missing"
