@@ -101,5 +101,22 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
         assert(gottenDoc.data.bar == "bar")
       }
     })
-  } 
+  }
+  
+  test("getDoc with nonexistant id") {
+    import sprouch.dsl.enhanceFuture
+    withNewDb(implicit db => {
+      for {
+        doc <- db.getDoc[Test]("nope").either
+        doc2 <- db.getDoc[Test]("nope").option
+      } yield {
+        assert(doc.isLeft)
+        assert(doc.left.get match {
+          case se:SprouchException => se.error.status == 404
+          case _ => false
+        })
+        assert(doc2.isEmpty)
+      }
+    })
+  }
 }

@@ -24,5 +24,17 @@ package object dsl {
   def get[A](doc:RevedDocument[A])(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
     db.flatMap(_.getDoc[A](doc))
   }
-  
+  class EnhancedFuture[A](f:Future[A]) {
+    def either = {
+      f.map(Right(_)).recover {
+        case e:Exception => Left(e)
+      }
+    }
+    def option = {
+      f.map(Some(_)).recover {
+        case e:Exception => None
+      }
+    }
+  }
+  implicit def enhanceFuture[A](f: Future[A]) = new EnhancedFuture(f) 
 }
