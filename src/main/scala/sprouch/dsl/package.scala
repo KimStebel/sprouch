@@ -30,5 +30,17 @@ package object dsl {
       		      executionContext:ExecutionContext):Future[RevedDocument[A]] = {
     db.flatMap(_.getDoc[A](doc))
   }
-  
+  class EnhancedFuture[A](f:Future[A]) {
+    def either(implicit ec:ExecutionContext) = {
+      f.map(Right(_)).recover {
+        case e:Exception => Left(e)
+      }
+    }
+    def option(implicit ec:ExecutionContext) = {
+      f.map(Some(_)).recover {
+        case e:Exception => None
+      }
+    }
+  }
+  implicit def enhanceFuture[A](f: Future[A]) = new EnhancedFuture(f) 
 }
