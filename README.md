@@ -22,6 +22,11 @@ Documentation
 - Scaladocs: http://kimstebel.github.com/sprouch/scaladoc/2.9.2/#package
 - For json serialization Sprouch uses https://github.com/spray/spray-json
 
+Mailing list
+------------
+
+https://groups.google.com/forum/?fromgroups#!forum/sprouch
+
 Sbt
 ---
 
