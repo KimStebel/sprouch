@@ -1,0 +1,12 @@
+#!/bin/bash
+
+version="$1"
+buildFile="project/Build.scala"
+if [ -n "$version" ]; then
+    sed -i "s/(version := \".*\")/(version := \"$version\")/" $buildFile &&
+    git add $buildFile &&
+    git commit -m "$version" &&
+    sbt publish
+else
+    echo "version argument missing"
+fi
