@@ -3,10 +3,14 @@
 version="$1"
 buildFile="project/Build.scala"
 if [ -n "$version" ]; then
+    branchName="$(git symbolic-ref HEAD 2>/dev/null)" &&
+    branchName=${branch_name##refs/heads/} &&
     sed -i "s/(version := \".*\")/(version := \"$version\")/" $buildFile &&
+    sed -i "s/\% \"[^\"]*\"$/% \"$version\"/" README.md &&
     git add $buildFile &&
-    git commit -m "$version" &&
-    git push origin master &&
+    git add README.md &&
+    git commit -m "v$version" &&
+    git push origin $branchName &&
     sbt publish
 else
     echo "version argument missing"
