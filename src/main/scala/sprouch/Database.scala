@@ -229,7 +229,6 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
         designDocId,
         viewName,
         kvs)
-    println("URI: " + uri)
     p(Get(uri))
   }
   
