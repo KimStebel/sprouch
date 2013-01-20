@@ -14,6 +14,9 @@ class DslNewDocument[A:RootJsonFormat](id:String, data:A) extends NewDocument[A]
   
   def create(implicit db:Future[Database]):Future[RevedDocument[A]] = db.flatMap(_.createDoc(data))  
   def create(id:String)(implicit db:Future[Database]):Future[RevedDocument[A]] = db.flatMap(_.createDoc(id, data))
+  def createViews(implicit db:Future[Database], ev:A <:< Views):Future[RevedDocument[Views]] = {
+    db.flatMap(_.createViews(this.asInstanceOf[NewDocument[Views]])) //cast will always work due to evidence parameter
+  }
 }
 
 class DslNewDocSeq[A:RootJsonFormat](data:Seq[A]) {
