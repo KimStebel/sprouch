@@ -5,6 +5,7 @@ import akka.dispatch.Future
 import spray.json.RootJsonFormat
 import sprouch.JsonProtocol.OkResponse
 import sprouch.JsonProtocol.AllDocsResponse
+import spray.json.JsonFormat
 
 class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String, AttachmentStub]) 
   extends RevedDocument[A](id, rev, data, attachments) {

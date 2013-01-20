@@ -32,7 +32,7 @@ object JsonProtocol extends DefaultJsonProtocol {
     override def read(js:JsValue) = if (js == JsNull) null else throw new Exception("null expected")
     override def write(n:Null) = JsNull
   }
-  implicit val mapReduceFormat = jsonFormat2(MapReduce)
+  implicit val mapReduceFormat = jsonFormat2((map:String, reduce:Option[String])=>MapReduce(map, reduce))
   implicit val viewsFormat = jsonFormat1(Views)
   case class ViewRow[K,V](key:K, value:V, doc:Option[JsValue]) {
     def docAs[A:JsonFormat] = doc.map(implicitly[JsonFormat[A]].read)

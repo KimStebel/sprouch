@@ -44,6 +44,11 @@ class RevedDocument[+A](
   def updateData[B](f:A=>B) = new RevedDocument(id, rev, f(data), attachments)
   def revOpt = Some(rev)
 }
+object RevedDocument {
+  def apply[A](id:String, rev:String, data:A, attachments:Map[String,AttachmentStub] = Map()) =
+    new RevedDocument(id, rev, data, attachments)
+}
+
 /**
  * @see sprouch.Document[A]
  */
@@ -52,11 +57,21 @@ class NewDocument[+A](val id:String, val data:A, val attachments:Map[String,Atta
   def this(data:A) = this(UUID.randomUUID.toString, data, Map())
   def revOpt = None
 }
+object NewDocument {
+  def apply[A](id:String, data:A, attachments:Map[String,AttachmentStub]):NewDocument[A] =
+    new NewDocument(id, data, attachments)
+  def apply[A](id:String, data:A):NewDocument[A] = apply(id, data, Map())
+  def apply[A](data:A):NewDocument[A] = apply(UUID.randomUUID.toString, data, Map())
+}
   
 /**
  * Class that holds the javascript functions for a view.
  */
 case class MapReduce(map:String, reduce:Option[String])
+object MapReduce {
+  def apply(map:String):MapReduce = MapReduce(map, None)
+  def apply(map:String, reduce:String):MapReduce = MapReduce(map, Some(reduce))
+}
 /**
  * Class that holds the views of a view document.
  */
