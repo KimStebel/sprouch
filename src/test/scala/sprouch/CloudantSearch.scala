@@ -12,7 +12,7 @@ import spray.json.JsValue
 class CloudantSearch extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   
-  test("create indexes") {
+  test("lucene based search") {
     implicit val dispatcher = (actorSystem.dispatcher)
         
     withNewDb("db")(db => {
@@ -38,7 +38,7 @@ class CloudantSearch extends FunSuite with CouchSuiteHelpers {
         
       } yield {
         val expectedIds = docs.filter(_.data.bar.startsWith("b")).map(_.id).toSet 
-        //assert(queryRes.rows.map(_.id).toSet === expectedIds)
+        assert(queryRes.rows.map(_.id).toSet === expectedIds)
       }
     })
   }
