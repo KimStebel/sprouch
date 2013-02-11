@@ -33,7 +33,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def attachmentUriRev(doc:RevedDocument[_], aid:String):String =
     attachmentUri(doc, aid) + "?rev=" + doc.rev
   private def attachmentUri(doc:Document[_], aid:String) = docUri(doc) + sep + encode(aid)
-  private def viewsUri(views:Document[Views]) = path(name, "_design", views.id)
+  private def viewsUri(views:Document[_]) = path(name, "_design", views.id)
   private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) = key + "=" + encode(aFormat.write(value).toString)
   private def query(kv:String*) = {
     if (kv.isEmpty) "" else {
@@ -46,6 +46,11 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       kvs:List[String]) = {
     path(name, "_design", designDocId, "_view", viewName) + query(kvs:_*)
   }
+  private def searchUri(designDocId:String, indexerName:String, q:String):String = {
+    val kv = "q=" + q
+    path(name, "_design", designDocId, "_search", indexerName) + query(kv)
+  }
+  
   private def allDocsUri(kvs:List[String]) = {
     path(name, "_all_docs") + query(kvs:_*)
   }
@@ -169,6 +174,12 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
   
+  def createIndexes(indexes:NewDocument[Indexes], dl:DocLogger = NopLogger):Future[RevedDocument[Indexes]] = {
+    val p = pipeline[CreateResponse](docLogger = dl)
+    val response = p(Put(viewsUri(indexes), indexes))
+    response.map(cr => indexes.setRev(cr.rev))
+  }
+  
   /**
     * Creates a view document containing one or more views. See the Views class for details.
     */
@@ -176,6 +187,12 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     val p = pipeline[CreateResponse]
     val response = p(Put(viewsUri(views), views))
     response.map(cr => views.setRev(cr.rev))
+  }
+  
+  def search(designDocId:String, indexerName:String, query:String, docLogger:DocLogger = NopLogger):Future[SearchResponse] = {
+    val p = pipeline[SearchResponse](docLogger = docLogger)
+    p(Get(searchUri(designDocId, indexerName, query)))
+    
   }
   
   /**

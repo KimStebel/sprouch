@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
     "com.novocode" % "junit-interface" % "0.10-M1" % "test"
   )
 
-  val main = Project(id = "sprouch", base = new File("."), settings = Project.defaultSettings ++ Seq(
+  val main = Project(id = "sprouch-cloudant", base = new File("."), settings = Project.defaultSettings ++ Seq(
     (scalaVersion := "2.9.2"),
     (libraryDependencies ++= dependencies),
     (resolvers ++= Seq(

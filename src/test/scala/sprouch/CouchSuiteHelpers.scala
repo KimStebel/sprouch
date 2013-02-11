@@ -17,9 +17,10 @@ trait CouchSuiteHelpers {
   implicit val testFormat = jsonFormat2(Test)
   
   implicit val actorSystem = ActorSystem("MySystem")
-  val c = new Couch(Config(actorSystem, "localhost", 5984, None, false))
-  val cSync = sprouch.synchronous.Couch(Config(actorSystem, "localhost", 5984, None, false))
-  implicit val testDuration = Duration("30 seconds")
+  private val conf = Config(actorSystem, "kimstebel.cloudant.com", 80, Some("kimstebel" -> "lse72438"), false) 
+  val c = new Couch(conf)
+  val cSync = sprouch.synchronous.Couch(conf)
+  implicit val testDuration = Duration("60 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   def assertGet[A](e:Either[_,A]):A = {
@@ -29,12 +30,15 @@ trait CouchSuiteHelpers {
   
   def withNewDb[A](f:Database => Future[A]):A = {
     val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
-    val res = c.createDb(dbName) flatMap {
-      db => {
-        f(db) andThen { case _ => db.delete() }
-      }
-    }
-    await(res)
+    withNewDb(dbName)(f)
+  }
+  
+  def withNewDb[A](name:String)(f:Database => Future[A]):A = {
+    await(for {
+      del <- c.deleteDb(name) recover { case _ => }
+      db <- c.createDb(name)
+      res <- f(db) andThen { case _ => db.delete() }
+    } yield (res))
   }
   
   def withNewDbFuture[A](f:Future[Database] => Future[A]):A = {

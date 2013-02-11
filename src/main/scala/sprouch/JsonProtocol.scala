@@ -24,6 +24,12 @@ object JsonProtocol extends DefaultJsonProtocol {
   trait Rev {
     val rev:String
   }
+  
+  case class Index(index:String)
+  implicit val indexFormat = jsonFormat1(Index)
+  case class Indexes(indexes:Map[String,Index])
+  implicit val indexesFormat = jsonFormat1(Indexes)
+
   case class RevInfo(rev:String, status:String)
   implicit val revInfoFormat = jsonFormat2(RevInfo)
   case class RevsInfo(_revs_info:Seq[RevInfo])
@@ -178,6 +184,12 @@ object JsonProtocol extends DefaultJsonProtocol {
     val f = implicitly[JsonFormat[A]]
     (f.write(ap._1),f.write(ap._2))
   }
+  
+  case class SearchResultRow(id:String, order:Seq[Int], fields:JsValue)
+  implicit val searchResultRowFormat = jsonFormat3(SearchResultRow)
+  case class SearchResponse(total_rows:Int, bookmark:String, rows:Seq[SearchResultRow])
+  implicit val searchResponseFormat = jsonFormat3(SearchResponse)
+  
   
 }
 

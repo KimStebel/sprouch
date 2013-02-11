@@ -55,7 +55,7 @@ class Couch(config:Config) extends UriBuilder {
   /**
    * Looks up a database by its name.
    */
-  def getDb(dbName:String):Future[Database] = {
+  def getDb(dbName:String, docLogger:DocLogger = NopLogger):Future[Database] = {
     getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
 

@@ -14,13 +14,8 @@ import spray.json._
 import spray.util._
 import java.util.UUID
 import akka.event.Logging
-import akka.actor.Actor
-import akka.actor.Props
-import akka.event.Logging
-import sprouch.JsonProtocol.ErrorResponseBody
-import sprouch.JsonProtocol.ErrorResponse
-import spray.io.IOBridge
-import spray.io.IOExtension
+import sprouch.JsonProtocol.{ErrorResponseBody, ErrorResponse}
+import spray.io.{IOBridge, IOExtension}
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
@@ -58,9 +53,9 @@ private[sprouch] class Pipelines(config:Config) {
     log.info(r.toString + "\n")
     r
   }  
-  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A](None)
+  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A]()
   
-  def pipeline[A:Unmarshaller](etag:Option[String]): HttpRequest => Future[A] = {
+  def pipeline[A:Unmarshaller](etag:Option[String] = None, docLogger:DocLogger = NopLogger): HttpRequest => Future[A] = {
     def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
       hr => (hr match {
         case HttpResponse(status, _, _, _) if status.value == 304 => {//not modified
@@ -86,9 +81,9 @@ private[sprouch] class Pipelines(config:Config) {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
-//  logRequest ~>
+    ((r:HttpRequest) => { docLogger.logRequest(r); r }) ~>
     sendReceive(conduit) ~>
-//  logResponse ~>
+    ((r:HttpResponse) => { docLogger.logResponse(r); r }) ~>
     unmarshalEither[A]
   }
   
