@@ -33,7 +33,7 @@ object JsonProtocol extends DefaultJsonProtocol {
     override def write(n:Null) = JsNull
   }
   implicit val mapReduceFormat = jsonFormat2((map:String, reduce:Option[String])=>MapReduce(map, reduce))
-  implicit val viewsFormat = jsonFormat1(Views)
+  implicit val viewsFormat = jsonFormat2(Views)
   case class ViewRow[K,V](key:K, value:V, doc:Option[JsValue]) {
     def docAs[A:JsonFormat] = doc.map(implicitly[JsonFormat[A]].read)
   }
@@ -107,7 +107,7 @@ object JsonProtocol extends DefaultJsonProtocol {
       
     }
     
-  } 
+  }
   
   abstract class DocFormat[A:RootJsonFormat, B <: Document[A]] extends RootJsonFormat[B] {
     
@@ -155,13 +155,13 @@ object JsonProtocol extends DefaultJsonProtocol {
     }
     override def makeB(fields:Map[String,JsValue], id:String, data:A, attachments:Map[String,AttachmentStub]) = {
       val stringFormat = implicitly[JsonFormat[String]]
-      val _rev = stringFormat.read(fields("_rev"))    
+      val _rev = stringFormat.read(fields("_rev"))
       new RevedDocument(id, _rev, data, attachments)
     }
   }
   class NewDocFormat[A:RootJsonFormat] extends DocFormat[A,NewDocument[A]] {
     override def otherFields(doc:NewDocument[A]) = Map()
-    override def makeB(fields:Map[String,JsValue], id:String, data:A, attachments:Map[String,AttachmentStub]) = 
+    override def makeB(fields:Map[String,JsValue], id:String, data:A, attachments:Map[String,AttachmentStub]) =
       new NewDocument(id, data, attachments)
     
   }

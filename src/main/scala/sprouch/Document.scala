@@ -12,7 +12,7 @@ import java.util.UUID
  *  NewDocument is only used for documents that have not been stored to CouchDB yet.
  *  Often, you don't need to use this type directly. All methods that return documents stored in CouchDb return instances of
  *  RevedDocument.
- *  
+ *
  *  @tparam A The type of the data contained in the document.
  */
 sealed trait Document[+A] extends Id {
@@ -39,7 +39,7 @@ class RevedDocument[+A](
     val attachments:Map[String,AttachmentStub]
 ) extends Document[A] with Rev {
   /**
-   * Creates a new Document[B] by applying f to the data field. 
+   * Creates a new Document[B] by applying f to the data field.
    */
   def updateData[B](f:A=>B) = new RevedDocument(id, rev, f(data), attachments)
   def revOpt = Some(rev)
@@ -75,4 +75,4 @@ object MapReduce {
 /**
  * Class that holds the views of a view document.
  */
-case class Views(views:Map[String,MapReduce])
+case class Views(views:Map[String,MapReduce], language:String = "javascript")

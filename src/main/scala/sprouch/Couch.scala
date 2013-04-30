@@ -21,7 +21,7 @@ import scala.concurrent.Future
 private[sprouch] trait UriBuilder {
   protected[this] def sep = "/"
   protected[this] def encode(s:String) = urlEncode(s, "UTF-8") 
-  protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)  
+  protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)
   protected[this] def dbUri(dbName:String) = path(dbName)
 }
 

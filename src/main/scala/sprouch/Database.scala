@@ -29,10 +29,10 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   
   private def dbUri:String = dbUri(name)
   private def docUri(doc:Document[_]):String = docUri(doc.id)
-  private def docUri(id:String) = path(name, id)
-  private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "?rev=" + doc.rev
+  private def docUri(id:String) = path(name, id) + "?w=3"
+  private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "&rev=" + doc.rev
   private def attachmentUriRev(doc:RevedDocument[_], aid:String):String =
-    attachmentUri(doc, aid) + "?rev=" + doc.rev
+    attachmentUri(doc, aid) + "&rev=" + doc.rev
   private def attachmentUri(doc:Document[_], aid:String) = docUri(doc) + sep + encode(aid)
   private def viewsUri(views:Document[Views]) = path(name, "_design", views.id)
   private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) = key + "=" + encode(aFormat.write(value).toString)
