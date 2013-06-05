@@ -24,7 +24,8 @@ object JsonProtocol extends DefaultJsonProtocol {
   trait Rev {
     val rev:String
   }
-  
+  case class ApiKeyResponse(ok:Boolean, key:String, password:String)
+  implicit val apiKeyResponseFormat = jsonFormat3(ApiKeyResponse)
   case class Index(index:String)
   implicit val indexFormat = jsonFormat1(Index)
   case class Indexes(indexes:Map[String,Index])
@@ -53,7 +54,7 @@ object JsonProtocol extends DefaultJsonProtocol {
   implicit val attachmentStubFormat = jsonFormat3(AttachmentStub)
   case class Revision(rev:String)
   implicit val revisionFormat = jsonFormat1(Revision)
-  case class AllDocsRow[A](id:String, key:String, value:Revision, doc:A)
+  case class AllDocsRow[A](id:String, key:String, value:Revision, doc:Option[A])
   implicit def allDocsRowFormat[A:RootJsonFormat] = jsonFormat4(AllDocsRow[A])
   case class AllDocsResponse[A](total_rows:Int, offset:Int, rows:Seq[AllDocsRow[A]])
   implicit def allDocsResponseFormat[A:RootJsonFormat] = jsonFormat3(AllDocsResponse[A])

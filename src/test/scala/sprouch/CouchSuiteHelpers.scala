@@ -6,6 +6,8 @@ import akka.util.Duration
 import akka.dispatch.Await
 import akka.dispatch.Future
 import java.util.UUID
+import sprouch.json.Schema
+import spray.json.JsonParser
 
 case class Test(foo:Int, bar:String)
 
@@ -16,8 +18,18 @@ trait CouchSuiteHelpers {
   
   implicit val testFormat = jsonFormat2(Test)
   
+  case class Person(name:String, age:Int, gender:String)
+  implicit val personFormat = jsonFormat3(Person)
+  val personSchema = Schema.complexSchemaFormat.read(JsonParser("""
+  {
+    "name": { "type": "name" },
+    "age": { "type": "int", "min": 18, "max": 120 },
+    "gender": { "type": "choice", "values": ["male", "female"] }
+  }"""))
+  def randomPerson() = personFormat.read(personSchema.generate())
+  
   implicit val actorSystem = ActorSystem("MySystem")
-  private val conf = Config(actorSystem, "kimstebel.cloudant.com", 80, Some("kimstebel" -> "lse72438"), false) 
+  private val conf = Config(actorSystem, "kimstebel.cloudant.com", 443, Some("kimstebel" -> "lse72438"), true) 
   val c = new Couch(conf)
   val cSync = sprouch.synchronous.Couch(conf)
   implicit val testDuration = Duration("60 seconds")
@@ -27,6 +39,8 @@ trait CouchSuiteHelpers {
     assert(e.isRight, e)
     e.right.get
   }
+  
+  def ignoreFailure[A](f: =>Future[A]) = f recover { case _ => } 
   
   def withNewDb[A](f:Database => Future[A]):A = {
     val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
@@ -48,6 +62,13 @@ trait CouchSuiteHelpers {
     resf andThen { case _ => dbf.flatMap(_.delete()) }
     await(resf)
   }
+  
+  def withNewDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
+    _ <- c.deleteDb(dbName) recover { case _ => }
+    dbf = c.createDb(dbName)
+    res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
+  } yield res)
+  
   
   
   def withNewDbSync[A](f:sprouch.synchronous.Database => A):A = {

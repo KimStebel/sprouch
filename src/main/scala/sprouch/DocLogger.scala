@@ -28,22 +28,33 @@ case class SphinxDocLogger(fileName:String) extends DocLogger {
     out.newLine()
     import spray.json._
     if (!m.entity.isEmpty) {
-      out.write(".. code-block:: javascript")
-      out.newLine(); out.newLine()
-      val entityStr = m.entity.asString.asJson.prettyPrint.split("\\n").map("    " +).mkString("\n")
-      out.write(entityStr)
-      out.newLine()
+      val reqResp = m match {
+        case _:HttpRequest => "request"
+        case _:HttpResponse => "response"
+      }
+      withWriter(fileName + "-" + reqResp + "-body.inc", append = false)(out => {
+        out.write(".. code-block:: javascript")
+        out.newLine(); out.newLine()
+        val entityStr = try {
+          m.entity.asString.asJson.prettyPrint.split("\\n").map("    " +).mkString("\n") 
+        } catch {
+          case pe:org.parboiled.errors.ParsingException => 
+            m.entity.asString.split("\\n").map("    " +).mkString("\n")
+        }
+        out.write(entityStr)
+        out.newLine()
+      })
     }
     
   }
-  override def logRequest(req:HttpRequest) = withWriter(fileName + "-request.inc", append=false)(out => {
+  override def logRequest(req:HttpRequest) = withWriter(fileName + "-request-headers.inc", append=false)(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
-    out.write("    " + req.method + " " + req.uri)
+    out.write("    " + req.method + " " + req.uri + " " + req.protocol)
     out.newLine()
     writeMessage(out, req)
   })
-  override def logResponse(resp:HttpResponse) = withWriter(fileName + "-response.inc", append=false)(out => {
+  override def logResponse(resp:HttpResponse) = withWriter(fileName + "-response-headers.inc", append=false)(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     out.write("    " + resp.status.value + " " + resp.status.reason)

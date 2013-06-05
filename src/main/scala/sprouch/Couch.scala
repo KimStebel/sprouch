@@ -16,8 +16,8 @@ import spray.util._
 import java.util.UUID
 import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
-
 import JsonProtocol._
+import akka.dispatch.ExecutionContext
 
 private[sprouch] trait UriBuilder {
   protected[this] def sep = "/"
@@ -36,9 +36,38 @@ case class SprouchException(error:ErrorResponse) extends Exception
  */
 class Couch(config:Config) extends UriBuilder {
   
-  private val pipelines = new Pipelines(config)
+  val pipelines = new Pipelines(config)
   private lazy val pipeline = pipelines.pipeline[OkResponse]
   private lazy val getDbPipeline = pipelines.pipeline[GetDbResponse]
+  
+  def withDl[A](dl:DocLogger)(f: => Future[A])(implicit ec:ExecutionContext):Future[A] = {
+    for {
+      _ <- Future { pipelines.docLogger = dl }
+      res <- f
+      _ <- Future { pipelines.docLogger = NopLogger }
+    } yield res
+  }
+  def withLog[A](dln:String)(f: => Future[A])(implicit ec:ExecutionContext):Future[A] = {
+    withDl(SphinxDocLogger("../cloudant-api-reference/src/api/" + dln))(f)
+  }
+  
+  /*def generateApiKey():Future[ApiKeyResponse] = {
+    val headers = List(
+        "Content-Length" -> "0",
+        "Host" -> "kimstebel.cloudant.com",
+        "Referer" -> "https://kimstebel.cloudant.com/",
+        "Content-Type" -> "application/x-www-form-urlencoded"
+    )
+    val pipeline = pipelines.pipeline[ApiKeyResponse](
+        useBasicAuth = true,
+        additionalHeaders = headers)
+    pipeline(Post("/api/generate_api_key"))
+  }*/
+  
+  def allDbs():Future[Seq[String]] = {
+    val p = pipelines.pipeline[Seq[String]]
+    p(Get("/_all_dbs"))
+  }
   
   /**
    * Creates a new database. Fails if the database already exists.
@@ -55,7 +84,7 @@ class Couch(config:Config) extends UriBuilder {
   /**
    * Looks up a database by its name.
    */
-  def getDb(dbName:String, docLogger:DocLogger = NopLogger):Future[Database] = {
+  def getDb(dbName:String):Future[Database] = {
     getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
 

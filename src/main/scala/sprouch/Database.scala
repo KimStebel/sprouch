@@ -18,6 +18,7 @@ import StaleOption._
 import ViewQueryFlag._
 import scala.annotation.implicitNotFound
 import spray.json.JsValue
+import spray.json.JsonWriter
 
 /**
   * Supports CRUD operations on documents and attachments,
@@ -46,9 +47,12 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       kvs:List[String]) = {
     path(name, "_design", designDocId, "_view", viewName) + query(kvs:_*)
   }
-  private def searchUri(designDocId:String, indexerName:String, q:String):String = {
-    val kv = "q=" + q
-    path(name, "_design", designDocId, "_search", indexerName) + query(kv)
+  private def searchUri(designDocId:String, indexerName:String, q:String, sort:Option[Seq[String]]):String = {
+    val kv = Seq("q=" + q) ++ (sort match {
+      case Some(keys) if !keys.isEmpty => Seq("sort=" + implicitly[JsonWriter[Seq[String]]].write(keys).toString)
+      case _ => Seq()
+    })
+    path(name, "_design", designDocId, "_search", indexerName) + query(kv:_*)
   }
   
   private def allDocsUri(kvs:List[String]) = {
@@ -174,8 +178,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
   
-  def createIndexes(indexes:NewDocument[Indexes], dl:DocLogger = NopLogger):Future[RevedDocument[Indexes]] = {
-    val p = pipeline[CreateResponse](docLogger = dl)
+  def createIndexes(indexes:NewDocument[Indexes]):Future[RevedDocument[Indexes]] = {
+    val p = pipeline[CreateResponse]
     val response = p(Put(viewsUri(indexes), indexes))
     response.map(cr => indexes.setRev(cr.rev))
   }
@@ -189,9 +193,9 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     response.map(cr => views.setRev(cr.rev))
   }
   
-  def search(designDocId:String, indexerName:String, query:String, docLogger:DocLogger = NopLogger):Future[SearchResponse] = {
-    val p = pipeline[SearchResponse](docLogger = docLogger)
-    p(Get(searchUri(designDocId, indexerName, query)))
+  def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None):Future[SearchResponse] = {
+    val p = pipeline[SearchResponse]
+    p(Get(searchUri(designDocId, indexerName, query, sort)))
     
   }
   
@@ -266,10 +270,10 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       stale:StaleOption = notStale
   ):Future[AllDocsResponse[V]] = { 
     val p = pipeline[AllDocsResponse[V]]
-    val flagsWithGroupWithoutReduce:Set[ViewQueryFlag] = (flags ++ Set(group).filter(_ => !keys.isEmpty) ++ Set(include_docs)) -- Set(reduce, group)
+    val flagsWithGroupWithoutReduce:Set[ViewQueryFlag] = (flags ++ Set(group).filter(_ => !keys.isEmpty)) -- Set(reduce, group)
     val kvs = 
-      flagsWithGroupWithoutReduce.toList.map(f => keyValue(f.toString)(true)) ++
-      (ViewQueryFlag.all.diff(Set(reduce, group))).diff(flagsWithGroupWithoutReduce).toList.map(f => keyValue(f.toString)(false)) ++ 
+      (flagsWithGroupWithoutReduce -- Set(inclusive_end)).toList.map(f => keyValue(f.toString)(true)) ++
+      (ViewQueryFlag.all.diff(Set(update_seq, descending, include_docs, reduce, group))).diff(flagsWithGroupWithoutReduce).toList.map(f => keyValue(f.toString)(false)) ++ 
       List(
         key.map(keyValue("key")),
         Option(keys).filter(!_.isEmpty).map(keyValue("keys")),

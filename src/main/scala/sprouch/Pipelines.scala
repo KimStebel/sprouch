@@ -16,6 +16,7 @@ import java.util.UUID
 import akka.event.Logging
 import sprouch.JsonProtocol.{ErrorResponseBody, ErrorResponse}
 import spray.io.{IOBridge, IOExtension}
+import sprouch.JsonProtocol.OkResponse
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
@@ -34,8 +35,48 @@ case class Config(
     https:Boolean = false
 )
 
-private[sprouch] class Pipelines(config:Config) {
+class Pipelines(config:Config) {
   import config._
+  
+  var docLogger:DocLogger = NopLogger
+  
+  var cookie:Option[String] = None
+  
+  def cloudantLogin():Future[String] = {
+    import spray.http.MediaTypes.`application/x-www-form-urlencoded`
+    val body = "name=" + userPass.get._1 + "&password=" + userPass.get._2
+    val headers = List(
+        "Accept" -> "*/*",
+        "Content-Type" -> "application/x-www-form-urlencoded",
+        "Content-Length" -> body.length.toString
+    )
+    val pl = pipelineWithoutUnmarshal(
+        etag = None,
+        useBasicAuth = false,
+        additionalHeaders = headers,
+        conduit = conduit)
+    val respf = pl(HttpRequest(
+        method = POST,
+        uri = "/_session",
+        entity = HttpEntity(Some(HttpBody(
+            ContentType(`application/x-www-form-urlencoded`, None),
+            body
+        )))
+    ))
+    respf.map(resp => {
+      val cookie = resp.headers.find(_.name == "Set-Cookie").get.value
+      this.cookie = Some(cookie)
+      cookie
+    })
+  }
+  def cloudantLogout() = {
+    val pl = pipeline[OkResponse](useBasicAuth = false, additionalHeaders = List("AuthSession" -> cookie.get))
+    pl(Delete("/_session"))
+  }
+  def getAuthInfo() = {
+    val pl = pipeline[OkResponse](useBasicAuth = false, additionalHeaders = List("AuthSession" -> cookie.get))
+    pl(Get("/_session"))
+  }
   
   private val conduit = {
     val ioBridge = IOExtension(actorSystem).ioBridge()
@@ -48,14 +89,17 @@ private[sprouch] class Pipelines(config:Config) {
     log.info(r.toString + "\n")
     r
   }
-  
   private val logResponse: HttpResponse => HttpResponse = r => {
     log.info(r.toString + "\n")
     r
   }  
   def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A]()
-  
-  def pipeline[A:Unmarshaller](etag:Option[String] = None, docLogger:DocLogger = NopLogger): HttpRequest => Future[A] = {
+  def pipeline[A:Unmarshaller](
+      etag:Option[String] = None,
+      useBasicAuth:Boolean = true,
+      additionalHeaders:List[(String,String)] = Nil,
+      conduit:ActorRef = this.conduit
+  ): HttpRequest => Future[A] = {
     def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
       hr => (hr match {
         case HttpResponse(status, _, _, _) if status.value == 304 => {//not modified
@@ -72,19 +116,40 @@ private[sprouch] class Pipelines(config:Config) {
         }
       })
     }
-    addHeader("accept", "application/json") ~>
+    pipelineWithoutUnmarshal(etag, useBasicAuth, additionalHeaders, conduit) ~>
+    unmarshalEither[A]
+  }
+  
+  def pipelineWithoutUnmarshal(
+      etag:Option[String] = None,
+      useBasicAuth:Boolean = true,
+      additionalHeaders:List[(String,String)] = Nil,
+      conduit:ActorRef = this.conduit): HttpRequest => Future[HttpResponse] = {
+    (if (additionalHeaders.exists(s => (s._1.toLowerCase == "accept"))) {
+      identity[HttpRequest] _
+    } else {
+      addHeader("accept", "application/json")
+    }) ~>
     (etag match {
       case Some(etag) => addHeader("If-None-Match", "\"" + etag + "\"") 
       case None => (x:HttpRequest) => x
     }) ~>
-    (userPass match {
+    (userPass.filter(_ => useBasicAuth) match {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
+    {
+        additionalHeaders.map { 
+          case (k,v) => addHeader(k,v)
+        }.foldRight(identity[HttpRequest] _) {
+          (f1,f2) => f1 andThen f2
+        }
+    } ~>
     ((r:HttpRequest) => { docLogger.logRequest(r); r }) ~>
+    logRequest ~>
     sendReceive(conduit) ~>
-    ((r:HttpResponse) => { docLogger.logResponse(r); r }) ~>
-    unmarshalEither[A]
+    logResponse ~>
+    ((r:HttpResponse) => { docLogger.logResponse(r); r })
   }
   
 }
