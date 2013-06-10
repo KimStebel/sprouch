@@ -9,7 +9,7 @@ class AuthenticationDoc extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
   
-  def dl(name:String) = SphinxDocLogger("../cloudant-api-reference/src/api/" + name)
+  def dl(name:String) = new SphinxDocLogger("../cloudant-api-reference/src/api/" + name)
   
   test("login") {
     await(for {

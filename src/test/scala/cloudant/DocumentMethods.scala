@@ -14,19 +14,19 @@ class DocumentMethods extends FunSuite with CouchSuiteHelpers {
       _ <- ignoreFailure(c.deleteDb("db"))
       db <- c.createDb("db")
       doc <- db.createDoc("DocID", randomPerson())
-      doc2 <- c.withLog("getDoc") {
+      doc2 <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/getDoc")) {
         db.getDoc[Person]("DocID")
       }
-      doc2wa <- c.withLog("putAtt") {
+      doc2wa <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/putAtt")) {
         db.putAttachment(doc, Attachment("my attachment", Array(0,1,2,3)))
       }
-      doc3 <- c.withLog("getDocAtt") {
+      doc3 <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/getDocAtt")) {
         db.getDoc[Person]("DocID")
       }
-      doc4 <- c.withLog("delAtt") {
+      doc4 <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/delAtt")) {
         db.deleteAttachment(doc3, "my attachment")
       }
-      revs <- c.withLog("getRevs") {
+      revs <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/getRevs")) {
         db.revisions(doc)
       }
     } yield {
@@ -39,10 +39,10 @@ class DocumentMethods extends FunSuite with CouchSuiteHelpers {
     await(for {
       _ <- ignoreFailure(c.deleteDb("db"))
       db <- c.createDb("db")
-      doc <- c.withLog("putDoc") {
+      doc <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/putDoc")) {
         db.createDoc("DocID", randomPerson())
       }
-      doc2 <- c.withLog("putDoc2") {
+      doc2 <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/putDoc2")) {
         db.updateDoc(doc.updateData(_.copy(age=40)))
       }
     } yield {

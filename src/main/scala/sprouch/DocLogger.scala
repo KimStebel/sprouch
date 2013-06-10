@@ -4,15 +4,22 @@ import spray.http.HttpRequest
 import spray.http.HttpResponse
 import java.io._
 import spray.http.HttpMessage
+import spray.json._
 
 trait DocLogger {
   def logRequest(request:HttpRequest):Unit
   def logResponse(response:HttpResponse):Unit
 }
 
-case class SphinxDocLogger(fileName:String) extends DocLogger {
-  private def withWriter(fileName:String, append:Boolean)(f:BufferedWriter=>Unit) = {
-    val out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName, append)))
+class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
+  def this(fileName:String) {
+    this((suffix,append) => 
+      new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+suffix, append)))
+    )
+  }
+  
+  private def withWriter(suffix:String, append:Boolean=false)(f:BufferedWriter=>Unit) = {
+    val out = getOut(suffix,append)
     try {
       f(out)
       out.flush()
@@ -26,13 +33,13 @@ case class SphinxDocLogger(fileName:String) extends DocLogger {
       out.newLine()
     })
     out.newLine()
-    import spray.json._
+    out.flush
     if (!m.entity.isEmpty) {
       val reqResp = m match {
         case _:HttpRequest => "request"
         case _:HttpResponse => "response"
       }
-      withWriter(fileName + "-" + reqResp + "-body.inc", append = false)(out => {
+      withWriter("-" + reqResp + "-body.inc")(out => {
         out.write(".. code-block:: javascript")
         out.newLine(); out.newLine()
         val entityStr = try {
@@ -47,14 +54,14 @@ case class SphinxDocLogger(fileName:String) extends DocLogger {
     }
     
   }
-  override def logRequest(req:HttpRequest) = withWriter(fileName + "-request-headers.inc", append=false)(out => {
+  override def logRequest(req:HttpRequest) = withWriter("-request-headers.inc")(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     out.write("    " + req.method + " " + req.uri + " " + req.protocol)
     out.newLine()
     writeMessage(out, req)
   })
-  override def logResponse(resp:HttpResponse) = withWriter(fileName + "-response-headers.inc", append=false)(out => {
+  override def logResponse(resp:HttpResponse) = withWriter("-response-headers.inc")(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     out.write("    " + resp.status.value + " " + resp.status.reason)

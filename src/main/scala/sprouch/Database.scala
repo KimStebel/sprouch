@@ -34,7 +34,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def attachmentUriRev(doc:RevedDocument[_], aid:String):String =
     attachmentUri(doc, aid) + "?rev=" + doc.rev
   private def attachmentUri(doc:Document[_], aid:String) = docUri(doc) + sep + encode(aid)
-  private def viewsUri(views:Document[_]) = path(name, "_design", views.id)
+  private def designDocUri(doc:Document[_]) = path(name, "_design", doc.id)
   private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) = key + "=" + encode(aFormat.write(value).toString)
   private def query(kv:String*) = {
     if (kv.isEmpty) "" else {
@@ -61,6 +61,11 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def bulkUri:String = path(name, "_bulk_docs")
   private def revisionsUri(id:String) = docUri(id) + "?revs_info=true"
   
+  
+  def security:Future[SecuritySettings] = {
+    val p = pipeline[SecuritySettings]
+    p(Get(path(name, "_security")))
+  }
   /**
    * Retrives old revisions of a document.
    */
@@ -180,7 +185,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   
   def createIndexes(indexes:NewDocument[Indexes]):Future[RevedDocument[Indexes]] = {
     val p = pipeline[CreateResponse]
-    val response = p(Put(viewsUri(indexes), indexes))
+    val response = p(Put(designDocUri(indexes), indexes))
     response.map(cr => indexes.setRev(cr.rev))
   }
   
@@ -189,14 +194,31 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     */
   def createViews(views:NewDocument[Views]):Future[RevedDocument[Views]] = {
     val p = pipeline[CreateResponse]
-    val response = p(Put(viewsUri(views), views))
+    val response = p(Put(designDocUri(views), views))
     response.map(cr => views.setRev(cr.rev))
   }
+  
+  def createDesign(designDoc:NewDocument[DesignDoc]):Future[RevedDocument[DesignDoc]] = {
+    val p = pipeline[CreateResponse]
+    val response = p(Put(designDocUri(designDoc), designDoc))
+    response.map(cr => designDoc.setRev(cr.rev))
+  }
+  
+  def show(designDoc:String, showName:String, docId:String, query:String) = {
+    val p = pipelines.pipelineWithoutUnmarshal()
+    p(Get(path(name, "_design", designDoc, "_show", showName, docId)+"?"+query))
+  }
+  
+  def list(designDoc:String, listName:String, viewName:String) = {
+    val p = pipelines.pipelineWithoutUnmarshal()
+    p(Get(path(name, "_design", designDoc, "_list", listName, viewName)))
+  }
+  
+  
   
   def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None):Future[SearchResponse] = {
     val p = pipeline[SearchResponse]
     p(Get(searchUri(designDocId, indexerName, query, sort)))
-    
   }
   
   /**

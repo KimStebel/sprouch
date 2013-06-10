@@ -10,7 +10,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   implicit val dispatcher = actorSystem.dispatcher
   
   test("get db") {
-    val dl = SphinxDocLogger("../cloudant-api-reference/src/api/DbGet")
+    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbGet")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
       db <- c.withDl(dl) {
@@ -23,7 +23,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("get all dbs") {
-    val dl = SphinxDocLogger("../cloudant-api-reference/src/api/allDbs")
+    val dl = new SphinxDocLogger("../api-reference/src/api/inc/allDbs")
     await(for {
       _ <- ignoreFailure(c.createDb("heyho"))
       all <- c.allDbs()
@@ -35,7 +35,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("create db") {
-    val dl = SphinxDocLogger("../cloudant-api-reference/src/api/DbPut")
+    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbPut")
     await(for {
       _ <- ignoreFailure(c.deleteDb("db"))
       db <- c.withDl(dl) {
@@ -47,7 +47,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("delete db") {
-    val dl = SphinxDocLogger("../cloudant-api-reference/src/api/DbDelete")
+    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbDelete")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
       ok <- c.withDl(dl) {
@@ -62,13 +62,13 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     await(for {
       _ <- c.deleteDb("test")
       db <- c.createDb("test")
-      docs <- c.withLog("bulkDocs") {
+      docs <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs")) {
         db.bulkPut((0 to 2).map(n => NewDocument(randomPerson())))
       }
-      newDocs <- c.withLog("bulkDocs2") {
+      newDocs <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs2")) {
         db.bulkPut(docs.map(_.updateData(_.copy(gender="female"))))
       }
-      all <- c.withLog("allDocs") {
+      all <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/allDocs")) {
         db.allDocs[Person](flags = ViewQueryFlag(include_docs = false))
       }
       

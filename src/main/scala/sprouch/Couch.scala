@@ -47,9 +47,6 @@ class Couch(config:Config) extends UriBuilder {
       _ <- Future { pipelines.docLogger = NopLogger }
     } yield res
   }
-  def withLog[A](dln:String)(f: => Future[A])(implicit ec:ExecutionContext):Future[A] = {
-    withDl(SphinxDocLogger("../cloudant-api-reference/src/api/" + dln))(f)
-  }
   
   /*def generateApiKey():Future[ApiKeyResponse] = {
     val headers = List(

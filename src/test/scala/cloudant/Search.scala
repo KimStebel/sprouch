@@ -5,6 +5,7 @@ import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
+import spray.json.JsonWriter
 
 class Search extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
@@ -13,10 +14,11 @@ class Search extends FunSuite with CouchSuiteHelpers {
     implicit val dispatcher = (actorSystem.dispatcher)
         
     withNewDbFuture("db")(implicit dbf => {
-      val data = List(Test(foo=0, bar="abc"),Test(1, "bcd"),Test(2, "cde"), Test(3, "def"), Test(4, "bbb"))
+      val data = List(Test(foo=0, bar="aa"),Test(1, "ab"),Test(2, "ac"), Test(3, "ba"), Test(4, "bb"))
       val index = Index("""
           function(doc){
             index("default", doc.bar, {"store": "yes"});
+          index("foo", doc.foo, {"store": "yes"});
           }
       """)
       val fooIndex = Index("""
@@ -24,19 +26,22 @@ class Search extends FunSuite with CouchSuiteHelpers {
             index("foo", doc.foo, {"store": "yes"});
           }
       """)
-      val indexesDoc = new NewDocument("my searches", Indexes(Map("bar" -> index, "foo" -> fooIndex)))
-      val dl = SphinxDocLogger("../cloudant-api-reference/src/api/search")
+      val indexes = Indexes(Map("bar" -> index, "foo" -> fooIndex))
+      val indexesDoc = new NewDocument("my searches", indexes)
+      val dl = new SphinxDocLogger("../api-reference/src/api/inc/search")
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc)
         docs <- data.create
-        _ <- db.search("my searches", "foo", "0")
-        queryRes <- c.withDl(dl) { db.search("my searches", "bar", "b*", Some(Seq("foo"))) }
+        //_ <- db.search("my searches", "foo", "0")
+        queryRes <- c.withDl(dl) {
+          db.search("my searches", "bar", "a*", Some(Seq("foo<number>")))
+        }
         _ = println(implicitly[JsonFormat[SearchResponse]].write(queryRes))
         
       } yield {
-        val expectedIds = docs.filter(_.data.bar.startsWith("b")).map(_.id).toSet 
-        assert(queryRes.rows.map(_.id).toSet === expectedIds)
+        val expectedIds = docs.filter(_.data.bar.startsWith("a")).sortBy(_.data.foo).map(_.id)
+        assert(queryRes.rows.map(_.id) === expectedIds)
       }
     })
   }

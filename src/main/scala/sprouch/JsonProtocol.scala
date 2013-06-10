@@ -186,11 +186,24 @@ object JsonProtocol extends DefaultJsonProtocol {
     (f.write(ap._1),f.write(ap._2))
   }
   
-  case class SearchResultRow(id:String, order:Seq[Int], fields:JsValue)
+  case class SearchResultRow(id:String, order:Seq[Option[Double]], fields:JsValue)
   implicit val searchResultRowFormat = jsonFormat3(SearchResultRow)
   case class SearchResponse(total_rows:Int, bookmark:String, rows:Seq[SearchResultRow])
   implicit val searchResponseFormat = jsonFormat3(SearchResponse)
   
+  // _security document
+  case class RolesAndNames(roles:Seq[String], names:Seq[String])
+  implicit val RolesAndNamesFormat = jsonFormat2(RolesAndNames)
+  case class SecuritySettings(readers:Option[RolesAndNames], writers:Option[RolesAndNames], admins:Option[RolesAndNames])
+  implicit val SecuritySettingsFormat = jsonFormat3(SecuritySettings)
+  
+  //design docs
+  case class DesignDoc(
+      shows:Option[Map[String,String]]=None,
+      views:Option[Map[String,MapReduce]]=None,
+      lists:Option[Map[String,String]]=None
+  )
+  implicit val designDocFormat = jsonFormat3(DesignDoc) 
   
 }
 

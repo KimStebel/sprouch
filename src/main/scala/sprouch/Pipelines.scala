@@ -17,6 +17,9 @@ import akka.event.Logging
 import sprouch.JsonProtocol.{ErrorResponseBody, ErrorResponse}
 import spray.io.{IOBridge, IOExtension}
 import sprouch.JsonProtocol.OkResponse
+import java.io.BufferedWriter
+import java.io.OutputStreamWriter
+import java.io.Writer
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
@@ -85,12 +88,18 @@ class Pipelines(config:Config) {
   }
   private val log = Logging(actorSystem, conduit)
   
+  private class MyBR(wr:Writer) extends BufferedWriter(wr) {
+    override def close() {}
+  }
+  private def dl = new SphinxDocLogger((suffix, append) => {
+      new MyBR(new OutputStreamWriter(System.out))
+    }) 
   private val logRequest: HttpRequest => HttpRequest = r => {
-    log.info(r.toString + "\n")
+    dl.logRequest(r)
     r
   }
   private val logResponse: HttpResponse => HttpResponse = r => {
-    log.info(r.toString + "\n")
+    dl.logResponse(r)
     r
   }  
   def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A]()
