@@ -96,6 +96,15 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   
   /**
+    * retrieves a design document.
+    * @param id the id is prefixed with "_design"
+    */
+  def getDesignDoc[A: RootJsonFormat](id: String): Future[RevedDocument[A]] = {
+    val p = pipeline[RevedDocument[A]]
+    p(Get(path(name, "_design", id)))
+  }
+  
+  /**
     * Retrieves a document. If the document is still current, the document is not transmitted again and doc is returned.
     */
   def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
