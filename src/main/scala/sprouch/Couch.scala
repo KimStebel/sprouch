@@ -37,29 +37,8 @@ case class SprouchException(error:ErrorResponse) extends Exception
 class Couch(config:Config) extends UriBuilder {
   
   val pipelines = new Pipelines(config)
-  private lazy val pipeline = pipelines.pipeline[OkResponse]
-  private lazy val getDbPipeline = pipelines.pipeline[GetDbResponse]
-  
-  def withDl[A](dl:DocLogger)(f: => Future[A])(implicit ec:ExecutionContext):Future[A] = {
-    for {
-      _ <- Future { pipelines.docLogger = dl }
-      res <- f
-      _ <- Future { pipelines.docLogger = NopLogger }
-    } yield res
-  }
-  
-  /*def generateApiKey():Future[ApiKeyResponse] = {
-    val headers = List(
-        "Content-Length" -> "0",
-        "Host" -> "kimstebel.cloudant.com",
-        "Referer" -> "https://kimstebel.cloudant.com/",
-        "Content-Type" -> "application/x-www-form-urlencoded"
-    )
-    val pipeline = pipelines.pipeline[ApiKeyResponse](
-        useBasicAuth = true,
-        additionalHeaders = headers)
-    pipeline(Post("/api/generate_api_key"))
-  }*/
+  private def pipeline = pipelines.pipeline[OkResponse]
+  private def getDbPipeline = pipelines.pipeline[GetDbResponse]
   
   def allDbs():Future[Seq[String]] = {
     val p = pipelines.pipeline[Seq[String]]
@@ -69,20 +48,23 @@ class Couch(config:Config) extends UriBuilder {
   /**
    * Creates a new database. Fails if the database already exists.
    */
-  def createDb(dbName:String):Future[Database] = {
-    pipeline(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
+  def createDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
+    val p = pipelines.pipeline[OkResponse](docLogger=docLogger)
+    p(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
   /**
    * Deletes a database and all containing documents.
    */
-  def deleteDb(dbName:String):Future[OkResponse] = {
-    pipeline(Delete(dbUri(dbName)))
+  def deleteDb(dbName:String, docLogger:DocLogger=NopLogger):Future[OkResponse] = {
+    val p = pipelines.pipeline[OkResponse](docLogger=docLogger)
+    p(Delete(dbUri(dbName)))
   }
   /**
    * Looks up a database by its name.
    */
-  def getDb(dbName:String):Future[Database] = {
-    getDbPipeline(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
+  def getDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
+    val p = pipelines.pipeline[GetDbResponse](docLogger = docLogger)
+    p(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
   }
 
 }

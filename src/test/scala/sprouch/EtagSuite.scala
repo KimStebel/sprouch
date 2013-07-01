@@ -14,8 +14,8 @@ class EtagSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "")
       for {
-        doc <- db.createDoc(data)
-        getAgain <- db.getDoc(doc)
+        doc <- db.createDocData(data)
+        getAgain <- db.getDocAgain(doc)
       } yield {
         assert(doc === getAgain)
         assert(doc eq getAgain)

@@ -18,7 +18,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = List(Test(foo=0, bar="a"),Test(1, "a"),Test(2, "b"), Test(3, "c"), Test(4, "c"))
       for {
-        docs <- Future.sequence(data.map(d => db.createDoc(d)))
+        docs <- Future.sequence(data.map(d => db.createDocData(d)))
         val sum = docs.map(_.data.foo).sum
         val mr = MapReduce(
             map = """
@@ -56,7 +56,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         
     withNewDb(db => {
       val data = List(Test(foo=0, bar="a"),Test(1, "a"),Test(2, "b"), Test(3, "c"), Test(4, "c"))
-      val dataFutures = data.map(d => db.createDoc(d))
+      val dataFutures = data.map(d => db.createDocData(d))
       for {
         docs <- Future.sequence(dataFutures)
         sum = docs.map(_.data.foo).sum
@@ -89,7 +89,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
         
     withNewDb(db => {
       val data = List(Test(foo=0, bar="a"),Test(1, "a"),Test(2, "b"), Test(3, "c"), Test(4, "c"))
-      val dataFutures = data.map(d => db.createDoc(d))
+      val dataFutures = data.map(d => db.createDocData(d))
       for {
         docs <- Future.sequence(dataFutures)
         sum = docs.map(_.data.foo).sum

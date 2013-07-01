@@ -13,9 +13,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbGet")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
-      db <- c.withDl(dl) {
-        c.getDb("db")
-      }
+      db <- c.getDb("db", docLogger = dl)
     } yield {
       assert(db.name === "db")
     })
@@ -38,9 +36,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbPut")
     await(for {
       _ <- ignoreFailure(c.deleteDb("db"))
-      db <- c.withDl(dl) {
-        c.createDb("db")
-      }
+      db <- c.createDb("db", docLogger = dl)
     } yield {
       assert(db.name === "db")
     })
@@ -50,9 +46,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbDelete")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
-      ok <- c.withDl(dl) {
-        c.deleteDb("db")
-      }
+      ok <- c.deleteDb("db", docLogger = dl)
     } yield {
       assert(ok.ok)
     })
@@ -62,15 +56,19 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     await(for {
       _ <- c.deleteDb("test")
       db <- c.createDb("test")
-      docs <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs")) {
-        db.bulkPut((0 to 2).map(n => NewDocument(randomPerson())))
-      }
-      newDocs <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs2")) {
-        db.bulkPut(docs.map(_.updateData(_.copy(gender="female"))))
-      }
-      all <- c.withDl(new SphinxDocLogger("../api-reference/src/api/inc/allDocs")) {
-        db.allDocs[Person](flags = ViewQueryFlag(include_docs = false))
-      }
+      docs <- db.bulkPut(
+          (0 to 2).map(n => NewDocument(randomPerson())),
+          docLogger = new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs")
+      )
+     
+      newDocs <- db.bulkPut(
+        docs.map(_.updateData(_.copy(gender="female"))),
+        docLogger = new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs2")
+      )
+      all <- db.allDocs[Person](
+        flags = ViewQueryFlag(include_docs = false),
+        docLogger = new SphinxDocLogger("../api-reference/src/api/inc/allDocs")
+      )
       
     } yield {
       assert(docs.map(_.id).toSet === all.rows.map(_.id).toSet)

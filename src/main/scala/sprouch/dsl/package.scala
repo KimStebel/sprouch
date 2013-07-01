@@ -42,7 +42,7 @@ package object dsl {
     db.flatMap(_.getDoc[A](id))
   }
   def get[A](doc:RevedDocument[A])(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = {
-    db.flatMap(_.getDoc[A](doc))
+    db.flatMap(_.getDocAgain[A](doc))
   }
   class EnhancedFuture[A](f:Future[A]) {
     def either = {

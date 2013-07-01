@@ -14,7 +14,7 @@ class OldRevisions extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "")
       for {
-        doc1 <- db.createDoc(data)
+        doc1 <- db.createDocData(data)
         doc2 <- db.updateDoc(doc1.updateData(_.copy(foo=1)))
         doc3 <- db.updateDoc(doc2.updateData(_.copy(foo=1)))
         revisions <- db.revisions(doc3)

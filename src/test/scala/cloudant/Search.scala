@@ -34,9 +34,7 @@ class Search extends FunSuite with CouchSuiteHelpers {
         view <- db.createIndexes(indexesDoc)
         docs <- data.create
         //_ <- db.search("my searches", "foo", "0")
-        queryRes <- c.withDl(dl) {
-          db.search("my searches", "bar", "a*", Some(Seq("foo<number>")))
-        }
+        queryRes <- db.search("my searches", "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
         _ = println(implicitly[JsonFormat[SearchResponse]].write(queryRes))
         
       } yield {

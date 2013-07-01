@@ -62,23 +62,23 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   private def revisionsUri(id:String) = docUri(id) + "?revs_info=true"
   
   
-  def security:Future[SecuritySettings] = {
-    val p = pipeline[SecuritySettings]
+  def security(docLogger:DocLogger = NopLogger):Future[SecuritySettings] = {
+    val p = pipeline[SecuritySettings](docLogger = docLogger)
     p(Get(path(name, "_security")))
   }
   /**
    * Retrives old revisions of a document.
    */
-  def revisions(doc:RevedDocument[_]):Future[Seq[RevInfo]] = {
-    val p = pipeline[RevsInfo]
+  def revisions(doc:RevedDocument[_], docLogger:DocLogger = NopLogger):Future[Seq[RevInfo]] = {
+    val p = pipeline[RevsInfo](docLogger = docLogger)
     p(Get(revisionsUri(doc.id))).map(_._revs_info)
   }
   
   /**
     * Creates or updates Documents in Bulk.
     */
-  def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]]):Future[Seq[RevedDocument[A]]] = {
-    val p = pipeline[Seq[CreateResponse]]
+  def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]], docLogger:DocLogger=NopLogger):Future[Seq[RevedDocument[A]]] = {
+    val p = pipeline[Seq[CreateResponse]](docLogger = docLogger)
     p(Post(bulkUri, BulkPut(docs))).map(crs => {
       crs.zip(docs).map { case (cr, doc) => doc.setRev(cr.rev) }
     })
@@ -103,16 +103,16 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Retrieves a document.
     */
-  def getDoc[A:RootJsonFormat](id:String):Future[RevedDocument[A]] = {
-    val p = pipeline[RevedDocument[A]]
+  def getDoc[A:RootJsonFormat](id:String, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    val p = pipeline[RevedDocument[A]](docLogger = docLogger)
     p(Get(docUri(id)))
   }
   
   /**
     * Retrieves a document. If the document is still current, the document is not transmitted again and doc is returned.
     */
-  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
-    val p = pipeline[RevedDocument[A]](etag = Some(doc.rev))
+  def getDocAgain[A:RootJsonFormat](doc:RevedDocument[A], docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    val p = pipeline[RevedDocument[A]](etag = Some(doc.rev), docLogger = docLogger)
     p(Get(docUri(doc.id))).recover {
       case SprouchException(e) if e.status == 304 => doc
     }
@@ -121,7 +121,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Creates a new document with the id given in the doc parameter.
     */
-  def createDoc[A:RootJsonFormat](doc:NewDocument[A]):Future[RevedDocument[A]] = {
+  def createDoc[A:RootJsonFormat](doc:NewDocument[A], docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse]
     val response = p(Put(docUri(doc), doc))
     response.map(cr => doc.setRev(cr.rev))
@@ -130,22 +130,22 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Creates a new Document with the id set by CouchDB and returned in the RevedDocument that is returned.
     */
-  def createDoc[A:RootJsonFormat](data:A):Future[RevedDocument[A]] = {
-    createDoc(new NewDocument(data))
+  def createDocData[A:RootJsonFormat](data:A, docLogger:DocLogger=NopLogger):Future[RevedDocument[A]] = {
+    createDoc(new NewDocument(data), docLogger)
   }
 
   /**
     * Creates a new document with the given id.
     */
-  def createDoc[A:RootJsonFormat](id:String, data:A):Future[RevedDocument[A]] = {
-    createDoc(new NewDocument(id, data, Map()))
+  def createDocId[A:RootJsonFormat](id:String, data:A, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    createDoc(new NewDocument(id, data, Map()), docLogger)
   }
   
   /**
     * Updates a document.
     */
-  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):Future[RevedDocument[A]] = {
-    val p = pipeline[CreateResponse]
+  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A], docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(docUriRev(doc), doc))
     response.map(cr => doc.setRev(cr.rev))
   }
@@ -153,8 +153,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Creates or updates an attachment.
     */
-  def putAttachment[A:RootJsonFormat](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = {
-    val p = pipeline[CreateResponse]
+  def putAttachment[A:RootJsonFormat](doc:RevedDocument[A], a:Attachment, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     for {
       _ <- p(Put(attachmentUriRev(doc, a.id), a.data))
       doc2 <- getDoc[A](doc.id)
@@ -172,13 +172,15 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   /**
     * Deletes an attachment.
     */
-  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):Future[RevedDocument[A]] = deleteAttachment(doc, a.id)
+  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = { 
+    deleteAttachmentId(doc, a.id, docLogger)
+  }
   
   /**
     * Deletes an attachment.
     */
-  def deleteAttachment[A](doc:RevedDocument[A], aid:String):Future[RevedDocument[A]] = {
-    val p = pipeline[CreateResponse]
+  def deleteAttachmentId[A](doc:RevedDocument[A], aid:String, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     p(Delete(attachmentUriRev(doc, aid))).map(cr => 
       new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
@@ -204,20 +206,20 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     response.map(cr => designDoc.setRev(cr.rev))
   }
   
-  def show(designDoc:String, showName:String, docId:String, query:String) = {
-    val p = pipelines.pipelineWithoutUnmarshal()
+  def show(designDoc:String, showName:String, docId:String, query:String, docLogger:DocLogger = NopLogger) = {
+    val p = pipelines.pipelineWithoutUnmarshal(docLogger = docLogger)
     p(Get(path(name, "_design", designDoc, "_show", showName, docId)+"?"+query))
   }
   
-  def list(designDoc:String, listName:String, viewName:String) = {
-    val p = pipelines.pipelineWithoutUnmarshal()
+  def list(designDoc:String, listName:String, viewName:String, docLogger:DocLogger = NopLogger) = {
+    val p = pipelines.pipelineWithoutUnmarshal(docLogger = docLogger)
     p(Get(path(name, "_design", designDoc, "_list", listName, viewName)))
   }
   
   
   
-  def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None):Future[SearchResponse] = {
-    val p = pipeline[SearchResponse]
+  def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None, docLogger:DocLogger = NopLogger):Future[SearchResponse] = {
+    val p = pipeline[SearchResponse](docLogger = docLogger)
     p(Get(searchUri(designDocId, indexerName, query, sort)))
   }
   
@@ -289,9 +291,10 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       endKey:Option[String] = None,
       limit:Option[Int] = None,
       skip:Option[Int] = None,
-      stale:StaleOption = notStale
+      stale:StaleOption = notStale,
+      docLogger:DocLogger = NopLogger
   ):Future[AllDocsResponse[V]] = { 
-    val p = pipeline[AllDocsResponse[V]]
+    val p = pipeline[AllDocsResponse[V]](docLogger = docLogger)
     val flagsWithGroupWithoutReduce:Set[ViewQueryFlag] = (flags ++ Set(group).filter(_ => !keys.isEmpty)) -- Set(reduce, group)
     val kvs = 
       (flagsWithGroupWithoutReduce -- Set(inclusive_end)).toList.map(f => keyValue(f.toString)(true)) ++

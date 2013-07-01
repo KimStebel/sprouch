@@ -30,13 +30,13 @@ class Database private (d:sprouch.Database, timeout:Duration) {
   
   def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc[A](id))
   
-  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDoc(doc)) 
+  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDocAgain(doc)) 
   
   def createDoc[A:RootJsonFormat](doc:NewDocument[A]):RevedDocument[A] = await(d.createDoc(doc))
   
-  def createDoc[A:RootJsonFormat](data:A):RevedDocument[A] = await(d.createDoc(data)) 
+  def createDoc[A:RootJsonFormat](data:A):RevedDocument[A] = await(d.createDocData(data)) 
 
-  def createDoc[A:RootJsonFormat](id:String, data:A):RevedDocument[A] = await(d.createDoc(id, data)) 
+  def createDoc[A:RootJsonFormat](id:String, data:A):RevedDocument[A] = await(d.createDocId(id, data)) 
   
   def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.updateDoc(doc)) 
   
@@ -46,7 +46,7 @@ class Database private (d:sprouch.Database, timeout:Duration) {
   
   def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):RevedDocument[A] = deleteAttachment(doc, a.id)
   
-  def deleteAttachment[A](doc:RevedDocument[A], aid:String):RevedDocument[A] = await(d.deleteAttachment(doc, aid))
+  def deleteAttachment[A](doc:RevedDocument[A], aid:String):RevedDocument[A] = await(d.deleteAttachmentId(doc, aid))
   
   def createViews(views:NewDocument[Views]):RevedDocument[Views] = await(d.createViews(views)) 
   

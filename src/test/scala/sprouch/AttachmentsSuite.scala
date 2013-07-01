@@ -17,7 +17,7 @@ class AttachmentsSuite extends FunSuite with CouchSuiteHelpers {
       val attachmentWithSlash = new Attachment("ab/12////", Array[Byte](1,2,3))
       val a2 = a.copy(data=Array[Byte](1,2,3))
       for {
-        doc <- db.createDoc(data)
+        doc <- db.createDocData(data)
         createRes <- db.putAttachment(doc, a)
         createRes2 <- db.putAttachment(createRes, attachmentWithSlash)
         updateRes <- db.putAttachment(createRes2, a2)

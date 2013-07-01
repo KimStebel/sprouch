@@ -41,11 +41,11 @@ case class Config(
 class Pipelines(config:Config) {
   import config._
   
-  var docLogger:DocLogger = NopLogger
+  //@volatile var docLogger:DocLogger = NopLogger
   
-  var cookie:Option[String] = None
+  @volatile var cookie:Option[String] = None
   
-  def cloudantLogin():Future[String] = {
+  def cloudantLogin(docLogger:DocLogger = NopLogger):Future[String] = {
     import spray.http.MediaTypes.`application/x-www-form-urlencoded`
     val body = "name=" + userPass.get._1 + "&password=" + userPass.get._2
     val headers = List(
@@ -57,7 +57,8 @@ class Pipelines(config:Config) {
         etag = None,
         useBasicAuth = false,
         additionalHeaders = headers,
-        conduit = conduit)
+        conduit = conduit,
+        docLogger = docLogger)
     val respf = pl(HttpRequest(
         method = POST,
         uri = "/_session",
@@ -72,12 +73,18 @@ class Pipelines(config:Config) {
       cookie
     })
   }
-  def cloudantLogout() = {
-    val pl = pipeline[OkResponse](useBasicAuth = false, additionalHeaders = List("AuthSession" -> cookie.get))
+  def cloudantLogout(docLogger:DocLogger = NopLogger) = {
+    val pl = pipeline[OkResponse](
+        useBasicAuth = false,
+        additionalHeaders = List("AuthSession" -> cookie.get),
+        docLogger = docLogger)
     pl(Delete("/_session"))
   }
-  def getAuthInfo() = {
-    val pl = pipeline[OkResponse](useBasicAuth = false, additionalHeaders = List("AuthSession" -> cookie.get))
+  def getAuthInfo(docLogger:DocLogger = NopLogger) = {
+    val pl = pipeline[OkResponse](
+        useBasicAuth = false,
+        additionalHeaders = List("AuthSession" -> cookie.get),
+        docLogger = docLogger)
     pl(Get("/_session"))
   }
   
@@ -107,7 +114,8 @@ class Pipelines(config:Config) {
       etag:Option[String] = None,
       useBasicAuth:Boolean = true,
       additionalHeaders:List[(String,String)] = Nil,
-      conduit:ActorRef = this.conduit
+      conduit:ActorRef = this.conduit,
+      docLogger:DocLogger = NopLogger
   ): HttpRequest => Future[A] = {
     def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
       hr => (hr match {
@@ -125,7 +133,7 @@ class Pipelines(config:Config) {
         }
       })
     }
-    pipelineWithoutUnmarshal(etag, useBasicAuth, additionalHeaders, conduit) ~>
+    pipelineWithoutUnmarshal(etag, useBasicAuth, additionalHeaders, conduit, docLogger) ~>
     unmarshalEither[A]
   }
   
@@ -133,7 +141,8 @@ class Pipelines(config:Config) {
       etag:Option[String] = None,
       useBasicAuth:Boolean = true,
       additionalHeaders:List[(String,String)] = Nil,
-      conduit:ActorRef = this.conduit): HttpRequest => Future[HttpResponse] = {
+      conduit:ActorRef = this.conduit,
+      docLogger:DocLogger = NopLogger): HttpRequest => Future[HttpResponse] = {
     (if (additionalHeaders.exists(s => (s._1.toLowerCase == "accept"))) {
       identity[HttpRequest] _
     } else {

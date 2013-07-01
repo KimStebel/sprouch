@@ -71,7 +71,7 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "")
       for {
-        doc0 <- db.createDoc(data)
+        doc0 <- db.createDocData(data)
         update1 <- db.updateDoc(doc0.updateData(_.copy(foo=1)))
         update2 <- db.updateDoc(doc0.updateData(_.copy(foo=2))).failed
         update3 <- db.updateDoc(update1.updateData(_.copy(foo=2)))
@@ -88,7 +88,7 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
     withNewDb(db => {
       val data = Test(0, "bar")
       for {
-        firstDoc <- db.createDoc(data)
+        firstDoc <- db.createDocData(data)
         val foo1 = firstDoc.updateData(_.copy(foo = 1))
         updatedDoc <- db.updateDoc(foo1)
         gottenDoc <- db.getDoc[Test](firstDoc.id)

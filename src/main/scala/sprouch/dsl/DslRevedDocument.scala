@@ -18,10 +18,10 @@ class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String,
     attachment match {
       case (id, array) => db.flatMap(_.putAttachment(this, new Attachment(id, array)))
     }
-  def get(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = db.flatMap(_.getDoc[A](this))
+  def get(implicit db:Future[Database], rjf:RootJsonFormat[A]):Future[RevedDocument[A]] = db.flatMap(_.getDocAgain[A](this))
   def attachment(id:String)(implicit db:Future[Database]):Future[Attachment] = db.flatMap(_.getAttachment(this, id))
   def deleteAttachment(id:String)(implicit db:Future[Database]):Future[RevedDocument[A]] =
-    db.flatMap(_.deleteAttachment(this, id))
+    db.flatMap(_.deleteAttachmentId(this, id))
 }
 
 class DslRevedDocSeq[A:RootJsonFormat](data:Seq[RevedDocument[A]]) {

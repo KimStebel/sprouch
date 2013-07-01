@@ -37,9 +37,7 @@ class List extends FunSuite with CouchSuiteHelpers {
         db <- dbf
         view <- db.createDesign(designDoc)
         docs <- data.create
-        queryRes <- c.withDl(dl) {
-          db.list(ddname, "asHtml", "id")
-        }
+        queryRes <- db.list(ddname, "asHtml", "id", docLogger = dl)
       } yield {
         assert(queryRes.entity.asString === "<ul>" + (docs.map(_.data.foo).map("<li>"+_+"</li>").mkString) + "</ul>")
         assert(queryRes.headers.find(_.name.toLowerCase == "content-type").get.value === "text/html")
