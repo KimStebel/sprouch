@@ -33,7 +33,7 @@ trait CouchSuiteHelpers {
   val url = new URL(System.getenv("TESTY_DATABASE_URL"))
   val host = url.getHost
   val dbBaseName = url.getPath.replaceAll("/", "")
-  val https = url.getProtocol.toLowerCase == "https"
+  val https = false//url.getProtocol.toLowerCase == "https"
   val user = System.getenv("TESTY_DATABASE_ADMIN_USER")
   val pass = System.getenv("TESTY_DATABASE_ADMIN_PASS")
   val port = url.getPort match {
@@ -43,7 +43,7 @@ trait CouchSuiteHelpers {
   private val conf = Config(actorSystem, host, port, Some(user -> pass), https) 
   val c = new Couch(conf)
   val cSync = sprouch.synchronous.Couch(conf)
-  implicit val testDuration = Duration("100 seconds")
+  implicit val testDuration = Duration("300 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   def assertGet[A](e:Either[_,A]):A = {
@@ -77,9 +77,15 @@ trait CouchSuiteHelpers {
     res
   }
   
+  def withDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
+    _ <- Future()
+    val dbf = c.getDb(dbName)
+    res <- f(dbf)// andThen { case _ => dbf.flatMap(_.delete()) }
+  } yield res)
+  
   def withNewDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- c.deleteDb(dbName) recover { case _ => }
-    dbf = c.createDb(dbName)
+    val dbf = c.createDb(dbName)
     res <- f(dbf)// andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   

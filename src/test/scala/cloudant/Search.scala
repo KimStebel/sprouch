@@ -6,6 +6,8 @@ import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
 import spray.json.JsonWriter
+import spray.json.JsObject
+import spray.json.JsonReader
 
 class Search extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
@@ -28,11 +30,22 @@ class Search extends FunSuite with CouchSuiteHelpers {
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc)
+        /*docs <- db.allDocs[JsObject](flags = Set(ViewQueryFlag.include_docs))
+          .map(_.rows.flatMap(r => r.doc.map(d => r.id -> d))
+          .filter{case (id, doc) => !id.startsWith("_design")}
+          .map{case (id,doc) => id -> implicitly[JsonReader[Test]].read(doc)}) // */
         docs <- data.create
-        queryRes <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
+        queryRes1 <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
+        queryRes2 <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
+        
       } yield {
-        val expectedIds = docs.filter(_.data.bar.startsWith("a")).sortBy(_.data.foo).map(_.id)
-        assert(queryRes.rows.map(_.id) === expectedIds)
+        //val expectedDocs = docs.filter(_._2.bar.startsWith("a")).sortBy(_._2.foo)
+        val expectedDocs = docs.filter(_.data.bar.startsWith("a")).sortBy(_.data.foo)
+        println(expectedDocs)
+        //val expectedIds = expectedDocs.map(_._1)
+        val expectedIds = expectedDocs.map(_.id)
+        assert(queryRes1.rows.map(_.id) != expectedIds)
+        assert(queryRes2.rows.map(_.id) === expectedIds)
       }
     })
   }
