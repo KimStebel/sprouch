@@ -82,6 +82,12 @@ object JsonProtocol extends DefaultJsonProtocol {
       case _ => deserializationError("UUID string expected")
     }
   }
+  
+  implicit object JsObjectJsonFormat extends RootJsonFormat[JsObject] {
+    override def write(in:JsObject) = in
+    override def read(out: JsValue) = out.asInstanceOf[JsObject]
+  }
+  
   case class GetDbResponse(
     db_name:String,
     doc_count:Int,
@@ -203,8 +209,10 @@ object JsonProtocol extends DefaultJsonProtocol {
       views:Option[Map[String,MapReduce]]=None,
       lists:Option[Map[String,String]]=None
   )
-  implicit val designDocFormat = jsonFormat3(DesignDoc) 
+  implicit val designDocFormat = jsonFormat3(DesignDoc)
   
+  case class ViewQuery(startkey:Option[JsValue], endkey:Option[JsValue], limit:Option[Int], skip:Option[Int], include_docs:Option[Boolean])
+  implicit val viewQueryFormat = jsonFormat5(ViewQuery)
 }
 
 

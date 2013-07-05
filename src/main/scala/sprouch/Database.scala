@@ -19,6 +19,8 @@ import ViewQueryFlag._
 import scala.annotation.implicitNotFound
 import spray.json.JsValue
 import spray.json.JsonWriter
+import spray.json.JsObject
+import spray.json.JsArray
 
 /**
   * Supports CRUD operations on documents and attachments,
@@ -216,11 +218,16 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     p(Get(path(name, "_design", designDoc, "_list", listName, viewName)))
   }
   
-  
-  
   def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None, docLogger:DocLogger = NopLogger):Future[SearchResponse] = {
     val p = pipeline[SearchResponse](docLogger = docLogger)
     p(Get(searchUri(designDocId, indexerName, query, sort)))
+  }
+  
+  def viewQueries(designDocId:String, viewName:String, queries:Seq[ViewQuery], docLogger:DocLogger = NopLogger):Future[Seq[JsObject]] = {
+    val p = pipeline[Map[String,JsValue]](docLogger = docLogger)
+    val body = Map("queries" -> queries)
+    val resp = p(Post(path(name, "_design", designDocId, "_view", viewName), body))
+    resp.map(m => m("results").asInstanceOf[JsArray].elements.toSeq.asInstanceOf[Seq[JsObject]])
   }
   
   /**
