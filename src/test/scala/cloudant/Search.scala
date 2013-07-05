@@ -29,7 +29,6 @@ class Search extends FunSuite with CouchSuiteHelpers {
         db <- dbf
         view <- db.createIndexes(indexesDoc)
         docs <- data.create
-        _ <- Future(Thread.sleep(10000))
         queryRes <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
       } yield {
         val expectedIds = docs.filter(_.data.bar.startsWith("a")).sortBy(_.data.foo).map(_.id)
