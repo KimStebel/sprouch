@@ -10,7 +10,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   implicit val dispatcher = actorSystem.dispatcher
   
   test("get db") {
-    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbGet")
+    val dl = SphinxDocLogger("DbGet")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
       db <- c.getDb("db", docLogger = dl)
@@ -21,7 +21,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("get all dbs") {
-    val dl = new SphinxDocLogger("../api-reference/src/api/inc/allDbs")
+    val dl = SphinxDocLogger("allDbs")
     await(for {
       _ <- ignoreFailure(c.createDb("heyho"))
       all <- c.allDbs()
@@ -33,7 +33,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("create db") {
-    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbPut")
+    val dl = SphinxDocLogger("DbPut")
     await(for {
       _ <- ignoreFailure(c.deleteDb("db"))
       db <- c.createDb("db", docLogger = dl)
@@ -43,7 +43,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
   }
   
   test("delete db") {
-    val dl = new SphinxDocLogger("../api-reference/src/api/inc/DbDelete")
+    val dl = SphinxDocLogger("DbDelete")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
       ok <- c.deleteDb("db", docLogger = dl)
@@ -58,16 +58,16 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
       db <- c.createDb("test")
       docs <- db.bulkPut(
           (0 to 2).map(n => NewDocument(randomPerson())),
-          docLogger = new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs")
+          docLogger = SphinxDocLogger("bulkDocs")
       )
      
       newDocs <- db.bulkPut(
         docs.map(_.updateData(_.copy(gender="female"))),
-        docLogger = new SphinxDocLogger("../api-reference/src/api/inc/bulkDocs2")
+        docLogger = SphinxDocLogger("bulkDocs2")
       )
       all <- db.allDocs[Person](
         flags = ViewQueryFlag(include_docs = false),
-        docLogger = new SphinxDocLogger("../api-reference/src/api/inc/allDocs")
+        docLogger = SphinxDocLogger("allDocs")
       )
       
     } yield {

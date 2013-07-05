@@ -10,7 +10,7 @@ class Authorization extends FunSuite with CouchSuiteHelpers {
   implicit val dispatcher = actorSystem.dispatcher
   
   test("get security document") {
-    val dl = new SphinxDocLogger("../api-reference/src/api/inc/_securityGET")
+    val dl = SphinxDocLogger("_securityGET")
     withNewDbFuture("db")(implicit dbf => for {
       db <- dbf
       sec <- db.security(docLogger = dl)

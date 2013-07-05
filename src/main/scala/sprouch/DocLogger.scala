@@ -11,8 +11,14 @@ trait DocLogger {
   def logResponse(response:HttpResponse):Unit
 }
 
+object SphinxDocLogger {
+  def apply(fileName:String) = {
+    new SphinxDocLogger(System.getenv("TESTY_RESULT_DIR") + "/" + fileName)
+  }
+}
+
 class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
-  def this(fileName:String) {
+  private def this(fileName:String) {
     this((suffix,append) => 
       new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+suffix, append)))
     )

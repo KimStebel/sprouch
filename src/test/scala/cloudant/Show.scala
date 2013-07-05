@@ -24,7 +24,7 @@ class Show extends FunSuite with CouchSuiteHelpers {
           }
       """)))
       val designDoc = new NewDocument("my shows", designDocContent)
-      val dl = new SphinxDocLogger("../api-reference/src/api/inc/show")
+      val dl = SphinxDocLogger("show")
       for {
         db <- dbf
         view <- db.createDesign(designDoc)

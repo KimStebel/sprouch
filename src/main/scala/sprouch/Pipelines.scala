@@ -99,8 +99,8 @@ class Pipelines(config:Config) {
     override def close() {}
   }
   private def dl = new SphinxDocLogger((suffix, append) => {
-      new MyBR(new OutputStreamWriter(System.out))
-    }) 
+    new MyBR(new OutputStreamWriter(System.out))
+  })
   private val logRequest: HttpRequest => HttpRequest = r => {
     dl.logRequest(r)
     r
@@ -164,9 +164,9 @@ class Pipelines(config:Config) {
         }
     } ~>
     ((r:HttpRequest) => { docLogger.logRequest(r); r }) ~>
-    logRequest ~>
+    //logRequest ~>
     sendReceive(conduit) ~>
-    logResponse ~>
+    //logResponse ~>
     ((r:HttpResponse) => { docLogger.logResponse(r); r })
   }
   

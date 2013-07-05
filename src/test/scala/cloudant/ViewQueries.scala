@@ -22,7 +22,7 @@ class ViewQueries extends FunSuite with CouchSuiteHelpers {
         }
       """))))
       val designDoc = new NewDocument(ddname, designDocContent)
-      val dl = new SphinxDocLogger("../api-reference/src/api/inc/viewQueries")
+      val dl = SphinxDocLogger("viewQueries")
       val queries = Seq(
           ViewQuery(None, None, None, None, None),
           ViewQuery(Some(1), None, Some(2), None, None)

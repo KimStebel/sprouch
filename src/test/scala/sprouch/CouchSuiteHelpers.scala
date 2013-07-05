@@ -8,6 +8,7 @@ import akka.dispatch.Future
 import java.util.UUID
 import sprouch.json.Schema
 import spray.json.JsonParser
+import java.net.URL
 
 case class Test(foo:Int, bar:String)
 
@@ -29,10 +30,20 @@ trait CouchSuiteHelpers {
   def randomPerson() = personFormat.read(personSchema.generate())
   
   implicit val actorSystem = ActorSystem("MySystem")
-  private val conf = Config(actorSystem, "kimstebel.cloudant.com", 443, Some("kimstebel" -> "lse72438"), true) 
+  val url = new URL(System.getenv("TESTY_DATABASE_URL"))
+  val host = url.getHost
+  val dbBaseName = url.getPath.replaceAll("/", "")
+  val https = url.getProtocol.toLowerCase == "https"
+  val user = System.getenv("TESTY_DATABASE_ADMIN_USER")
+  val pass = System.getenv("TESTY_DATABASE_ADMIN_PASS")
+  val port = url.getPort match {
+    case -1 => if (https) 443 else 80
+    case x => x
+  }
+  private val conf = Config(actorSystem, host, port, Some(user -> pass), https) 
   val c = new Couch(conf)
   val cSync = sprouch.synchronous.Couch(conf)
-  implicit val testDuration = Duration("60 seconds")
+  implicit val testDuration = Duration("100 seconds")
   def await[A](f:Future[A]) = Await.result(f, testDuration)
   
   def assertGet[A](e:Either[_,A]):A = {
@@ -42,8 +53,10 @@ trait CouchSuiteHelpers {
   
   def ignoreFailure[A](f: =>Future[A]) = f recover { case _ => } 
   
+  private def randomDbName = dbBaseName + UUID.randomUUID.toString.toLowerCase
+  
   def withNewDb[A](f:Database => Future[A]):A = {
-    val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
+    val dbName = randomDbName
     withNewDb(dbName)(f)
   }
   
@@ -56,7 +69,7 @@ trait CouchSuiteHelpers {
   }
   
   def withNewDbFuture[A](f:Future[Database] => Future[A]):A = {
-    val dbName = "tempdb" + UUID.randomUUID.toString.toLowerCase
+    val dbName = randomDbName
     val dbf = c.createDb(dbName)
     val resf = f(dbf)
     val res = await(resf)
@@ -67,7 +80,7 @@ trait CouchSuiteHelpers {
   def withNewDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- c.deleteDb(dbName) recover { case _ => }
     dbf = c.createDb(dbName)
-    res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
+    res <- f(dbf)// andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   
   def withNewDbSync[A](f:sprouch.synchronous.Database => A):A = {

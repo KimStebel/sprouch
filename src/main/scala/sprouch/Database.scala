@@ -51,7 +51,7 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   private def searchUri(designDocId:String, indexerName:String, q:String, sort:Option[Seq[String]]):String = {
     val kv = Seq("q=" + q) ++ (sort match {
-      case Some(keys) if !keys.isEmpty => Seq("sort=" + implicitly[JsonWriter[Seq[String]]].write(keys).toString)
+      case Some(keys) if !keys.isEmpty => Seq("sort=" + encode(implicitly[JsonWriter[Seq[String]]].write(keys).toString))
       case _ => Seq()
     })
     path(name, "_design", designDocId, "_search", indexerName) + query(kv:_*)

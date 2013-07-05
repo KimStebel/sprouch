@@ -32,7 +32,7 @@ class List extends FunSuite with CouchSuiteHelpers {
         }
       """))))
       val designDoc = new NewDocument(ddname, designDocContent)
-      val dl = new SphinxDocLogger("../api-reference/src/api/inc/list")
+      val dl = SphinxDocLogger("list")
       for {
         db <- dbf
         view <- db.createDesign(designDoc)
