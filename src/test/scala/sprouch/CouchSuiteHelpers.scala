@@ -38,7 +38,7 @@ trait CouchSuiteHelpers {
   val pass = System.getenv("TESTY_DATABASE_ADMIN_PASS")
   val port = url.getPort match {
     case -1 => if (https) 443 else 80
-    case x => x
+    case p => p
   }
   private val conf = Config(actorSystem, host, port, Some(user -> pass), https) 
   val c = new Couch(conf)
@@ -53,7 +53,7 @@ trait CouchSuiteHelpers {
   
   def ignoreFailure[A](f: =>Future[A]) = f recover { case _ => } 
   
-  def wait(ms:Int):Future[Unit] = Future {
+  def pause(ms:Int = 2000):Future[Unit] = Future {
     Thread.sleep(ms)
   }
   

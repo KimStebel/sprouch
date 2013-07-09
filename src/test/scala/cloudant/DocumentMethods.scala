@@ -10,9 +10,11 @@ class DocumentMethods extends FunSuite with CouchSuiteHelpers {
   implicit val dispatcher = actorSystem.dispatcher
   
   test("get doc") {
+    val dbName = randomDbName
     await(for {
-      _ <- ignoreFailure(c.deleteDb("db"))
-      db <- c.createDb("db")
+      _ <- ignoreFailure(c.deleteDb(dbName))
+      db <- c.createDb(dbName)
+      _ <- pause()
       doc <- db.createDocId("DocID", randomPerson())
       doc2 <- db.getDoc[Person](
           "DocID",
@@ -29,6 +31,7 @@ class DocumentMethods extends FunSuite with CouchSuiteHelpers {
       revs <- db.revisions(doc, docLogger = SphinxDocLogger("getRevs"))
     } yield {
       assert(doc === doc2)
+      //TODO more checks
     })
   }
   
@@ -45,6 +48,7 @@ class DocumentMethods extends FunSuite with CouchSuiteHelpers {
           docLogger = SphinxDocLogger("putDoc2"))
     } yield {
       assert(doc.id === doc2.id)
+      //TODO more checks
     })
   }
 }

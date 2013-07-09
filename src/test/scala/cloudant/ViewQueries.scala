@@ -14,7 +14,7 @@ class ViewQueries extends FunSuite with CouchSuiteHelpers {
   test("view queries") {
     implicit val dispatcher = (actorSystem.dispatcher)
     val ddname = "queries"
-    withNewDbFuture("db")(implicit dbf => {
+    withNewDbFuture(implicit dbf => {
       val data = Seq(Test(foo=0, bar="foo"),Test(foo=1, bar="bar"),Test(foo=2, bar="baz"))
       val designDocContent = DesignDoc(views=Some(Map("id" -> MapReduce(map="""
         function(doc) {

@@ -30,7 +30,8 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
               function(keys, values) {
                 return sum(values);
               }
-            """)
+            """),
+            dbcopy = None
         )
         val viewsDoc = new NewDocument("my views", Views(Map("sum" -> mr)))
         val view <- db.createViews(viewsDoc)
@@ -66,7 +67,8 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
                 emit(doc.bar, doc.foo);
               }
             """,
-            reduce = None
+            reduce = None,
+            dbcopy = None
         )
         viewsDoc = new NewDocument("my views", Views(Map("map" -> mr)))
         view <- db.createViews(viewsDoc)
@@ -99,7 +101,8 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
                 emit([doc.bar,doc.foo], doc.foo);
               }
             """,
-            reduce = None
+            reduce = None,
+            dbcopy = None
         )
         viewsDoc = new NewDocument("my views", Views(Map("map" -> mr)))
         view <- db.createViews(viewsDoc)

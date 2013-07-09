@@ -14,7 +14,9 @@ class AuthenticationDoc extends FunSuite with CouchSuiteHelpers {
   test("login") {
     await(for {
       cookie <- c.pipelines.cloudantLogin(docLogger = dl("Login"))
+      _ <- pause()
       _ <- c.pipelines.getAuthInfo(docLogger = dl("getAuthInfo"))
+      _ <- pause()
       _ <- c.pipelines.cloudantLogout(dl("Logout"))
     } yield {
       assert(cookie != "")

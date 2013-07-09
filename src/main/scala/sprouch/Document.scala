@@ -67,10 +67,11 @@ object NewDocument {
 /**
  * Class that holds the javascript functions for a view.
  */
-case class MapReduce(map:String, reduce:Option[String])
+case class MapReduce(map:String, reduce:Option[String], dbcopy:Option[String])
 object MapReduce {
-  def apply(map:String):MapReduce = MapReduce(map, None)
-  def apply(map:String, reduce:String):MapReduce = MapReduce(map, Some(reduce))
+  def apply(map:String):MapReduce = MapReduce(map, None, None)
+  def apply(map:String, reduce:String):MapReduce = MapReduce(map, Some(reduce), None)
+  def apply(map:String, reduce:String, dbcopy:String):MapReduce = MapReduce(map, Some(reduce), Some(dbcopy))
 }
 /**
  * Class that holds the views of a view document.

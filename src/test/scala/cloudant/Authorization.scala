@@ -11,7 +11,7 @@ class Authorization extends FunSuite with CouchSuiteHelpers {
   
   test("get security document") {
     val dl = SphinxDocLogger("_securityGET")
-    withNewDbFuture("db")(implicit dbf => for {
+    withNewDbFuture(implicit dbf => for {
       db <- dbf
       sec <- db.security(docLogger = dl)
     } yield {

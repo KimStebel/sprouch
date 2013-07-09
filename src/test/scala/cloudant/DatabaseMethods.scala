@@ -4,8 +4,9 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import org.scalatest.Tag
 
-class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
+class DatabaseMethods extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
   
@@ -14,6 +15,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dbName = randomDbName
     await(for {
       _ <- ignoreFailure(c.createDb(dbName))
+      _ <- pause()
       db <- c.getDb(dbName, docLogger = dl)
     } yield {
       assert(db.name === dbName)
@@ -26,8 +28,8 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dbName = randomDbName
     await(for {
       _ <- ignoreFailure(c.createDb(dbName))
+      _ <- pause()
       all <- c.allDbs()
-      
     } yield {
       assert(all.contains(dbName), "list of all dbs includes " + dbName)
       assert(all.size > 1, "at least 2 dbs")
@@ -50,6 +52,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dbName = randomDbName
     await(for {
       _ <- ignoreFailure(c.createDb(dbName))
+      _ <- pause()
       ok <- c.deleteDb(dbName, docLogger = dl)
     } yield {
       assert(ok.ok)
@@ -60,9 +63,9 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
     val dbName = randomDbName
     await(for {
       _ <- ignoreFailure(c.deleteDb(dbName))
-      _ <- wait(2000)
+      _ <- pause()
       db <- c.createDb(dbName)
-      _ <- wait(2000)
+      _ <- pause()
       docs <- db.bulkPut(
           (0 to 2).map(n => NewDocument(randomPerson())),
           docLogger = SphinxDocLogger("bulkDocs")
@@ -71,7 +74,7 @@ class DatabaseMethodsDoc extends FunSuite with CouchSuiteHelpers {
         docs.map(_.updateData(_.copy(gender="female"))),
         docLogger = SphinxDocLogger("bulkDocs2")
       )
-      _ <- wait(2000)
+      _ <- pause()
       all <- db.allDocs[Person](
         flags = ViewQueryFlag(include_docs = false),
         docLogger = SphinxDocLogger("allDocs")

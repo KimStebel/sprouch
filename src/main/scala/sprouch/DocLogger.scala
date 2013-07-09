@@ -63,7 +63,14 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
   override def logRequest(req:HttpRequest) = withWriter("-request-headers.inc")(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
-    out.write("    " + req.method + " " + req.uri + " " + req.protocol)
+    def prettyUri(uri:String) = {
+      if (uri.startsWith("/_")) uri else {
+        val parts = uri.split("/").toList
+        val replacedDbName = "db" :: parts.tail.tail
+        "/" + replacedDbName.mkString("/")
+      }
+    }
+    out.write("    " + req.method + " " + prettyUri(req.uri) + " " + req.protocol)
     out.newLine()
     writeMessage(out, req)
   })

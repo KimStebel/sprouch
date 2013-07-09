@@ -13,7 +13,7 @@ class List extends FunSuite with CouchSuiteHelpers {
   test("list functions") {
     implicit val dispatcher = (actorSystem.dispatcher)
     val ddname = "mylists"
-    withNewDbFuture("db")(implicit dbf => {
+    withNewDbFuture(implicit dbf => {
       val data = Seq(Test(foo=0, bar="foo"),Test(foo=1, bar="bar"),Test(foo=2, bar="baz"))
       val designDocContent = DesignDoc(lists = Some(Map("asHtml" -> """
         function(head, req) {
@@ -37,7 +37,7 @@ class List extends FunSuite with CouchSuiteHelpers {
         db <- dbf
         view <- db.createDesign(designDoc)
         docs <- data.create
-        _ <- wait(2000)
+        _ <- pause()
         queryRes <- db.list(ddname, "asHtml", "id", docLogger = dl)
       } yield {
         assert(queryRes.entity.asString === "<ul>" + (docs.map(_.data.foo).map("<li>"+_+"</li>").mkString) + "</ul>")

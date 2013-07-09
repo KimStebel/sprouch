@@ -13,7 +13,7 @@ class Show extends FunSuite with CouchSuiteHelpers {
   test("show functions") {
     implicit val dispatcher = actorSystem.dispatcher
         
-    withNewDbFuture("db")(implicit dbf => {
+    withNewDbFuture(implicit dbf => {
       val data = Test(foo=1, bar="foo")
       val designDocContent = DesignDoc(lists = None, shows = Some(Map("asHtml" -> """
           function(doc, req) {
@@ -34,7 +34,6 @@ class Show extends FunSuite with CouchSuiteHelpers {
       } yield {
         assert(queryRes.entity.asString === "<h1>heading</h1><ul><li>1</li><li>foo</li></ul>")
         assert(queryRes.headers.find(_.name.toLowerCase == "content-type").get.value === "text/html")
-        
       }
     })
   }
