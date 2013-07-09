@@ -53,7 +53,11 @@ trait CouchSuiteHelpers {
   
   def ignoreFailure[A](f: =>Future[A]) = f recover { case _ => } 
   
-  private def randomDbName = dbBaseName + UUID.randomUUID.toString.toLowerCase
+  def wait(ms:Int):Future[Unit] = Future {
+    Thread.sleep(ms)
+  }
+  
+  protected def randomDbName = dbBaseName + UUID.randomUUID.toString.toLowerCase
   
   def withNewDb[A](f:Database => Future[A]):A = {
     val dbName = randomDbName

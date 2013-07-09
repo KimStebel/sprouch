@@ -30,21 +30,14 @@ class Search extends FunSuite with CouchSuiteHelpers {
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc)
-        /*docs <- db.allDocs[JsObject](flags = Set(ViewQueryFlag.include_docs))
-          .map(_.rows.flatMap(r => r.doc.map(d => r.id -> d))
-          .filter{case (id, doc) => !id.startsWith("_design")}
-          .map{case (id,doc) => id -> implicitly[JsonReader[Test]].read(doc)}) // */
         docs <- data.create
         queryRes1 <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
         queryRes2 <- db.search(ddocName, "bar", "a*", Some(Seq("foo<number>")), docLogger = dl)
         
       } yield {
-        //val expectedDocs = docs.filter(_._2.bar.startsWith("a")).sortBy(_._2.foo)
         val expectedDocs = docs.filter(_.data.bar.startsWith("a")).sortBy(_.data.foo)
-        println(expectedDocs)
-        //val expectedIds = expectedDocs.map(_._1)
         val expectedIds = expectedDocs.map(_.id)
-        assert(queryRes1.rows.map(_.id) != expectedIds)
+        //assert(queryRes1.rows.map(_.id) === expectedIds) see https://cloudant.fogbugz.com/default.asp?20797
         assert(queryRes2.rows.map(_.id) === expectedIds)
       }
     })
