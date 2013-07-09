@@ -1,5 +1,5 @@
 testy-output
-testy-env
+*-env
 .worksheet
 bin
 .target
