@@ -33,6 +33,7 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
       out.close()  
     }
   }
+  
   private def writeMessage(out:BufferedWriter, m:HttpMessage) {
     m.headers.filter(_.name != "Authorization").foreach(h => {
       out.write("    " + h.name + ": " + h.value)
@@ -58,8 +59,8 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
         out.newLine()
       })
     }
-    
   }
+  
   override def logRequest(req:HttpRequest) = withWriter("-request-headers.inc")(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
@@ -74,6 +75,7 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     out.newLine()
     writeMessage(out, req)
   })
+  
   override def logResponse(resp:HttpResponse) = withWriter("-response-headers.inc")(out => {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()

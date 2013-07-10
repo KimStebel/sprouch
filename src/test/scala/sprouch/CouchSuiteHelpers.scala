@@ -30,12 +30,12 @@ trait CouchSuiteHelpers {
   def randomPerson() = personFormat.read(personSchema.generate())
   
   implicit val actorSystem = ActorSystem("MySystem")
-  val url = new URL(System.getenv("TESTY_DATABASE_URL"))
+  val url = new URL(System.getenv("TESTY_DB_URL"))
   val host = url.getHost
   val dbBaseName = url.getPath.replaceAll("/", "")
   val https = false//url.getProtocol.toLowerCase == "https"
-  val user = System.getenv("TESTY_DATABASE_ADMIN_USER")
-  val pass = System.getenv("TESTY_DATABASE_ADMIN_PASS")
+  val user = System.getenv("TESTY_DB_ADMIN_USER")
+  val pass = System.getenv("TESTY_DB_ADMIN_PASS")
   val port = url.getPort match {
     case -1 => if (https) 443 else 80
     case p => p
