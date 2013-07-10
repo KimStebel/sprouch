@@ -20,8 +20,6 @@ class Authentication extends FunSuite with CouchSuiteHelpers {
       _ <- c.pipelines.cloudantLogout(dl("Logout"))
     } yield {
       assert(cookie != "")
-    })
-    
-  }  
-    
+    }) 
+  }    
 }

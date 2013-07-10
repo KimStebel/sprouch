@@ -33,7 +33,7 @@ trait CouchSuiteHelpers {
   val url = new URL(System.getenv("TESTY_DB_URL"))
   val host = url.getHost
   val dbBaseName = url.getPath.replaceAll("/", "")
-  val https = false//url.getProtocol.toLowerCase == "https"
+  val https = url.getProtocol.toLowerCase == "https"
   val user = System.getenv("TESTY_DB_ADMIN_USER")
   val pass = System.getenv("TESTY_DB_ADMIN_PASS")
   val port = url.getPort match {
@@ -84,13 +84,13 @@ trait CouchSuiteHelpers {
   def withDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- Future()
     val dbf = c.getDb(dbName)
-    res <- f(dbf)// andThen { case _ => dbf.flatMap(_.delete()) }
+    res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   
   def withNewDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- c.deleteDb(dbName) recover { case _ => }
     val dbf = c.createDb(dbName)
-    res <- f(dbf)// andThen { case _ => dbf.flatMap(_.delete()) }
+    res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   
   def withNewDbSync[A](f:sprouch.synchronous.Database => A):A = {
