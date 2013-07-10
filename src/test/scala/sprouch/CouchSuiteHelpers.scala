@@ -100,5 +100,4 @@ trait CouchSuiteHelpers {
     db.delete
     res
   }
-  
 }
