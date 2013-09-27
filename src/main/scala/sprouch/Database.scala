@@ -202,8 +202,8 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     response.map(cr => views.setRev(cr.rev))
   }
   
-  def createDesign(designDoc:NewDocument[DesignDoc]):Future[RevedDocument[DesignDoc]] = {
-    val p = pipeline[CreateResponse]
+  def createDesign(designDoc:NewDocument[DesignDoc], docLogger:DocLogger = NopLogger):Future[RevedDocument[DesignDoc]] = {
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(designDocUri(designDoc), designDoc))
     response.map(cr => designDoc.setRev(cr.rev))
   }
@@ -256,9 +256,10 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
       limit:Option[Int] = None,
       skip:Option[Int] = None,
       groupLevel:Option[Int] = None,
-      stale:StaleOption = notStale
+      stale:StaleOption = notStale,
+      docLogger:DocLogger = NopLogger
   ):Future[ViewResponse[K,V]] = { 
-    val p = pipeline[ViewResponse[K,V]]
+    val p = pipeline[ViewResponse[K,V]](docLogger = docLogger)
     val flagsWithImplicitGroup:Set[ViewQueryFlag] = flags ++ Set(group).filter(_ => !keys.isEmpty)
     val kvs = 
       flagsWithImplicitGroup.toList.map(f => keyValue(f.toString)(true)) ++

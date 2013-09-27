@@ -74,6 +74,7 @@ trait CouchSuiteHelpers {
   
   def withNewDbFuture[A](f:Future[Database] => Future[A]):A = {
     val dbName = randomDbName
+    println("using database " + dbName)
     val dbf = c.createDb(dbName)
     val resf = f(dbf)
     val res = await(resf)

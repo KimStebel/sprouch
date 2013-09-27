@@ -214,6 +214,12 @@ object JsonProtocol extends DefaultJsonProtocol {
   
   case class ViewQuery(startkey:Option[JsValue], endkey:Option[JsValue], limit:Option[Int], skip:Option[Int], include_docs:Option[Boolean])
   implicit val viewQueryFormat = jsonFormat5(ViewQuery)
+  
+  case class DbCopy[KEY, VALUE](key:KEY, value:VALUE, salt:JsValue, partials:JsValue) {
+    def pair = key -> value
+  }
+  implicit def dbCopyFormat[KEY:JsonFormat, VALUE:JsonFormat] = jsonFormat4(DbCopy[KEY, VALUE])
+  
 }
 
 

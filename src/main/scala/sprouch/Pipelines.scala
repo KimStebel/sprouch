@@ -164,9 +164,9 @@ class Pipelines(config:Config) {
         }
     } ~>
     ((r:HttpRequest) => { docLogger.logRequest(r); r }) ~>
-    //logRequest ~>
+    logRequest ~>
     sendReceive(conduit) ~>
-    //logResponse ~>
+    logResponse ~>
     ((r:HttpResponse) => { docLogger.logResponse(r); r })
   }
   
