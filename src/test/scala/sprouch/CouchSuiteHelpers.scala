@@ -36,11 +36,12 @@ trait CouchSuiteHelpers {
   val https = url.getProtocol.toLowerCase == "https"
   val user = System.getenv("TESTY_DB_ADMIN_USER")
   val pass = System.getenv("TESTY_DB_ADMIN_PASS")
+  val up = if (user.trim == "") None else Some(user -> pass)
   val port = url.getPort match {
     case -1 => if (https) 443 else 80
     case p => p
   }
-  private val conf = Config(actorSystem, host, port, Some(user -> pass), https) 
+  private val conf = Config(actorSystem, host, port, up, https) 
   val c = new Couch(conf)
   val cSync = sprouch.synchronous.Couch(conf)
   implicit val testDuration = Duration("300 seconds")

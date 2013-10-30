@@ -29,7 +29,7 @@ import spray.json.JsArray
 class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
   import pipelines._
   
-  private def dbUri:String = dbUri(name)
+   def dbUri:String = dbUri(name)
   private def docUri(doc:Document[_]):String = docUri(doc.id)
   private def docUri(id:String) = path(name, id)
   private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "?rev=" + doc.rev
@@ -62,6 +62,16 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   }
   private def bulkUri:String = path(name, "_bulk_docs")
   private def revisionsUri(id:String) = docUri(id) + "?revs_info=true"
+  
+  def shards(docLogger:DocLogger = NopLogger):Future[ShardsResponse] = {
+    val p = pipeline[ShardsResponse](docLogger = docLogger)
+    p(Get(path(name, "_shards")))
+  }
+  
+  def shardForDoc(id:String, docLogger:DocLogger = NopLogger):Future[ShardsDocIdResponse] = {
+    val p = pipeline[ShardsDocIdResponse](docLogger = docLogger)
+    p(Get(path(name, "_shards", id)))
+  }
   
   
   def security(docLogger:DocLogger = NopLogger):Future[SecuritySettings] = {

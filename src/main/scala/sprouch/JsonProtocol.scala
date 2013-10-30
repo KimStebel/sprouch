@@ -220,6 +220,10 @@ object JsonProtocol extends DefaultJsonProtocol {
   }
   implicit def dbCopyFormat[KEY:JsonFormat, VALUE:JsonFormat] = jsonFormat4(DbCopy[KEY, VALUE])
   
+  case class ShardsResponse(shards:Map[String, Seq[String]])
+  implicit val shardsResponseFormat = jsonFormat1(ShardsResponse)
+  case class ShardsDocIdResponse(nodes:Seq[String], range:String)
+  implicit val shardsDocIdResponseFormat = jsonFormat2(ShardsDocIdResponse)
 }
 
 
