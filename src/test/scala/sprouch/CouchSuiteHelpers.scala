@@ -41,7 +41,7 @@ trait CouchSuiteHelpers {
     case -1 => if (https) 443 else 80
     case p => p
   }
-  private val conf = Config(actorSystem, host, port, up, https) 
+  private val conf = Config()(actorSystem, host, port, up, https) 
   val c = new Couch(conf)
   val cSync = sprouch.synchronous.Couch(conf)
   implicit val testDuration = Duration("300 seconds")

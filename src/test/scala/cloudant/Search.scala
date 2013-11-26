@@ -13,7 +13,7 @@ class Search extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   
   test("lucene based search") {
-    implicit val dispatcher = (actorSystem.dispatcher)
+    implicit val dispatcher = actorSystem.dispatcher
         
     withNewDbFuture(implicit dbf => {
       val data = List(Test(foo=0, bar="aa"),Test(11, "ab"),Test(2, "ac"), Test(3, "aa"), Test(22, "aa"), Test(3, "ba"), Test(4, "bb"))

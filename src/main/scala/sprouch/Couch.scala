@@ -2,9 +2,6 @@ package sprouch
 
 import akka.actor._
 import akka.dispatch.Future
-import spray.can.client.HttpClient
-import spray.client.HttpConduit
-import HttpConduit._
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
@@ -18,12 +15,18 @@ import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
 import JsonProtocol._
 import akka.dispatch.ExecutionContext
+import spray.httpx.RequestBuilding._
 
 private[sprouch] trait UriBuilder {
   protected[this] def sep = "/"
   protected[this] def encode(s:String) = urlEncode(s, "UTF-8") 
   protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)  
   protected[this] def dbUri(dbName:String) = path(dbName)
+  protected[this] def query(kv:String*) = {
+    if (kv.isEmpty) "" else {
+      "?" + kv.mkString("&")
+    }
+  }
 }
 
 /**
@@ -34,7 +37,7 @@ case class SprouchException(error:ErrorResponse) extends Exception
 /**
  * Class that handles the connection to CouchDB. It contains methods for creating, looking up and deleting databases.
  */
-class Couch(config:Config) extends UriBuilder {
+class Couch(protected[this] val config:Config) extends UriBuilder with GlobalChangesModule {
   
   val pipelines = new Pipelines(config)
   private def pipeline = pipelines.pipeline[OkResponse]
@@ -50,7 +53,7 @@ class Couch(config:Config) extends UriBuilder {
    */
   def createDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
     val p = pipelines.pipeline[OkResponse](docLogger=docLogger)
-    p(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
+    p(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines, config))
   }
   /**
    * Deletes a database and all containing documents.
@@ -64,7 +67,7 @@ class Couch(config:Config) extends UriBuilder {
    */
   def getDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
     val p = pipelines.pipeline[GetDbResponse](docLogger = docLogger)
-    p(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines))
+    p(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines, config))
   }
 
 }

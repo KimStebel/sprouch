@@ -5,8 +5,6 @@ import spray.httpx.marshalling.Marshaller
 import spray.httpx.unmarshalling.Unmarshaller
 import akka.actor.ActorRef
 import spray.http.HttpMethods.HEAD
-import spray.client.HttpConduit
-import HttpConduit.{Post, Delete, Get, Put}
 import spray.httpx.SprayJsonSupport._
 import akka.dispatch.Future
 import spray.json.RootJsonFormat
@@ -17,19 +15,22 @@ import spray.json.JsonFormat
 import StaleOption._
 import ViewQueryFlag._
 import scala.annotation.implicitNotFound
-import spray.json.JsValue
-import spray.json.JsonWriter
-import spray.json.JsObject
-import spray.json.JsArray
+import spray.json.{JsValue, JsonWriter, JsObject, JsArray}
+import spray.httpx.RequestBuilding._
+
+trait DbUriBuilder extends UriBuilder {
+  def name:String
+  protected[this] def dbUri:String = dbUri(name)
+  
+}
 
 /**
   * Supports CRUD operations on documents and attachments,
   * creating and querying views, bulk get, update, and delete operations.  
   */
-class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
+class Database private[sprouch](val name:String, protected[this] val pipelines:Pipelines, protected[this] val config:Config) extends DbUriBuilder with SearchModule with DbChangesModule {
   import pipelines._
   
-   def dbUri:String = dbUri(name)
   private def docUri(doc:Document[_]):String = docUri(doc.id)
   private def docUri(id:String) = path(name, id)
   private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "?rev=" + doc.rev
@@ -37,25 +38,13 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
     attachmentUri(doc, aid) + "?rev=" + doc.rev
   private def attachmentUri(doc:Document[_], aid:String) = docUri(doc) + sep + encode(aid)
   private def designDocUri(doc:Document[_]) = path(name, "_design", doc.id)
-  private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) = key + "=" + encode(aFormat.write(value).toString)
-  private def query(kv:String*) = {
-    if (kv.isEmpty) "" else {
-      "?" + kv.mkString("&")
-    }
-  }
+  private def keyValue[A](key:String)(value:A)(implicit aFormat:JsonFormat[A]) =
+    key + "=" + encode(aFormat.write(value).toString)
   private def viewQueryUri(
       designDocId:String,
       viewName:String,
-      kvs:List[String]) = {
+      kvs:List[String]) =
     path(name, "_design", designDocId, "_view", viewName) + query(kvs:_*)
-  }
-  private def searchUri(designDocId:String, indexerName:String, q:String, sort:Option[Seq[String]]):String = {
-    val kv = Seq("q=" + q) ++ (sort match {
-      case Some(keys) if !keys.isEmpty => Seq("sort=" + encode(implicitly[JsonWriter[Seq[String]]].write(keys).toString))
-      case _ => Seq()
-    })
-    path(name, "_design", designDocId, "_search", indexerName) + query(kv:_*)
-  }
   
   private def allDocsUri(kvs:List[String]) = {
     path(name, "_all_docs") + query(kvs:_*)
@@ -226,11 +215,6 @@ class Database private[sprouch](val name:String, pipelines:Pipelines) extends Ur
   def list(designDoc:String, listName:String, viewName:String, docLogger:DocLogger = NopLogger) = {
     val p = pipelines.pipelineWithoutUnmarshal(docLogger = docLogger)
     p(Get(path(name, "_design", designDoc, "_list", listName, viewName)))
-  }
-  
-  def search(designDocId:String, indexerName:String, query:String, sort:Option[Seq[String]] = None, docLogger:DocLogger = NopLogger):Future[SearchResponse] = {
-    val p = pipeline[SearchResponse](docLogger = docLogger)
-    p(Get(searchUri(designDocId, indexerName, query, sort)))
   }
   
   def viewQueries(designDocId:String, viewName:String, queries:Seq[ViewQuery], docLogger:DocLogger = NopLogger):Future[Seq[JsObject]] = {

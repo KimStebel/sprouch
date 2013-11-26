@@ -7,7 +7,7 @@ import sprouch._
 import sprouch.dsl._
 import spray.json.JsonWriter
 
-class List extends FunSuite with CouchSuiteHelpers {
+class ListFunctions extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   
   test("list functions") {

@@ -4,16 +4,16 @@ import Keys._
 object ApplicationBuild extends Build {
 
   val dependencies = Seq(
-    "org.scalatest" %% "scalatest" % "1.8" % "test",
-    "io.spray" % "spray-can" % "1.0-M7",
-    "io.spray" % "spray-client" % "1.0-M7",
-    "io.spray" %  "spray-json_2.9.2" % "1.2.3",
-    "com.typesafe.akka" % "akka-actor" % "2.0.4",
+    "org.scalatest" %% "scalatest" % "1.9.2" % "test",
+    "io.spray" % "spray-can" % "1.0-RC3",
+    "io.spray" % "spray-client" % "1.0-RC3",
+    "io.spray" %  "spray-json_2.9.3" % "1.2.5",
+    "com.typesafe.akka" % "akka-actor" % "2.0.5",
     "com.novocode" % "junit-interface" % "0.10-M1" % "test"
   )
 
   val main = Project(id = "sprouch-cloudant", base = new File("."), settings = Project.defaultSettings ++ Seq(
-    (scalaVersion := "2.9.2"),
+    (scalaVersion := "2.9.3"),
     (libraryDependencies ++= dependencies),
     (resolvers ++= Seq(
         "spray repo" at "http://repo.spray.io",

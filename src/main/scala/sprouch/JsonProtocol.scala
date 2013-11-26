@@ -1,8 +1,5 @@
 package sprouch
 
-import spray.can.client.HttpClient
-import spray.client.HttpConduit
-import HttpConduit._
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
@@ -17,7 +14,13 @@ import java.util.UUID
  * contains classes needed to model the protocol used by CouchDB
  * and implicit vals and defs of type JsonFormat to convert Scala types to and from JSON.
  */
-object JsonProtocol extends DefaultJsonProtocol {
+
+trait JsonProtocolTrait extends DefaultJsonProtocol with SprouchJsonProtocol with ChangesJsonProtocol
+
+object JsonProtocol extends JsonProtocolTrait
+
+trait SprouchJsonProtocol {
+  self:DefaultJsonProtocol =>
   trait Id {
     val id:String
   }
@@ -118,9 +121,7 @@ object JsonProtocol extends DefaultJsonProtocol {
         case Some(_rev) => new RevedDocument(id, _rev, data, attachments)
         case None => new NewDocument(id, data, attachments)
       }
-      
     }
-    
   } 
   
   abstract class DocFormat[A:RootJsonFormat, B <: Document[A]] extends RootJsonFormat[B] {
@@ -224,6 +225,19 @@ object JsonProtocol extends DefaultJsonProtocol {
   implicit val shardsResponseFormat = jsonFormat1(ShardsResponse)
   case class ShardsDocIdResponse(nodes:Seq[String], range:String)
   implicit val shardsDocIdResponseFormat = jsonFormat2(ShardsDocIdResponse)
+  
+  /*case class DbUpdate(dbname:String, `type`:String, seq:String, account:Option[String])
+  implicit val dbUpdateFormat = jsonFormat4(DbUpdate)
+  
+  case class RevObject(rev:String)
+  implicit val revObjectFormat = jsonFormat1(RevObject)
+  
+  case class DocUpdate(seq:String, id:String, changes:Seq[RevObject])
+  implicit val docUpdateFormat = jsonFormat3(DocUpdate)
+  
+  case class DbUpdates(results:Seq[DbUpdate], last_seq:String)
+  implicit val dbUpdatesFormat = jsonFormat2(DbUpdates)  
+  */
 }
 
 

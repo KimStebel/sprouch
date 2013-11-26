@@ -19,7 +19,7 @@ object LocalEnv {
   /**
    * instance of Couch with default config
    */
-  lazy val couch = new Couch(Config(actorSystem))
+  lazy val couch = new Couch(Config()(actorSystem))
   /**
    * timeout for futures, default 10 seconds
    */

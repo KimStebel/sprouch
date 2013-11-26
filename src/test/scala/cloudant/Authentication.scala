@@ -5,6 +5,7 @@ import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
 
+/* TODO
 class Authentication extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
@@ -23,3 +24,4 @@ class Authentication extends FunSuite with CouchSuiteHelpers {
     }) 
   }    
 }
+ */
