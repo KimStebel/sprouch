@@ -9,6 +9,7 @@ import java.util.UUID
 import sprouch.json.Schema
 import spray.json.JsonParser
 import java.net.URL
+import akka.actor.Props
 
 case class Test(foo:Int, bar:String)
 
@@ -29,7 +30,11 @@ trait CouchSuiteHelpers {
   }"""))
   def randomPerson() = personFormat.read(personSchema.generate())
   
-  implicit val actorSystem = ActorSystem("MySystem")
+  implicit val actorSystem = { 
+    val as = ActorSystem("MySystem")
+    as.actorOf(Props[ChunkedResponseLoggerActor], "docLogger")
+    as
+  }
   val url = new URL(System.getenv("TESTY_DB_URL"))
   val host = url.getHost
   val dbBaseName = url.getPath.replaceAll("/", "")

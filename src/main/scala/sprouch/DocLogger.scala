@@ -11,11 +11,14 @@ import spray.http.ChunkedResponseStart
 import spray.http.ChunkedMessageEnd
 import spray.http.MessageChunk
 import akka.event.Logging
+import spray.http.HttpResponsePart
+import ChunkedResponseLoggerActor._
+import spray.http.HttpHeader
 
 trait DocLogger {
   def logRequest(request:HttpRequest):Unit
   def logResponse(response:HttpResponse):Unit
-  def logBody(reqOrResp:String, body:Seq[String]):Unit
+  
 }
 
 object SphinxDocLogger {
@@ -24,29 +27,55 @@ object SphinxDocLogger {
   }
 }
 
-class ChunkedResponseLoggerActor(actor:Actor, dl:DocLogger) extends Actor {
+object ChunkedResponseLoggerActor {
+  sealed trait HoB
+  sealed trait RoR
+  case object headers extends HoB
+  case object body extends HoB
+  case object request extends RoR
+  case object response extends RoR
+  sealed trait HttpEvent {
+    def description:String
+  }
+  case class ResponseHeaders(description:String, resp:HttpResponse) extends HttpEvent
+  case class ResponseBodyJson(description:String, body:JsValue) extends HttpEvent
+  case class ResponseBodyString(description:String, body:String) extends HttpEvent
+  case class RequestHeaders(description:String, headers:HttpRequest) extends HttpEvent
+  case class RequestBodyJson(description:String, body:JsValue) extends HttpEvent
+  case class RequestBodyString(description:String, body:String) extends HttpEvent
+}
+
+class ChunkedResponseLoggerActor extends Actor {
   var acc = List[String]()
   val log = Logging(context.system, this)
   
   def receive = {
-    case crs:ChunkedResponseStart => {
-      log.info("crs received")
-      dl.logResponse(crs.message)
-      actor.receive(crs)
-      actor.forward(crs)
+    case e:HttpEvent => {
+      val dl = SphinxDocLogger(e.description)
+      e match {
+        case  ResponseHeaders(_, resp) => {
+          dl.logResponseHeaders(resp)
+        }
+        case  ResponseBodyJson(_, b) => {
+          dl.logResponseBodyJson(b)
+        }
+        case  ResponseBodyString(_, b) => {
+          dl.logResponseBodyString(b)
+        }
+        case  RequestHeaders(_, req) => {
+          dl.logRequestHeaders(req)
+        }
+        case  RequestBodyJson(_, b) => {
+          
+        }
+        case  RequestBodyString(_, b) => {
+          
+        }
+      }
     }
-    case cme:ChunkedMessageEnd => {
-      dl.logBody("response", acc.reverse)
-      actor.forward(cme)
-    }
-    case mc:MessageChunk => {
-      acc ::= mc.data.asString
-      actor.forward(mc)
-    }
-    case other => actor.forward(other)
   }
 }
-
+                             //suffix,append
 class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
   private def this(fileName:String) {
     this((suffix,append) => 
@@ -54,50 +83,92 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     )
   }
   
-  private def withWriter(suffix:String, append:Boolean=false)(f:BufferedWriter=>Unit) = {
-    val out = getOut(suffix,append)
-    try {
-      f(out)
-      out.flush()
-    } finally {
-      out.close()  
-    }
+  def logRequestHeaders(req:HttpRequest) = {
+    withWriter(request, headers, false)(out => {
+      logRequestStart(req, out)
+      logHeaders(req.headers, out)
+    })
+    withWriter(request, body, false)(logBodyStart)
   }
   
-  private def logMessage(out:BufferedWriter, m:HttpMessage) {
-    m.headers.filter(_.name != "Authorization").foreach(h => {
+  def logResponseHeaders(resp:HttpResponse) = {
+    withWriter(response, headers, false)(out => {
+      logResponseStart(out, resp)
+      logHeaders(resp.headers, out)
+    })
+    withWriter(response, body, false)(logBodyStart)
+  }
+  
+  def logResponseBodyJson(js:JsValue) {
+    withWriter(response, body, true)(out => {
+      logBodyPartJson(js, out)
+    })
+  }
+  def logResponseBodyString(str:String) {
+    withWriter(response, body, true)(out => {
+      logBodyPartString(str, out)
+    })
+  }
+  
+  
+  private def logHeaders(hs:Seq[HttpHeader], out:BufferedWriter) {
+    hs.filter(_.name != "Authorization").foreach(h => {
       out.write("    " + h.name + ": " + h.value)
       out.newLine()
     })
     out.newLine()
-    out.flush
+  }
+  
+  private def logMessage(out:BufferedWriter, m:HttpMessage) {
+    logHeaders(m.headers, out)
     if (!m.entity.isEmpty) {
       val reqResp = m match {
-        case _:HttpRequest => "request"
-        case _:HttpResponse => "response"
+        case _:HttpRequest => request
+        case _:HttpResponse => response
       }
-      logBody(reqResp, Seq(m.entity.asString))
+      logBody(m.entity.asString, out)
     }
   }
   
-  def logBody(reqOrResp:String, body:Seq[String]) {
-    withWriter("-" + reqOrResp + "-body.inc")(out => {
-        out.write(".. code-block:: javascript")
-        out.newLine(); out.newLine()
-        val entityStr = 
-          body.map(chunk => try {
-            chunk.asJson.prettyPrint.split("\\n").map("    " +).mkString("\n")
-          } catch {
-            case pe:org.parboiled.errors.ParsingException => 
-              chunk.split("\\n").map("    " +).mkString("\n")
-          }).mkString("\n")
-        out.write(entityStr)
-        out.newLine()
-      })
+  def logBody(bodyStr:String, out:BufferedWriter) {
+    try {
+      logBodyPartJson(bodyStr.asJson, out)
+    } catch {
+      case e => { //parsing exception, so not json
+        logBodyPartString(bodyStr, out)
+      }
+    }
   }
   
+  def withWriter(reqOrResp:RoR, headersOrBody:HoB, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
+    def withWriter(suffix:String, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
+      val out = getOut(suffix,append)
+      try {
+        f(out)
+        out.flush()
+      } finally {
+        out.close()  
+      }
+    }
+    withWriter("-" + reqOrResp + "-" + headersOrBody + ".inc", append)(f)
+  }
   
-  override def logRequest(req:HttpRequest) = withWriter("-request-headers.inc")(out => {
+  def logBodyStart(out:BufferedWriter) {
+    out.write(".. code-block:: javascript")
+    out.newLine(); out.newLine()
+  }
+  
+  def logBodyPartJson(body:JsValue, out:BufferedWriter) {
+    logBodyPartString(body.prettyPrint.split("\\n").map("    " +).mkString("\n"), out)
+  }
+  
+  def logBodyPartString(bodyStr:String, out:BufferedWriter) {
+    val entityStr = bodyStr.split("\\n").map("    " +).mkString("\n")
+    out.write(entityStr)
+    out.newLine()
+  }
+  
+  private def logRequestStart(req:HttpRequest, out:BufferedWriter) {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     def prettyUri(uri:String) = {
@@ -109,20 +180,28 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     }
     out.write("    " + req.method + " " + prettyUri(req.uri.toRelative.toString) + " " + req.protocol)
     out.newLine()
+  }
+  
+  def logRequest(req:HttpRequest) = withWriter(request, headers, false)(out => {
+    logRequestStart(req, out)
     logMessage(out, req)
   })
   
-  override def logResponse(resp:HttpResponse) = withWriter("-response-headers.inc")(out => {
+  private def logResponseStart(out:BufferedWriter, resp:HttpResponse) = {
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
-    out.write("    " + resp.status.value)
+    out.write("    " + resp.protocol.value + " " + resp.status.value)
     out.newLine()
+    
+  }
+  def logResponse(resp:HttpResponse) = withWriter(response, headers, false)(out => {
+    logResponseStart(out, resp)
     logMessage(out, resp)
   })
 }
 
 object NopLogger extends DocLogger {
-  override def logRequest(req:HttpRequest) {}
-  override def logResponse(resp:HttpResponse) {}
-  override def logBody(reqOrResp:String, body:Seq[String]) {}
+  def logRequest(req:HttpRequest) {}
+  def logResponse(resp:HttpResponse) {}
+  def logBody(reqOrResp:String, body:Seq[String]) {}
 }

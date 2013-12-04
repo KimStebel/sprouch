@@ -46,8 +46,7 @@ class Changes extends FunSuite with CouchSuiteHelpers {
         }
         case LastSeqResponse(seq) => {
           val dl = SphinxDocLogger("dbChangesFeed")
-          val w:ActorRef => ActorRef = (ar) => context.actorOf(Props(new ChunkedResponseLoggerActor(ar, dl)))
-          db.DbChangesActor.changesActorRef ! Continuous(since = Some(seq), wrapper = w)
+          db.DbChangesActor.changesActorRef ! Continuous(since = Some(seq))
           db.createDocId("1" + uuid, Empty).flatMap{doc => db.deleteDoc(doc)}
           db.createDocId("2" + uuid, Empty).flatMap{doc => db.deleteDoc(doc)}
         }
@@ -105,8 +104,7 @@ class Changes extends FunSuite with CouchSuiteHelpers {
         }
         case LastSeqResponse(seq) => {
           val dl = SphinxDocLogger("globalChangesFeedContinuous")
-          val w:ActorRef => ActorRef = (ar) => context.actorOf(Props(new ChunkedResponseLoggerActor(ar, dl)))
-          c.GlobalChangesActor.changesActorRef ! Continuous(since = Some(seq), wrapper = w)
+          c.GlobalChangesActor.changesActorRef ! Continuous(since = Some(seq))
           for (dbName <- dbNames) {
             c.createDb(dbName).andThen{case _ => c.deleteDb(dbName)} 
           }

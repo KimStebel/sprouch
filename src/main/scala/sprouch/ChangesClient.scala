@@ -40,22 +40,18 @@ trait DbChangesClient {
 }
 
 object ChangesModule {
-  sealed trait Request {
-    val wrapper:ActorRef => ActorRef
-  }
+  sealed trait Request
   case class LastSeq(wrapper:ActorRef => ActorRef = identity[ActorRef]) extends Request
   case class Continuous(since:Option[String] = None,
                         limit:Option[Int] = None,
                         descending:Option[Boolean] = None,
                         timeout:Option[Int] = None,
-                        heartbeat:Option[Int] = None,
-                        wrapper:ActorRef => ActorRef = identity[ActorRef]) extends Request with Params
+                        heartbeat:Option[Int] = None) extends Request with Params
   case class Longpoll(since:Option[String] = None,
                       limit:Option[Int] = None,
                       descending:Option[Boolean] = None,
                       timeout:Option[Int] = None,
-                      heartbeat:Option[Int] = None,
-                      wrapper:ActorRef => ActorRef = identity[ActorRef]) extends Request with Params
+                      heartbeat:Option[Int] = None) extends Request with Params
   trait Params {
     val since:Option[String]
     val limit:Option[Int]
@@ -77,7 +73,7 @@ trait ChangesModule {
     self: Actor =>
       
     protected[this] def handleRequest(actor: => Actor, request:Request) {
-      val requestActor = request.wrapper(context.actorOf(Props(actor)))
+      val requestActor = context.actorOf(Props(actor))
       requestActor forward request
     }
     
@@ -129,29 +125,34 @@ trait ChangesModule {
   }
   
   trait ContinuousRequestActor[A] extends Actor {
+    val description:String
     val baseUri:String
     implicit val aJsonFormat:JsonFormat[A]
     var reqSender:ActorRef = null
     val log = Logging(context.system, this)
+    val logger = context.actorFor("akka://MySystem/user/docLogger")
     def receive = {
       case p:Params => {
         reqSender = sender
         val cl = pipelines.conduit
         val query = paramsToQuery(p)
         val req = pipelines.addBasicAuth(Get(baseUri + query))
+        logger ! ChunkedResponseLoggerActor.RequestHeaders(description, req)
         cl ! req
       }
       case crs:ChunkedResponseStart => {
-        
+        logger ! ChunkedResponseLoggerActor.ResponseHeaders(description, crs.message)
       }
       case ChunkedMessageEnd => {
         reqSender ! ResponseEnd
         context.stop(self)
       }
       case mc:MessageChunk => {
-        val str = mc.data.asString
         try {
-          val update = mc.data.asString.asJson.convertTo[A]
+          val str = mc.data.asString
+          val js = str.asJson
+          val update = js.convertTo[A]
+          logger ! ChunkedResponseLoggerActor.ResponseBodyJson(description, js)
           reqSender ! update
         } catch {
           case e => {
@@ -163,25 +164,30 @@ trait ChangesModule {
   }
   
   trait LongpollRequestActor[A] extends Actor {
+    val description:String
     val baseUri:String
     implicit val aJsonFormat:JsonFormat[A]
     var reqSender:ActorRef = null
     var acc:String = ""
     val log = Logging(context.system, this)
+    val logger = context.actorFor("akka://MySystem/user/docLogger")
     def receive = {
       case p:Params => {
         reqSender = sender
         val cl = pipelines.conduit
         val query = paramsToQuery(p)
         val req = pipelines.addBasicAuth(Get(baseUri + query))
+        logger ! ChunkedResponseLoggerActor.RequestHeaders(description, req)
         cl ! req
       }
       case crs:ChunkedResponseStart => {
-        
+        logger ! ChunkedResponseLoggerActor.ResponseHeaders(description, crs.message)
       }
       case ChunkedMessageEnd => {
         try {
-          val updates = acc.asJson.convertTo[A]
+          val js = acc.asJson
+          logger ! ChunkedResponseLoggerActor.ResponseBodyJson(description, js)
+          val updates = js.convertTo[A]
           reqSender ! updates
         } catch {
           case e => {
@@ -232,6 +238,7 @@ trait DbChangesModule extends ChangesModule {
   }
   
   private class DbLongpollRequestActor extends LongpollRequestActor[DocUpdates] {
+    override val description = "DbLongpollChangesFeed"
     override val baseUri = "/" + name  + "/_changes?feed=longpoll&"
     override val aJsonFormat = implicitly[JsonFormat[DocUpdates]]
   }
@@ -241,6 +248,7 @@ trait DbChangesModule extends ChangesModule {
   }
   
   protected[this] class DbContinuousRequestActor extends ContinuousRequestActor[DocUpdate] {
+    val description = "DbContinousChangesFeed"
     import DbChangesActor._
     override val baseUri = "/" + name + "/_changes?feed=continuous&"
     override val aJsonFormat = implicitly[JsonFormat[DocUpdate]]
@@ -269,7 +277,7 @@ trait GlobalChangesModule extends ChangesModule {
         handleRequest(new GlobalLastSeqRequestActor, ls)
       }
       case c:Continuous => {
-        handleRequest(new ContinuousRequestActor, c)
+        handleRequest(new GlobalContinuousRequestActor, c)
       }
       case l:Longpoll => {
         handleRequest(new GlobalLongpollRequestActor, l)
@@ -282,6 +290,7 @@ trait GlobalChangesModule extends ChangesModule {
   }
   
   private class GlobalLongpollRequestActor extends LongpollRequestActor[DbUpdates] {
+    override val description = "GlobalLongpollChangesFeed"
     override val baseUri = "/_db_updates?feed=longpoll&"
     override val aJsonFormat = implicitly[JsonFormat[DbUpdates]]
   }
@@ -290,36 +299,11 @@ trait GlobalChangesModule extends ChangesModule {
     override val uri = "/_db_updates?limit=1&descending=true"
   }
   
-  private class ContinuousRequestActor extends Actor {
+  private class GlobalContinuousRequestActor extends ContinuousRequestActor[DbUpdate] {
+    val description = "GlobalContinousChangesFeed"
     import GlobalChangesActor._
-    var reqSender:ActorRef = null
-    val log = Logging(context.system, this)
-    def receive = {
-      case p:Params => {
-        reqSender = sender
-        val cl = pipelines.conduit
-        val query = paramsToQuery(p)
-        val req = pipelines.addBasicAuth(Get("/_db_updates?feed=continuous&" + query))
-        cl ! req
-      }
-      case crs:ChunkedResponseStart => {
-        
-      }
-      case ChunkedMessageEnd => {
-        reqSender ! ResponseEnd
-        context.stop(self)
-      }
-      case mc:MessageChunk => {
-        val str = mc.data.asString
-        try {
-          val dbUpdate = mc.data.asString.asJson.convertTo[DbUpdate]
-          reqSender ! dbUpdate
-        } catch {
-          case e => {
-            //not an update chunk -> ignore
-          }
-        }
-      }
-    }
+    override val baseUri = "/_db_updates?feed=continuous&"
+    override val aJsonFormat = implicitly[JsonFormat[DbUpdate]]
+    
   }  
 }
