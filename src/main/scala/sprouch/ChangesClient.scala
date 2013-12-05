@@ -248,7 +248,7 @@ trait DbChangesModule extends ChangesModule {
   }
   
   protected[this] class DbContinuousRequestActor extends ContinuousRequestActor[DocUpdate] {
-    val description = "DbContinousChangesFeed"
+    val description = "DbContinuousChangesFeed"
     import DbChangesActor._
     override val baseUri = "/" + name + "/_changes?feed=continuous&"
     override val aJsonFormat = implicitly[JsonFormat[DocUpdate]]
@@ -300,7 +300,7 @@ trait GlobalChangesModule extends ChangesModule {
   }
   
   private class GlobalContinuousRequestActor extends ContinuousRequestActor[DbUpdate] {
-    val description = "GlobalContinousChangesFeed"
+    val description = "GlobalContinuousChangesFeed"
     import GlobalChangesActor._
     override val baseUri = "/_db_updates?feed=continuous&"
     override val aJsonFormat = implicitly[JsonFormat[DbUpdate]]
