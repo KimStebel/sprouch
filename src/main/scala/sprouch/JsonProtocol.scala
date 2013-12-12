@@ -194,10 +194,15 @@ trait SprouchJsonProtocol {
     (f.write(ap._1),f.write(ap._2))
   }
   
-  case class SearchResultRow(id:String, order:Seq[Option[Double]], fields:JsValue)
+  case class SearchResultRow(id:String, order:Seq[Option[JsValue]], fields:JsValue)
   implicit val searchResultRowFormat = jsonFormat3(SearchResultRow)
   case class SearchResponse(total_rows:Int, bookmark:String, rows:Seq[SearchResultRow])
   implicit val searchResponseFormat = jsonFormat3(SearchResponse)
+  
+  case class SearchResultGroup(by:String, total_rows:Int, rows:Seq[SearchResultRow])
+  implicit val SearchResultGroupFormat = jsonFormat3(SearchResultGroup)
+  case class GroupedSearchResponse(total_rows:Int, bookmark:Option[String], groups:Seq[SearchResultGroup])
+  implicit val groupedSearchResponseFormat = jsonFormat3(GroupedSearchResponse)
   
   // _security document
   case class RolesAndNames(roles:Seq[String], names:Seq[String])

@@ -23,7 +23,8 @@ trait DocLogger {
 
 object SphinxDocLogger {
   def apply(fileName:String) = {
-    new SphinxDocLogger(System.getenv("TESTY_RESULT_DIR") + "/" + fileName)
+    val baseName = System.getenv("TESTY_RESULT_DIR") + "/" + fileName
+    new SphinxDocLogger(baseName)
   }
 }
 
@@ -119,17 +120,6 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     out.newLine()
   }
   
-  private def logMessage(out:BufferedWriter, m:HttpMessage) {
-    logHeaders(m.headers, out)
-    if (!m.entity.isEmpty) {
-      val reqResp = m match {
-        case _:HttpRequest => request
-        case _:HttpResponse => response
-      }
-      logBody(m.entity.asString, out)
-    }
-  }
-  
   def logBody(bodyStr:String, out:BufferedWriter) {
     try {
       logBodyPartJson(bodyStr.asJson, out)
@@ -169,6 +159,7 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
   }
   
   private def logRequestStart(req:HttpRequest, out:BufferedWriter) {
+    println("logging request start")
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     def prettyUri(uri:String) = {
@@ -182,10 +173,16 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     out.newLine()
   }
   
-  def logRequest(req:HttpRequest) = withWriter(request, headers, false)(out => {
-    logRequestStart(req, out)
-    logMessage(out, req)
-  })
+  def logRequest(req:HttpRequest) = {
+    withWriter(request, headers, false)(out => {
+      logRequestStart(req, out)
+      logHeaders(req.headers, out)
+    })
+    withWriter(request, body, false)(out => {
+      logBodyStart(out)
+      logBody(req.entity.asString, out)
+    })
+  }
   
   private def logResponseStart(out:BufferedWriter, resp:HttpResponse) = {
     out.write(".. code-block:: http")
@@ -194,10 +191,16 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     out.newLine()
     
   }
-  def logResponse(resp:HttpResponse) = withWriter(response, headers, false)(out => {
-    logResponseStart(out, resp)
-    logMessage(out, resp)
-  })
+  def logResponse(resp:HttpResponse) = {
+    withWriter(response, headers, false)(out => {
+      logResponseStart(out, resp)
+      logHeaders(resp.headers, out)
+    })
+    withWriter(response, body, false)(out => {
+      logBodyStart(out)
+      logBody(resp.entity.asString, out)
+    })
+  }
 }
 
 object NopLogger extends DocLogger {
