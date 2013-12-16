@@ -159,7 +159,6 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
   }
   
   private def logRequestStart(req:HttpRequest, out:BufferedWriter) {
-    println("logging request start")
     out.write(".. code-block:: http")
     out.newLine(); out.newLine()
     def prettyUri(uri:String) = {

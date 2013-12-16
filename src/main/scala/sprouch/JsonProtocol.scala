@@ -29,8 +29,10 @@ trait SprouchJsonProtocol {
   }
   case class ApiKeyResponse(ok:Boolean, key:String, password:String)
   implicit val apiKeyResponseFormat = jsonFormat3(ApiKeyResponse)
-  case class Index(index:String)
-  implicit val indexFormat = jsonFormat1(Index)
+  case class Analyzer(name:String, default:Option[String], fields:Option[Map[String, String]])
+  implicit val analyzerFormat = jsonFormat3(Analyzer)
+  case class Index(index:String, analyzer:Option[Analyzer])
+  implicit val indexFormat = jsonFormat2(Index)
   case class Indexes(indexes:Map[String,Index])
   implicit val indexesFormat = jsonFormat1(Indexes)
 

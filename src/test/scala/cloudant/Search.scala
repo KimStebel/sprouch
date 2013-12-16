@@ -22,7 +22,7 @@ class Search extends FunSuite with CouchSuiteHelpers {
             index("default", doc.bar, {"store": "yes"});
             index("foo", doc.foo, {"store": "yes"});
           }
-      """)
+      """, None)
       val indexes = Indexes(Map("bar" -> index))
       val ddocName = "mysearches"
       val indexesDoc = new NewDocument(ddocName, indexes)

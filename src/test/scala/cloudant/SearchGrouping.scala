@@ -33,7 +33,7 @@ class SearchGrouping extends FunSuite with CouchSuiteHelpers {
             index("bar", doc.bar, {"store": "yes"});
             index("foo", doc.foo, {"store": "yes"});
           }
-      """)
+      """, None)
       val indexName = "index1"
       val indexes = Indexes(Map(indexName -> index))
       val ddocName = "mysearches"
