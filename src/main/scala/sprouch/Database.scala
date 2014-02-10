@@ -28,7 +28,8 @@ trait DbUriBuilder extends UriBuilder {
   * Supports CRUD operations on documents and attachments,
   * creating and querying views, bulk get, update, and delete operations.  
   */
-class Database private[sprouch](val name:String, protected[this] val pipelines:Pipelines, protected[this] val config:Config) extends DbUriBuilder with SearchModule with DbChangesModule {
+class Database private[sprouch](val name:String, protected[this] val pipelines:Pipelines, protected[this] val config:Config)
+    extends DbUriBuilder with SearchModule with DbChangesModule {
   import pipelines._
   
   private def docUri(doc:Document[_]):String = docUri(doc.id)
@@ -186,8 +187,8 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
   
-  def createIndexes(indexes:NewDocument[Indexes]):Future[RevedDocument[Indexes]] = {
-    val p = pipeline[CreateResponse]
+  def createIndexes(indexes:NewDocument[Indexes], docLogger:DocLogger = NopLogger):Future[RevedDocument[Indexes]] = {
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(designDocUri(indexes), indexes))
     response.map(cr => indexes.setRev(cr.rev))
   }

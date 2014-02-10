@@ -189,7 +189,7 @@ class Pipelines(config:Config) {
     ((hr:HttpRequest) => {docLogger.logRequest(hr); hr}) ~>
     sendReceive(conduit) ~>
     ((hr:HttpResponse) => {docLogger.logResponse(hr); hr}) ~>
-    ((hr:HttpResponse) => {/*println(hr);*/ hr})
+    ((hr:HttpResponse) => {println(hr.entity.asString); hr})
     
   }
   

@@ -27,8 +27,8 @@ trait ChangesJsonProtocol {
   case class DocUpdate(seq:String, id:String, changes:Seq[RevObject])
   implicit val docUpdateFormat = jsonFormat3(DocUpdate)
   
-  case class DocUpdates(results:Seq[DocUpdate], last_seq:String)
-  implicit val docUpdatesFormat = jsonFormat2(DocUpdates)
+  case class DocUpdates(results:Seq[DocUpdate], last_seq:String, pending:Int)
+  implicit val docUpdatesFormat = jsonFormat3(DocUpdates)
   
   case class DbUpdates(results:Seq[DbUpdate], last_seq:String)
   implicit val dbUpdatesFormat = jsonFormat2(DbUpdates)  
@@ -212,7 +212,7 @@ trait DbChangesModule extends ChangesModule {
   import pipelines._
   
   object DbChangesActor {
-    val actorName = "dbChangesActor"
+    val actorName = "dbChangesActor" + name
     val changesActorRef = config.actorSystem.actorOf(Props(new DbChangesActor), actorName)
   }
   

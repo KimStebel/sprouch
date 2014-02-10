@@ -67,7 +67,7 @@ trait SprouchJsonProtocol {
   case class OkResponse(ok:Boolean)
   case class CreateResponse(ok:Option[Boolean], id:String, rev:String)
   case class ErrorResponse(status:Int, body:Option[ErrorResponseBody])
-  case class ErrorResponseBody(error:String, reason:String)
+  case class ErrorResponseBody(error:String, reason:Option[String])
   case object Empty
   
   implicit val emptyFormat = new RootJsonFormat[Empty.type] {
@@ -201,6 +201,14 @@ trait SprouchJsonProtocol {
   case class SearchResponse(total_rows:Int, bookmark:String, rows:Seq[SearchResultRow])
   implicit val searchResponseFormat = jsonFormat3(SearchResponse)
   
+  case class FacetedSearchResponse(
+      rows:Seq[SearchResultRow],
+      bookmark:String,
+      total_rows:Int,
+      ranges:Option[Map[String,Map[String,Int]]],
+      counts:Option[Map[String,Map[String,Int]]])
+  implicit val facetedSearchResponseFormat = jsonFormat5(FacetedSearchResponse)
+  
   case class SearchResultGroup(by:String, total_rows:Int, rows:Seq[SearchResultRow])
   implicit val SearchResultGroupFormat = jsonFormat3(SearchResultGroup)
   case class GroupedSearchResponse(total_rows:Int, bookmark:Option[String], groups:Seq[SearchResultGroup])
@@ -233,18 +241,9 @@ trait SprouchJsonProtocol {
   case class ShardsDocIdResponse(nodes:Seq[String], range:String)
   implicit val shardsDocIdResponseFormat = jsonFormat2(ShardsDocIdResponse)
   
-  /*case class DbUpdate(dbname:String, `type`:String, seq:String, account:Option[String])
-  implicit val dbUpdateFormat = jsonFormat4(DbUpdate)
+  case class MembershipResponse(cluster_nodes:Seq[String], all_nodes:Seq[String])
+  implicit val membershipResponseFormat = jsonFormat2(MembershipResponse)
   
-  case class RevObject(rev:String)
-  implicit val revObjectFormat = jsonFormat1(RevObject)
-  
-  case class DocUpdate(seq:String, id:String, changes:Seq[RevObject])
-  implicit val docUpdateFormat = jsonFormat3(DocUpdate)
-  
-  case class DbUpdates(results:Seq[DbUpdate], last_seq:String)
-  implicit val dbUpdatesFormat = jsonFormat2(DbUpdates)  
-  */
 }
 
 

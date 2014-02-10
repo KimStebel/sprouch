@@ -19,8 +19,8 @@ class Search extends FunSuite with CouchSuiteHelpers {
       val data = List(Test(foo=0, bar="aa"),Test(11, "ab"),Test(2, "ac"), Test(3, "aa"), Test(22, "aa"), Test(3, "ba"), Test(4, "bb"))
       val index = Index("""
           function(doc){
-            index("default", doc.bar, {"store": "yes"});
-            index("foo", doc.foo, {"store": "yes"});
+            index("default", doc.bar, {"store": true});
+            index("foo", doc.foo, {"store": true});
           }
       """, None)
       val indexes = Indexes(Map("bar" -> index))

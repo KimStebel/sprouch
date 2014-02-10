@@ -43,6 +43,11 @@ class Couch(protected[this] val config:Config) extends UriBuilder with GlobalCha
   private def pipeline = pipelines.pipeline[OkResponse]
   private def getDbPipeline = pipelines.pipeline[GetDbResponse]
   
+  def membership(docLogger:DocLogger = NopLogger):Future[MembershipResponse] = {
+    val p = pipelines.pipeline[MembershipResponse](docLogger = docLogger)
+    p(Get(path("_membership")))
+  }
+  
   def allDbs():Future[Seq[String]] = {
     val p = pipelines.pipeline[Seq[String]]
     p(Get("/_all_dbs"))
