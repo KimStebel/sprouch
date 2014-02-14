@@ -1,11 +1,12 @@
 package sprouch
 
 import spray.json.RootJsonFormat
-import akka.dispatch.Future
+import scala.concurrent.Future
 import scala.annotation.implicitNotFound
 import spray.json.JsonFormat
 import spray.json.JsValue
 import sprouch.StaleOption.notStale
+import scala.concurrent.ExecutionContext.Implicits.global
 
 package object dsl {
   def queryView[K,V](viewDocName:String, viewName:String,

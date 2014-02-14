@@ -5,6 +5,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @RunWith(classOf[JUnitRunner])
 class BulkActions extends FunSuite with CouchSuiteHelpers {

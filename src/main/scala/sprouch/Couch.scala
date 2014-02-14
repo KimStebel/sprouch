@@ -1,10 +1,9 @@
 package sprouch
 
 import akka.actor._
-import akka.dispatch.Future
-import spray.can.client.HttpClient
-import spray.client.HttpConduit
-import HttpConduit._
+import scala.concurrent.Future
+import spray.can.Http
+import spray.client.pipelining._
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
@@ -16,7 +15,6 @@ import spray.util._
 import java.util.UUID
 import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
-
 import JsonProtocol._
 
 private[sprouch] trait UriBuilder {
@@ -35,7 +33,9 @@ case class SprouchException(error:ErrorResponse) extends Exception
  * Class that handles the connection to CouchDB. It contains methods for creating, looking up and deleting databases.
  */
 class Couch(config:Config) extends UriBuilder {
-  
+  implicit val system = ActorSystem()
+  import system.dispatcher // execution context for futures
+
   private val pipelines = new Pipelines(config)
   private lazy val pipeline = pipelines.pipeline[OkResponse]
   private lazy val getDbPipeline = pipelines.pipeline[GetDbResponse]

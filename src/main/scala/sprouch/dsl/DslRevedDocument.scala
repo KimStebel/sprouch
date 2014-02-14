@@ -1,11 +1,12 @@
 package sprouch.dsl
 
 import sprouch._
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.RootJsonFormat
 import sprouch.JsonProtocol.OkResponse
 import sprouch.JsonProtocol.AllDocsResponse
 import spray.json.JsonFormat
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class DslRevedDocument[A](id:String, rev:String, data:A, attachments:Map[String, AttachmentStub]) 
   extends RevedDocument[A](id, rev, data, attachments) {

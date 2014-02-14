@@ -1,15 +1,15 @@
 package sprouch
 
+import akka.util.Timeout
 import akka.actor._
-import akka.dispatch.Future
-import spray.can.client.HttpClient
-import spray.client.HttpConduit
-import HttpConduit._
+import scala.concurrent.Future
+import spray.client.pipelining
+import spray.client.pipelining._
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
 import spray.httpx.SprayJsonSupport._
-import spray.httpx.unmarshalling.Unmarshaller
+import spray.httpx.unmarshalling.FromResponseUnmarshaller
 import spray.json._
 import spray.util._
 import java.util.UUID
@@ -19,9 +19,12 @@ import akka.actor.Props
 import akka.event.Logging
 import sprouch.JsonProtocol.ErrorResponseBody
 import sprouch.JsonProtocol.ErrorResponse
-import spray.io.IOBridge
-import spray.io.IOExtension
-
+import akka.io.IO
+import spray.can.Http
+import akka.pattern.ask
+import spray.io.{ ConnectionTimeouts, ClientSSLEngineProvider, ServerSSLEngineProvider }
+import scala.concurrent.duration.Duration
+import scala.concurrent.Await
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
  * 
@@ -39,44 +42,36 @@ case class Config(
     https:Boolean = false
 )
 
-private[sprouch] class Pipelines(config:Config) {
-  import config._
+private[sprouch] class Pipelines(config:Config) {  
+  import config._  
+  implicit val system = actorSystem
+  implicit val timeout = Timeout(10000)
+  import system.dispatcher
   
-  private val conduit = {
-    val ioBridge = IOExtension(actorSystem).ioBridge()
-    val httpClient = actorSystem.actorOf(Props(new HttpClient(ioBridge)))
-    actorSystem.actorOf(Props(new HttpConduit(httpClient, hostName, port, https)))
-  }
-  private val log = Logging(actorSystem, conduit)
+  lazy val transportActorRefFuture = for (
+      Http.HostConnectorInfo(connector, _) <- IO(Http)(actorSystem) ? Http.HostConnectorSetup(host = hostName, port = port, sslEncryption = https)
+  ) yield connector 
   
-  private val logRequest: HttpRequest => HttpRequest = r => {
-    log.info(r.toString + "\n")
-    r
-  }
+  def pipeline[A:FromResponseUnmarshaller]: HttpRequest => Future[A] = pipeline[A](None)
   
-  private val logResponse: HttpResponse => HttpResponse = r => {
-    log.info(r.toString + "\n")
-    r
-  }  
-  def pipeline[A:Unmarshaller]: HttpRequest => Future[A] = pipeline[A](None)
-  
-  def pipeline[A:Unmarshaller](etag:Option[String]): HttpRequest => Future[A] = {
-    def unmarshalEither[A:Unmarshaller]: HttpResponse => A = {
+  def pipeline[A:FromResponseUnmarshaller](etag:Option[String]): HttpRequest => Future[A] = {
+    def unmarshalEither[A:FromResponseUnmarshaller]: HttpResponse => A = {
       hr => (hr match {
-        case HttpResponse(status, _, _, _) if status.value == 304 => {//not modified
-          throw new SprouchException(ErrorResponse(status.value, None))
+        case HttpResponse(status, _, _, _) if status.intValue == 304 => {//not modified
+          throw new SprouchException(ErrorResponse(status.intValue, None))
         }
         case HttpResponse(status, _, _, _) if status.isSuccess => {
-          unmarshal[A](implicitly[Unmarshaller[A]])(hr)
+          unmarshal[A](implicitly[FromResponseUnmarshaller[A]])(hr)
         }
         case HttpResponse(errorStatus, _, _, _) => {
-          log.error(hr.toString)
-          val ue = implicitly[Unmarshaller[ErrorResponseBody]]
+          val ue = implicitly[FromResponseUnmarshaller[ErrorResponseBody]]
           val body = unmarshal[ErrorResponseBody](ue)(hr.copy(status = StatusCodes.OK))
-          throw new SprouchException(ErrorResponse(errorStatus.value, Option(body)))
+          throw new SprouchException(ErrorResponse(errorStatus.intValue, Option(body)))
         }
       })
     }
+    val transportActorRef = Await.result[ActorRef](transportActorRefFuture, Duration("10 seconds"))
+    
     addHeader("accept", "application/json") ~>
     (etag match {
       case Some(etag) => addHeader("If-None-Match", "\"" + etag + "\"") 
@@ -86,9 +81,7 @@ private[sprouch] class Pipelines(config:Config) {
       case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
       case None => (x:HttpRequest) => x
     }) ~>
-//  logRequest ~>
-    sendReceive(conduit) ~>
-//  logResponse ~>
+    sendReceive(transportActorRef) ~>
     unmarshalEither[A]
   }
   

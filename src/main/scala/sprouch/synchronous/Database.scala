@@ -1,8 +1,8 @@
 package sprouch.synchronous
 
-import akka.util.Duration
-import akka.dispatch.Future
-import akka.dispatch.Await
+import scala.concurrent.duration.Duration
+import scala.concurrent.Future
+import scala.concurrent.Await
 import spray.json.{JsonFormat, RootJsonFormat}
 import sprouch._
 import JsonProtocol._

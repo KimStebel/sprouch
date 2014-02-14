@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.{RootJsonFormat, JsonFormat, JsValue}
 import spray.json.JsObject
 import spray.json.JsString

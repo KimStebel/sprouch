@@ -5,9 +5,10 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.JsonFormat
 import spray.json.JsValue
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ViewsSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
@@ -33,7 +34,7 @@ class ViewsSuite extends FunSuite with CouchSuiteHelpers {
             """)
         )
         val viewsDoc = new NewDocument("my views", Views(Map("sum" -> mr)))
-        val view <- db.createViews(viewsDoc)
+        view <- db.createViews(viewsDoc)
         queryRes <- db.queryView[Null,Int]("my views", "sum")
         groupedRes <- db.queryView[String,Int]("my views", "sum", flags = ViewQueryFlag(group = true))
         keyRes <- db.queryView[Null,Int]("my views", "sum", key = Some("a"))

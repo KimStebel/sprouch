@@ -6,6 +6,7 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import sprouch.dsl._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @RunWith(classOf[JUnitRunner])
 class Dsl extends FunSuite with CouchSuiteHelpers {
