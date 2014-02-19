@@ -48,7 +48,7 @@ private[sprouch] class Pipelines(config:Config) {
   implicit val timeout = Timeout(10000)
   import system.dispatcher
   
-  lazy val transportActorRefFuture = for (
+  def transportActorRefFuture = for (
       Http.HostConnectorInfo(connector, _) <- IO(Http)(actorSystem) ? Http.HostConnectorSetup(host = hostName, port = port, sslEncryption = https)
   ) yield connector 
   
