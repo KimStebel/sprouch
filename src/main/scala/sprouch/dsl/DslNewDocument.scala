@@ -2,8 +2,9 @@ package sprouch.dsl
 
 import sprouch._
 import java.util.UUID
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.RootJsonFormat
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait DslDocument[A] {
   

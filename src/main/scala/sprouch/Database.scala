@@ -1,14 +1,14 @@
 package sprouch
 
+import akka.actor._
 import java.util.UUID
 import spray.httpx.marshalling.Marshaller
 import spray.httpx.unmarshalling.Unmarshaller
 import akka.actor.ActorRef
 import spray.http.HttpMethods.HEAD
-import spray.client.HttpConduit
-import HttpConduit.{Post, Delete, Get, Put}
+import spray.client.pipelining._
 import spray.httpx.SprayJsonSupport._
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.RootJsonFormat
 import spray.httpx.RequestBuilding.RequestBuilder
 import spray.http.HttpRequest
@@ -25,7 +25,9 @@ import spray.json.JsValue
   */
 class Database private[sprouch](val name:String, pipelines:Pipelines) extends UriBuilder {
   import pipelines._
-  
+  implicit val system = ActorSystem()
+  import system.dispatcher // execution context for futures
+
   private def dbUri:String = dbUri(name)
   private def docUri(doc:Document[_]):String = docUri(doc.id)
   private def docUri(id:String) = path(name, id)
