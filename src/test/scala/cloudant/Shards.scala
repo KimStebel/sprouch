@@ -20,7 +20,7 @@ class Shards extends FunSuite with CouchSuiteHelpers {
       val dlid = SphinxDocLogger("shardForId")
       for {
         db <- dbf
-        val docId = "foo"
+        docId = "foo"
         doc <- db.createDocId(docId, Empty)
         res1 <- db.shards(docLogger = dl)
         res2 <- db.shardForDoc(docId, docLogger = dlid)

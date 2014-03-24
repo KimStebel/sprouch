@@ -29,7 +29,7 @@ class Show extends FunSuite with CouchSuiteHelpers {
         db <- dbf
         view <- db.createDesign(designDoc)
         doc <- data.create
-        val query = "h=heading"
+        query = "h=heading"
         queryRes <- db.show("my shows", "asHtml", doc.id, query, docLogger = dl)
       } yield {
         assert(queryRes.entity.asString === "<h1>heading</h1><ul><li>1</li><li>foo</li></ul>")

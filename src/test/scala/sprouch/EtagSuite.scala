@@ -9,7 +9,8 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class EtagSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   test("get request with identical etag") {
     withNewDb(db => {
       val data = Test(0, "")

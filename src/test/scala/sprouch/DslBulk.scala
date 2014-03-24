@@ -1,17 +1,13 @@
 package sprouch
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import sprouch.dsl._
-import akka.dispatch.Future
 
 class DslBulk extends FunSuite with CouchSuiteHelpers {
   
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   test("create docs in bulk with dsl") {
     withNewDbFuture(implicit dbf => {
       val data = for (i <- 1 to 10) yield Test(i, "")

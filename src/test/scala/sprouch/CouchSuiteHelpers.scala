@@ -2,9 +2,8 @@ package sprouch
 
 import org.scalatest.FunSuite
 import akka.actor.ActorSystem
-import akka.util.Duration
-import akka.dispatch.Await
-import akka.dispatch.Future
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 import java.util.UUID
 import sprouch.json.Schema
 import spray.json.JsonParser
@@ -89,13 +88,13 @@ trait CouchSuiteHelpers {
   
   def withDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- Future()
-    val dbf = c.getDb(dbName)
+    dbf = c.getDb(dbName)
     res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   
   def withNewDbFuture[A](dbName:String)(f:Future[Database] => Future[A]):A = await(for {
     _ <- c.deleteDb(dbName) recover { case _ => }
-    val dbf = c.createDb(dbName)
+    dbf = c.createDb(dbName)
     res <- f(dbf) andThen { case _ => dbf.flatMap(_.delete()) }
   } yield res)
   
