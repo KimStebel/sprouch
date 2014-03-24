@@ -1,12 +1,12 @@
 package sprouch
 
+import scala.concurrent.Future
 import java.util.UUID
 import spray.httpx.marshalling.Marshaller
 import spray.httpx.unmarshalling.Unmarshaller
 import akka.actor.ActorRef
 import spray.http.HttpMethods.HEAD
 import spray.httpx.SprayJsonSupport._
-import akka.dispatch.Future
 import spray.json.RootJsonFormat
 import spray.httpx.RequestBuilding.RequestBuilder
 import spray.http.HttpRequest
@@ -21,17 +21,18 @@ import spray.httpx.RequestBuilding._
 trait DbUriBuilder extends UriBuilder {
   def name:String
   protected[this] def dbUri:String = dbUri(name)
-  
+
 }
 
 /**
   * Supports CRUD operations on documents and attachments,
-  * creating and querying views, bulk get, update, and delete operations.  
+  * creating and querying views, bulk get, update, and delete operations.
   */
 class Database private[sprouch](val name:String, protected[this] val pipelines:Pipelines, protected[this] val config:Config)
     extends DbUriBuilder with SearchModule with DbChangesModule {
   import pipelines._
-  
+  import config.actorSystem.dispatcher
+
   private def docUri(doc:Document[_]):String = docUri(doc.id)
   private def docUri(id:String) = path(name, id)
   private def docUriRev(doc:RevedDocument[_]) = docUri(doc) + "?rev=" + doc.rev
@@ -46,24 +47,24 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       viewName:String,
       kvs:List[String]) =
     path(name, "_design", designDocId, "_view", viewName) + query(kvs:_*)
-  
+
   private def allDocsUri(kvs:List[String]) = {
     path(name, "_all_docs") + query(kvs:_*)
   }
   private def bulkUri:String = path(name, "_bulk_docs")
   private def revisionsUri(id:String) = docUri(id) + "?revs_info=true"
-  
+
   def shards(docLogger:DocLogger = NopLogger):Future[ShardsResponse] = {
     val p = pipeline[ShardsResponse](docLogger = docLogger)
     p(Get(path(name, "_shards")))
   }
-  
+
   def shardForDoc(id:String, docLogger:DocLogger = NopLogger):Future[ShardsDocIdResponse] = {
     val p = pipeline[ShardsDocIdResponse](docLogger = docLogger)
     p(Get(path(name, "_shards", id)))
   }
-  
-  
+
+
   def security(docLogger:DocLogger = NopLogger):Future[SecuritySettings] = {
     val p = pipeline[SecuritySettings](docLogger = docLogger)
     p(Get(path(name, "_security")))
@@ -75,7 +76,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val p = pipeline[RevsInfo](docLogger = docLogger)
     p(Get(revisionsUri(doc.id))).map(_._revs_info)
   }
-  
+
   /**
     * Creates or updates Documents in Bulk.
     */
@@ -85,7 +86,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       crs.zip(docs).map { case (cr, doc) => doc.setRev(cr.rev) }
     })
   }
-  
+
   /**
     * Deletes the entire database.
     */
@@ -93,7 +94,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val p = pipeline[OkResponse]
     p(Delete(dbUri))
   }
-  
+
   /**
     * Deletes a document.
     */
@@ -101,7 +102,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val p = pipeline[OkResponse]
     p(Delete(docUriRev(doc)))
   }
-  
+
   /**
     * Retrieves a document.
     */
@@ -109,7 +110,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val p = pipeline[RevedDocument[A]](docLogger = docLogger)
     p(Get(docUri(id)))
   }
-  
+
   /**
     * Retrieves a document. If the document is still current, the document is not transmitted again and doc is returned.
     */
@@ -119,7 +120,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       case SprouchException(e) if e.status == 304 => doc
     }
   }
-  
+
   /**
     * Creates a new document with the id given in the doc parameter.
     */
@@ -128,7 +129,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val response = p(Put(docUri(doc), doc))
     response.map(cr => doc.setRev(cr.rev))
   }
-  
+
   /**
     * Creates a new Document with the id set by CouchDB and returned in the RevedDocument that is returned.
     */
@@ -142,7 +143,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
   def createDocId[A:RootJsonFormat](id:String, data:A, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
     createDoc(new NewDocument(id, data, Map()), docLogger)
   }
-  
+
   /**
     * Updates a document.
     */
@@ -151,7 +152,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val response = p(Put(docUriRev(doc), doc))
     response.map(cr => doc.setRev(cr.rev))
   }
-  
+
   /**
     * Creates or updates an attachment.
     */
@@ -162,7 +163,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       doc2 <- getDoc[A](doc.id)
     } yield doc2
   }
-  
+
   /**
     * Retrieves an attachment.
     */
@@ -170,29 +171,29 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val p = pipeline[Array[Byte]]
     p(Get(attachmentUri(doc, id))).map(array => new Attachment(id, array))
   }
-  
+
   /**
     * Deletes an attachment.
     */
-  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = { 
+  def deleteAttachment[A](doc:RevedDocument[A], a:Attachment, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
     deleteAttachmentId(doc, a.id, docLogger)
   }
-  
+
   /**
     * Deletes an attachment.
     */
   def deleteAttachmentId[A](doc:RevedDocument[A], aid:String, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
     val p = pipeline[CreateResponse](docLogger = docLogger)
-    p(Delete(attachmentUriRev(doc, aid))).map(cr => 
+    p(Delete(attachmentUriRev(doc, aid))).map(cr =>
       new RevedDocument(id = doc.id, rev = cr.rev, doc.data, doc.attachments - aid))
   }
-  
+
   def createIndexes(indexes:NewDocument[Indexes], docLogger:DocLogger = NopLogger):Future[RevedDocument[Indexes]] = {
     val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(designDocUri(indexes), indexes))
     response.map(cr => indexes.setRev(cr.rev))
   }
-  
+
   /**
     * Creates a view document containing one or more views. See the Views class for details.
     */
@@ -201,33 +202,33 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     val response = p(Put(designDocUri(views), views))
     response.map(cr => views.setRev(cr.rev))
   }
-  
+
   def createDesign(designDoc:NewDocument[DesignDoc], docLogger:DocLogger = NopLogger):Future[RevedDocument[DesignDoc]] = {
     val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(designDocUri(designDoc), designDoc))
     response.map(cr => designDoc.setRev(cr.rev))
   }
-  
+
   def show(designDoc:String, showName:String, docId:String, query:String, docLogger:DocLogger = NopLogger) = {
     val p = pipelines.pipelineWithoutUnmarshal(docLogger = docLogger)
     p(Get(path(name, "_design", designDoc, "_show", showName, docId)+"?"+query))
   }
-  
+
   def list(designDoc:String, listName:String, viewName:String, docLogger:DocLogger = NopLogger) = {
     val p = pipelines.pipelineWithoutUnmarshal(docLogger = docLogger)
     p(Get(path(name, "_design", designDoc, "_list", listName, viewName)))
   }
-  
+
   def viewQueries(designDocId:String, viewName:String, queries:Seq[ViewQuery], docLogger:DocLogger = NopLogger):Future[Seq[JsObject]] = {
     val p = pipeline[Map[String,JsValue]](docLogger = docLogger)
     val body = Map("queries" -> queries)
     val resp = p(Post(path(name, "_design", designDocId, "_view", viewName), body))
     resp.map(m => m("results").asInstanceOf[JsArray].elements.toSeq.asInstanceOf[Seq[JsObject]])
   }
-  
+
   /**
     * Queries a view. Most parameters are not documented here, since they are already documented in CouchDB's documentation.
-    * 
+    *
     * @tparam K Type of the keys of the view.
     *  In case of a reduce view without the group option, this will be Null.
     *  There needs to be an implicit JsonFormat[K] in scope.
@@ -236,7 +237,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     * @param designDocId id of the document containing the view.
     *  This is the same document you passed to createViews.
     * @param name of the view inside the document given by designDocId.
-    *  
+    *
     */
   def queryView[K:JsonFormat,V:JsonFormat](
       designDocId:String,
@@ -253,12 +254,12 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       groupLevel:Option[Int] = None,
       stale:StaleOption = notStale,
       docLogger:DocLogger = NopLogger
-  ):Future[ViewResponse[K,V]] = { 
+  ):Future[ViewResponse[K,V]] = {
     val p = pipeline[ViewResponse[K,V]](docLogger = docLogger)
     val flagsWithImplicitGroup:Set[ViewQueryFlag] = flags ++ Set(group).filter(_ => !keys.isEmpty)
-    val kvs = 
+    val kvs =
       flagsWithImplicitGroup.toList.map(f => keyValue(f.toString)(true)) ++
-      (ViewQueryFlag.all -- Set(group).filter(_ => !flags.contains(reduce))).diff(flagsWithImplicitGroup).toList.map(f => keyValue(f.toString)(false)) ++ 
+      (ViewQueryFlag.all -- Set(group).filter(_ => !flags.contains(reduce))).diff(flagsWithImplicitGroup).toList.map(f => keyValue(f.toString)(false)) ++
       List(
         key.map(keyValue("key")),
         Option(keys).filter(!_.isEmpty).map(keyValue("keys")),
@@ -271,20 +272,20 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
         groupLevel.map(keyValue("group_level")),
         Option(stale).filter(notStale !=).map("stale=" +)
       ).flatten
-    
+
     val uri = viewQueryUri(
         designDocId,
         viewName,
         kvs)
     p(Get(uri))
   }
-  
+
   /**
    * Retrieves all or a range of Documents. The parameters are not documented here, since they are already documented in CouchDB's documentation.
-   * 
+   *
    * @tparam V Type of the documents.
    *  There needs to be an implicit JsonFormat[V] in scope.
-   * 
+   *
    */
   def allDocs[V:RootJsonFormat](
       flags:Set[ViewQueryFlag] = ViewQueryFlag.default,
@@ -296,12 +297,12 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
       skip:Option[Int] = None,
       stale:StaleOption = notStale,
       docLogger:DocLogger = NopLogger
-  ):Future[AllDocsResponse[V]] = { 
+  ):Future[AllDocsResponse[V]] = {
     val p = pipeline[AllDocsResponse[V]](docLogger = docLogger)
     val flagsWithGroupWithoutReduce:Set[ViewQueryFlag] = (flags ++ Set(group).filter(_ => !keys.isEmpty)) -- Set(reduce, group)
-    val kvs = 
+    val kvs =
       (flagsWithGroupWithoutReduce -- Set(inclusive_end)).toList.map(f => keyValue(f.toString)(true)) ++
-      (ViewQueryFlag.all.diff(Set(update_seq, descending, include_docs, reduce, group))).diff(flagsWithGroupWithoutReduce).toList.map(f => keyValue(f.toString)(false)) ++ 
+      (ViewQueryFlag.all.diff(Set(update_seq, descending, include_docs, reduce, group))).diff(flagsWithGroupWithoutReduce).toList.map(f => keyValue(f.toString)(false)) ++
       List(
         key.map(keyValue("key")),
         Option(keys).filter(!_.isEmpty).map(keyValue("keys")),
@@ -311,9 +312,9 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
         skip.map(keyValue("skip")),
         Option(stale).filter(notStale !=).map("stale=" +)
       ).flatten
-    
+
     val uri = allDocsUri(kvs)
     p(Get(uri))
   }
-  
+
 }

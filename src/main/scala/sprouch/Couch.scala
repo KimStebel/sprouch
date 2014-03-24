@@ -1,7 +1,7 @@
 package sprouch
 
 import akka.actor._
-import akka.dispatch.Future
+import scala.concurrent.{Future, ExecutionContext}
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
@@ -14,13 +14,12 @@ import java.util.UUID
 import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
 import JsonProtocol._
-import akka.dispatch.ExecutionContext
 import spray.httpx.RequestBuilding._
 
 private[sprouch] trait UriBuilder {
   protected[this] def sep = "/"
-  protected[this] def encode(s:String) = urlEncode(s, "UTF-8") 
-  protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)  
+  protected[this] def encode(s:String) = urlEncode(s, "UTF-8")
+  protected[this] def path(parts:String*) = sep + parts.map(encode).mkString(sep)
   protected[this] def dbUri(dbName:String) = path(dbName)
   protected[this] def query(kv:String*) = {
     if (kv.isEmpty) "" else {
@@ -37,27 +36,29 @@ case class SprouchException(error:ErrorResponse) extends Exception
 /**
  * Class that handles the connection to CouchDB. It contains methods for creating, looking up and deleting databases.
  */
-class Couch(protected[this] val config:Config) extends UriBuilder with GlobalChangesModule {
-  
+class Couch(protected[this] val config: Config) extends UriBuilder with GlobalChangesModule {
+
   val pipelines = new Pipelines(config)
+  import config.actorSystem.dispatcher
+
   private def pipeline = pipelines.pipeline[OkResponse]
   private def getDbPipeline = pipelines.pipeline[GetDbResponse]
-  
+
   def membership(docLogger:DocLogger = NopLogger):Future[MembershipResponse] = {
     val p = pipelines.pipeline[MembershipResponse](docLogger = docLogger)
     p(Get(path("_membership")))
   }
-  
+
   def allDbs():Future[Seq[String]] = {
     val p = pipelines.pipeline[Seq[String]]
     p(Get("/_all_dbs"))
   }
-  
+
   /**
    * Creates a new database. Fails if the database already exists.
    */
-  def createDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
-    val p = pipelines.pipeline[OkResponse](docLogger=docLogger)
+  def createDb(dbName: String, docLogger: DocLogger = NopLogger): Future[Database] = {
+    val p = pipelines.pipeline[OkResponse](docLogger = docLogger)
     p(Put(dbUri(dbName))).map(_ => new Database(dbName, pipelines, config))
   }
   /**

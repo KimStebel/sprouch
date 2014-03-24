@@ -1,7 +1,8 @@
 package sprouch
 
 import akka.actor._
-import akka.dispatch.Future
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 import spray.http._
 import HttpMethods._
 import spray.httpx.encoding.{Gzip, Deflate}
@@ -19,13 +20,12 @@ import java.io.Writer
 import spray.httpx.RequestBuilding.{Get => _, Delete => _, addCredentials => _, addHeader => _, _}
 import spray.http._
 import spray.client.pipelining._
-import akka.dispatch.Await
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
- * 
+ *
  * @constructor
- * 
+ *
  * @param userPass Optional pair of username and password.
  * @param https Whether to use https. If true, the config property spray.can.client.ssl-encryption
  *  must be set to on, which is the default setting in the reference.conf of this library.
@@ -40,13 +40,13 @@ case class Config(
 
 class Pipelines(config:Config) {
   import config.actorSystem
-  
+
   //@volatile var docLogger:DocLogger = NopLogger
-  
+
   @volatile var cookie:Option[String] = None
-  
-  implicit val timeout = akka.util.Timeout(akka.util.Duration("60 seconds"))
-  
+
+  implicit val timeout = akka.util.Timeout(60 seconds)
+
   /* TODO
   def cloudantLogin(docLogger:DocLogger = NopLogger):Future[String] = {
     import spray.http.MediaTypes.`application/x-www-form-urlencoded`
@@ -77,7 +77,7 @@ class Pipelines(config:Config) {
     })
   }
   */
- 
+
   def cloudantLogout(docLogger:DocLogger = NopLogger) = {
     val pl = pipeline[OkResponse](
         useBasicAuth = false,
@@ -92,7 +92,7 @@ class Pipelines(config:Config) {
         docLogger = docLogger)
     pl(Get("/_session"))
   }
-  
+
   import akka.io.IO
   import akka.pattern.ask
   import spray.can.Http
@@ -105,12 +105,12 @@ class Pipelines(config:Config) {
   Await.result((for (
     Http.HostConnectorInfo(connector, _) <-
       IO(Http) ? Http.HostConnectorSetup(config.hostName, port = config.port, sslEncryption = config.https)
-  ) yield connector), akka.util.Duration("60 seconds"))
-  
-  
-  
+  ) yield connector), 60 seconds)
+
+
+
   private val log = Logging(actorSystem, conduit)
-  
+
   private class MyBR(wr:Writer) extends BufferedWriter(wr) {
     override def close() {}
   }
@@ -124,10 +124,10 @@ class Pipelines(config:Config) {
   private val logResponse: HttpResponse => HttpResponse = r => {
     dl.logResponse(r)
     r
-  }  
+  }
   import  spray.httpx.unmarshalling.FromResponseUnmarshaller
   def pipeline[A:FromResponseUnmarshaller]: HttpRequest => Future[A] = pipeline[A]()
-  
+
   def unmarshalEither[A:FromResponseUnmarshaller]: HttpResponse => A = {
       hr => (hr match {
         case HttpResponse(status, _, _, _) if status.value == 304 => {//not modified
@@ -144,8 +144,8 @@ class Pipelines(config:Config) {
         }
       })
     }
-    
-  
+
+
   def pipeline[A:FromResponseUnmarshaller](
       etag:Option[String] = None,
       useBasicAuth:Boolean = true,
@@ -156,12 +156,12 @@ class Pipelines(config:Config) {
     pipelineWithoutUnmarshal(etag, useBasicAuth, additionalHeaders, conduit, docLogger) ~>
     unmarshalEither[A]
   }
-  
+
   def addBasicAuth(req:HttpRequest) = (config.userPass match {
     case Some((u,p)) => addCredentials(BasicHttpCredentials(u, p))
     case None => (x:HttpRequest) => x
   })(req)
-  
+
   def pipelineWithoutUnmarshal(
       etag:Option[String] = None,
       useBasicAuth:Boolean = true,
@@ -174,12 +174,12 @@ class Pipelines(config:Config) {
       addHeader("accept", "application/json")
     }) ~>
     (etag match {
-      case Some(etag) => addHeader("If-None-Match", "\"" + etag + "\"") 
+      case Some(etag) => addHeader("If-None-Match", "\"" + etag + "\"")
       case None => (x:HttpRequest) => x
     }) ~>
     (if (useBasicAuth) (addBasicAuth _) else identity[HttpRequest] _) ~>
     {
-        additionalHeaders.map { 
+        additionalHeaders.map {
           case (k,v) => addHeader(k,v)
         }.foldRight(identity[HttpRequest] _) {
           (f1,f2) => f1 andThen f2
@@ -190,7 +190,7 @@ class Pipelines(config:Config) {
     sendReceive(conduit) ~>
     ((hr:HttpResponse) => {docLogger.logResponse(hr); hr}) ~>
     ((hr:HttpResponse) => {println(hr.entity.asString); hr})
-    
+
   }
-  
+
 }
