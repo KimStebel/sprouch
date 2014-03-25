@@ -15,6 +15,7 @@ import com.typesafe.config.ConfigFactory
 @RunWith(classOf[JUnitRunner])
 class CouchSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
     
   test("ssl enabled") {
     val conf = ConfigFactory.load()

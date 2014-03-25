@@ -1,18 +1,14 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
-import spray.json.JsonWriter
-import spray.json.JsArray
 
 class DbCopy extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol.{DbCopy => DbCopyContent, _}
-  
+  import actorSystem.dispatcher
+
   test("dbcopy") {
-    implicit val dispatcher = (actorSystem.dispatcher)
     val ddName = "dbcopy"
     case class Employee(name:String, company:String)
     implicit val employeeFormat = jsonFormat2(Employee)

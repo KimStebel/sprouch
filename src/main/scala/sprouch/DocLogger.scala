@@ -79,8 +79,8 @@ class ChunkedResponseLoggerActor extends Actor {
   }
 }
                              //suffix,append
-class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
-  private def this(fileName:String) {
+class SphinxDocLogger(getOut: (String, Boolean) => BufferedWriter) extends DocLogger {
+  private def this(fileName: String) {
     this((suffix,append) => 
       new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+suffix, append)))
     )

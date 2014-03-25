@@ -3,12 +3,11 @@ package sprouch
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AttachmentsSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
   
   test("create, get, update, and delete attachment") {
     withNewDb(db => {

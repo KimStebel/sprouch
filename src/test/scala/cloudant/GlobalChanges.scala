@@ -5,22 +5,23 @@ import org.scalatest.FunSuite
 import sprouch._
 import JsonProtocol._
 
-import akka.dispatch.Await
 import akka.actor.{Actor,Props}
 import akka.event.Logging
 import akka.actor.ActorRef
 import akka.pattern.ask
-import akka.util.{Timeout, Duration}
+import akka.util.Timeout
+import scala.concurrent.duration._
+import scala.concurrent.Await
 
 import java.util.UUID
 
 class GlobalChanges extends FunSuite with CouchSuiteHelpers {
+  import actorSystem.dispatcher
   import c.GlobalChangesActor._
   import ChangesModule._
     
   test("global changes feed continuous") {
-    implicit val dispatcher = actorSystem.dispatcher
-    val duration = Duration("60 seconds")
+    val duration = 60 seconds
     implicit val timeout = Timeout(duration)
     val uuid = randomDbName
     val dbNamePrefix = "documentationchangescontinuous"
@@ -56,7 +57,7 @@ class GlobalChanges extends FunSuite with CouchSuiteHelpers {
               testSender ! (updates)
             }
           } catch {
-            case e => {
+            case e: Throwable => {
               //not an update chunk, ignore
             }
           }
@@ -75,10 +76,10 @@ class GlobalChanges extends FunSuite with CouchSuiteHelpers {
   }
   
   test("global changes feed longpoll") {
-    implicit val dispatcher = actorSystem.dispatcher
+
     import akka.pattern.ask
-    import akka.util.{Timeout, Duration}
-    val duration = Duration("60 seconds")
+
+    val duration = 60 seconds
     implicit val timeout = Timeout(duration)
     
     class ChangesTestActor extends Actor {

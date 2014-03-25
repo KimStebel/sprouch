@@ -1,17 +1,14 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
-import spray.json.JsonWriter
 
 class Show extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
   
   test("show functions") {
-    implicit val dispatcher = actorSystem.dispatcher
         
     withNewDbFuture(implicit dbf => {
       val data = Test(foo=1, bar="foo")

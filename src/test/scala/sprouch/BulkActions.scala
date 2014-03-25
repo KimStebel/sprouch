@@ -9,7 +9,8 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class BulkActions extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   test("create, get, update, and delete documents") {
     withNewDb(db => {
       val data = Seq(Test(0, "a"), Test(1, "b"), Test(2, "c")).map(new NewDocument(_))

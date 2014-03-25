@@ -1,8 +1,6 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 
 /* TODO

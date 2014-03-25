@@ -34,6 +34,9 @@ trait CouchSuiteHelpers {
     as.actorOf(Props[ChunkedResponseLoggerActor], "docLogger")
     as
   }
+
+  import actorSystem.dispatcher
+
   val url = new URL(System.getenv("TESTY_DB_URL"))
   val host = url.getHost
   val dbBaseName = url.getPath.replaceAll("/", "")
