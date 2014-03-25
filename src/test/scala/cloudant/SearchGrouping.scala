@@ -1,22 +1,18 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
-import spray.json.JsonWriter
-import spray.json.JsObject
-import spray.json.JsonReader
+import scala.concurrent.Future
 
 class SearchGrouping extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   case class Thing(foo:String, bar:String)
   implicit val thingFormat = jsonFormat2(Thing)
   
   test("lucene based search - grouping") {
-    implicit val dispatcher = actorSystem.dispatcher
         
     withNewDbFuture(implicit dbf => {
       val data = Seq(

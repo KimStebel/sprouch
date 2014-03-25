@@ -1,18 +1,15 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
-import spray.json.JsonWriter
 import spray.json.JsArray
 
 class ViewQueries extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
   
   test("view queries") {
-    implicit val dispatcher = (actorSystem.dispatcher)
     val ddname = "queries"
     withNewDbFuture(implicit dbf => {
       val data = Seq(Test(foo=0, bar="foo"),Test(foo=1, bar="bar"),Test(foo=2, bar="baz"))

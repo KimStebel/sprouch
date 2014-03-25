@@ -1,13 +1,11 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 
 class Authorization extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  implicit val dispatcher = actorSystem.dispatcher
+  import actorSystem.dispatcher
   
   test("get security document") {
     val dl = SphinxDocLogger("_securityGET")

@@ -1,21 +1,16 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
-import sprouch.dsl._
-import spray.json.JsonWriter
-import spray.json.JsObject
-import spray.json.JsonReader
 
 case class T4(price:Double, name:String, category:String, subcategory:String)
 
 class SearchFaceting extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   test("search faceting") {
-    implicit val dispatcher = actorSystem.dispatcher
+
     implicit val t4format = jsonFormat4(T4)
     withNewDbFuture(implicit dbf => {
       val data = List(

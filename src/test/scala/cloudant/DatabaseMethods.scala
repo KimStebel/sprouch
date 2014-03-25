@@ -1,14 +1,11 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
-import org.scalatest.Tag
 
 class DatabaseMethods extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  implicit val dispatcher = actorSystem.dispatcher
+  import actorSystem.dispatcher
   
   test("get db") {
     val dl = SphinxDocLogger("DbGet")

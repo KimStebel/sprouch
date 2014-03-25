@@ -9,7 +9,8 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class OldRevisions extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   test("get old revisions of a document") {
     withNewDb(db => {
       val data = Test(0, "")

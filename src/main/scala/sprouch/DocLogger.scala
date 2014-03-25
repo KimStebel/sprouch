@@ -35,9 +35,11 @@ object ChunkedResponseLoggerActor {
   case object body extends HoB
   case object request extends RoR
   case object response extends RoR
+
   sealed trait HttpEvent {
-    def description:String
+    def description: String
   }
+
   case class ResponseHeaders(description:String, resp:HttpResponse) extends HttpEvent
   case class ResponseBodyJson(description:String, body:JsValue) extends HttpEvent
   case class ResponseBodyString(description:String, body:String) extends HttpEvent
@@ -51,7 +53,7 @@ class ChunkedResponseLoggerActor extends Actor {
   val log = Logging(context.system, this)
   
   def receive = {
-    case e:HttpEvent => {
+    case e: HttpEvent => {
       val dl = SphinxDocLogger(e.description)
       e match {
         case  ResponseHeaders(_, resp) => {
@@ -77,8 +79,8 @@ class ChunkedResponseLoggerActor extends Actor {
   }
 }
                              //suffix,append
-class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
-  private def this(fileName:String) {
+class SphinxDocLogger(getOut: (String, Boolean) => BufferedWriter) extends DocLogger {
+  private def this(fileName: String) {
     this((suffix,append) => 
       new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+suffix, append)))
     )
@@ -124,7 +126,7 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     try {
       logBodyPartJson(bodyStr.asJson, out)
     } catch {
-      case e => { //parsing exception, so not json
+      case e: Throwable => { //parsing exception, so not json
         logBodyPartString(bodyStr, out)
       }
     }

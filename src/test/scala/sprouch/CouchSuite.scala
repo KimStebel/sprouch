@@ -4,18 +4,18 @@ import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import akka.actor.ActorSystem
-import akka.dispatch.Await
-import akka.util.Duration
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 import java.util.UUID
 import spray.httpx.SprayJsonSupport._
 import spray.json._
-import akka.dispatch.Future
 import spray.httpx.marshalling.Marshaller
 import com.typesafe.config.ConfigFactory
 
 @RunWith(classOf[JUnitRunner])
 class CouchSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
     
   test("ssl enabled") {
     val conf = ConfigFactory.load()
@@ -89,7 +89,7 @@ class CouchSuite extends FunSuite with CouchSuiteHelpers {
       val data = Test(0, "bar")
       for {
         firstDoc <- db.createDocData(data)
-        val foo1 = firstDoc.updateData(_.copy(foo = 1))
+        foo1 = firstDoc.updateData(_.copy(foo = 1))
         updatedDoc <- db.updateDoc(foo1)
         gottenDoc <- db.getDoc[Test](firstDoc.id)
         res <- db.deleteDoc(updatedDoc)

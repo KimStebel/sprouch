@@ -5,19 +5,19 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import akka.dispatch.Future
+import scala.concurrent.Future
 import spray.json.{RootJsonFormat, JsonFormat, JsValue}
 import spray.json.JsObject
 import spray.json.JsString
 
 class JsonProtocolSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
-  
+  import actorSystem.dispatcher
+
   case class FooIdRev(foo:String, _id:String, _rev:String)
   
   
   test("document format should handle data objects with _id and _rev properties") {
-    implicit val dispatcher = (actorSystem.dispatcher)
     implicit val fooIdRevFormat = jsonFormat3(FooIdRev)
     val data = FooIdRev("hello", "world", "123")
     val doc = new RevedDocument("world", "123", data, Map())

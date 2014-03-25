@@ -1,8 +1,7 @@
 package sprouch.synchronous
 
-import akka.util.Duration
-import akka.dispatch.Future
-import akka.dispatch.Await
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Future, Await}
 import spray.json.{JsonFormat, RootJsonFormat}
 import sprouch._
 import JsonProtocol._
@@ -13,43 +12,43 @@ import spray.json.JsValue
 /**
   * This is just a synchronous wrapper around sprouch.Database.
   * Please look there for documentation. All the methods are identical,
-  * except that they return A instead of Future[A].  
+  * except that they return A instead of Future[A].
   */
 @implicitNotFound("You need to get a database object first and store it in an implicit val.")
 class Database private (d:sprouch.Database, timeout:Duration) {
-  
-  private def await[A](f:Future[A]) = Await.result(f, timeout) 
-  
-  def revisions(doc:RevedDocument[_]):Seq[RevInfo] = await(d.revisions(doc))
-  
-  def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]]):Seq[RevedDocument[A]] = await(d.bulkPut(docs)) 
-  
-  def delete():OkResponse = await(d.delete())
-  
-  def deleteDoc[A](doc:RevedDocument[A]):OkResponse = await(d.deleteDoc(doc))
-  
-  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc[A](id))
-  
-  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDocAgain(doc)) 
-  
-  def createDoc[A:RootJsonFormat](doc:NewDocument[A]):RevedDocument[A] = await(d.createDoc(doc))
-  
-  def createDoc[A:RootJsonFormat](data:A):RevedDocument[A] = await(d.createDocData(data)) 
 
-  def createDoc[A:RootJsonFormat](id:String, data:A):RevedDocument[A] = await(d.createDocId(id, data)) 
-  
-  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.updateDoc(doc)) 
-  
+  private def await[A](f:Future[A]) = Await.result(f, timeout)
+
+  def revisions(doc:RevedDocument[_]):Seq[RevInfo] = await(d.revisions(doc))
+
+  def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]]):Seq[RevedDocument[A]] = await(d.bulkPut(docs))
+
+  def delete():OkResponse = await(d.delete())
+
+  def deleteDoc[A](doc:RevedDocument[A]):OkResponse = await(d.deleteDoc(doc))
+
+  def getDoc[A:RootJsonFormat](id:String):RevedDocument[A] = await(d.getDoc[A](id))
+
+  def getDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.getDocAgain(doc))
+
+  def createDoc[A:RootJsonFormat](doc:NewDocument[A]):RevedDocument[A] = await(d.createDoc(doc))
+
+  def createDoc[A:RootJsonFormat](data:A):RevedDocument[A] = await(d.createDocData(data))
+
+  def createDoc[A:RootJsonFormat](id:String, data:A):RevedDocument[A] = await(d.createDocId(id, data))
+
+  def updateDoc[A:RootJsonFormat](doc:RevedDocument[A]):RevedDocument[A] = await(d.updateDoc(doc))
+
   def putAttachment[A:RootJsonFormat](doc:RevedDocument[A], a:Attachment):RevedDocument[A] = await(d.putAttachment(doc, a))
-  
-  def getAttachment(doc:Document[_], id:String):Attachment = await(d.getAttachment(doc, id)) 
-  
+
+  def getAttachment(doc:Document[_], id:String):Attachment = await(d.getAttachment(doc, id))
+
   def deleteAttachment[A](doc:RevedDocument[A], a:Attachment):RevedDocument[A] = deleteAttachment(doc, a.id)
-  
+
   def deleteAttachment[A](doc:RevedDocument[A], aid:String):RevedDocument[A] = await(d.deleteAttachmentId(doc, aid))
-  
-  def createViews(views:NewDocument[Views]):RevedDocument[Views] = await(d.createViews(views)) 
-  
+
+  def createViews(views:NewDocument[Views]):RevedDocument[Views] = await(d.createViews(views))
+
   def queryView[K:JsonFormat,V:JsonFormat](
       designDocId:String,
       viewName:String,
@@ -77,7 +76,7 @@ class Database private (d:sprouch.Database, timeout:Duration) {
       skip,
       groupLevel,
       stale))
-  
+
   def allDocs[V:RootJsonFormat](
       flags:Set[ViewQueryFlag] = ViewQueryFlag.default,
       key:Option[String] = None,
@@ -95,7 +94,7 @@ class Database private (d:sprouch.Database, timeout:Duration) {
       endKey,
       limit,
       skip,
-      stale))  
+      stale))
 }
 
 object Database {

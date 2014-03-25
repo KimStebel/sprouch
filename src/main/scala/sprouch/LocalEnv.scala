@@ -1,9 +1,8 @@
 package sprouch
 
 import akka.actor.ActorSystem
-import akka.util.Duration
-import akka.dispatch.Future
-import akka.dispatch.Await
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 
 /**
  * Convenience methods and values for the default config of a local CouchDb install.
@@ -23,7 +22,7 @@ object LocalEnv {
   /**
    * timeout for futures, default 10 seconds
    */
-  var testDuration = Duration("10 seconds")
+  var testDuration = 10 seconds
   /**
    * convenience method to wait for future completion
    */

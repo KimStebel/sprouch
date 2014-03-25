@@ -1,19 +1,14 @@
 package cloudant
 
 import org.scalatest.FunSuite
-import akka.dispatch.Future
-import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
-import spray.json.JsonWriter
-import spray.json.JsObject
-import spray.json.JsonReader
 
 class SearchWithPerFieldAnalyzer extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
+  import actorSystem.dispatcher
   
   test("lucene based search with per field analyzer") {
-    implicit val dispatcher = actorSystem.dispatcher
         
     case class EnglishGerman(word:String, wordInGerman:String)
     implicit val geformat = jsonFormat2(EnglishGerman)
