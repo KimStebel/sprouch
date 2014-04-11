@@ -4,6 +4,7 @@ import akka.dispatch.Future
 import spray.json.JsonWriter
 import spray.httpx.SprayJsonSupport._
 import spray.httpx.RequestBuilding._
+import docLogger._
 
 import JsonProtocol._
 

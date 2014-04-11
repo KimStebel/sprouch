@@ -4,6 +4,7 @@ import sprouch._
 import java.util.UUID
 import akka.dispatch.Future
 import spray.json.RootJsonFormat
+import docLogger._
 
 trait DslDocument[A] {
   

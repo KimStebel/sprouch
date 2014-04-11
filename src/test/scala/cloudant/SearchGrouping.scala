@@ -5,6 +5,7 @@ import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
 import sprouch.dsl._
+import docLogger._
 import spray.json.JsonWriter
 import spray.json.JsObject
 import spray.json.JsonReader
@@ -38,7 +39,7 @@ class SearchGrouping extends FunSuite with CouchSuiteHelpers {
       val indexes = Indexes(Map(indexName -> index))
       val ddocName = "mysearches"
       val indexesDoc = new NewDocument(ddocName, indexes)
-      val dl = SphinxDocLogger("searchGrouping")
+      val dl = MdDocLogger("searchGrouping")
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc)

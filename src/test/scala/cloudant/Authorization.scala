@@ -4,13 +4,14 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 
 class Authorization extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
   
   test("get security document") {
-    val dl = SphinxDocLogger("_securityGET")
+    val dl = MdDocLogger("_securityGET")
     withNewDbFuture(implicit dbf => for {
       db <- dbf
       sec <- db.security(docLogger = dl)
@@ -21,7 +22,7 @@ class Authorization extends FunSuite with CouchSuiteHelpers {
   
   
   /*test("generate api key") {
-    val gakDl = SphinxDocLogger("../cloudant-api-reference/src/api/inc/generateApiKey")
+    val gakDl = MdDocLogger("../cloudant-api-reference/src/api/inc/generateApiKey")
     await(for {
       _ <- ignoreFailure(c.createDb("db"))
       key <- c.withDl(gakDl) {

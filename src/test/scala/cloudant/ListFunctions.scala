@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 
@@ -32,7 +33,7 @@ class ListFunctions extends FunSuite with CouchSuiteHelpers {
         }
       """))))
       val designDoc = new NewDocument(ddname, designDocContent)
-      val dl = SphinxDocLogger("list")
+      val dl = MdDocLogger("list")
       for {
         db <- dbf
         view <- db.createDesign(designDoc)

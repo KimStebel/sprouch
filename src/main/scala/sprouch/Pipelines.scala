@@ -20,6 +20,7 @@ import spray.httpx.RequestBuilding.{Get => _, Delete => _, addCredentials => _, 
 import spray.http._
 import spray.client.pipelining._
 import akka.dispatch.Await
+import docLogger._
 
 /**
  * Configuration data, default values should be valid for a default install of CouchDB.
@@ -114,7 +115,7 @@ class Pipelines(config:Config) {
   private class MyBR(wr:Writer) extends BufferedWriter(wr) {
     override def close() {}
   }
-  private def dl = new SphinxDocLogger((suffix, append) => {
+  private def dl = new MdDocLogger((suffix, append) => {
     new MyBR(new OutputStreamWriter(System.out))
   })
   private val logRequest: HttpRequest => HttpRequest = r => {

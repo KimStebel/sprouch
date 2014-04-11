@@ -17,6 +17,7 @@ import ViewQueryFlag._
 import scala.annotation.implicitNotFound
 import spray.json.{JsValue, JsonWriter, JsObject, JsArray}
 import spray.httpx.RequestBuilding._
+import docLogger._
 
 trait DbUriBuilder extends UriBuilder {
   def name:String

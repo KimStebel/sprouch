@@ -10,7 +10,7 @@ class Authentication extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
   
-  def dl(name:String) = SphinxDocLogger(name)
+  def dl(name:String) = MdDocLogger(name)
   
   test("login") {
     await(for {

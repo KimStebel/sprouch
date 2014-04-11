@@ -10,6 +10,7 @@ import sprouch.json.Schema
 import spray.json.JsonParser
 import java.net.URL
 import akka.actor.Props
+import docLogger._
 
 case class Test(foo:Int, bar:String)
 

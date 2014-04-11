@@ -15,6 +15,7 @@ import akka.event.Logging
 import java.net.URLEncoder.{encode => urlEncode}
 import JsonProtocol._
 import akka.dispatch.ExecutionContext
+import docLogger._
 import spray.httpx.RequestBuilding._
 
 private[sprouch] trait UriBuilder {
@@ -73,6 +74,11 @@ class Couch(protected[this] val config:Config) extends UriBuilder with GlobalCha
   def getDb(dbName:String, docLogger:DocLogger=NopLogger):Future[Database] = {
     val p = pipelines.pipeline[GetDbResponse](docLogger = docLogger)
     p(Get(dbUri(dbName))).map(_ => new Database(dbName, pipelines, config))
+  }
+  
+  def searchAnalyze(analyzerName:String, text:String, docLogger:DocLogger=NopLogger):Future[SearchAnalyzeResult] = {
+    val p = pipelines.pipeline[SearchAnalyzeResult](docLogger = docLogger)
+    p(Post("/_search_analyze", SearchAnalyzeRequest(analyzerName, text)))
   }
 
 }

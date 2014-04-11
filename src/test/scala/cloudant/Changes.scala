@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 
 import sprouch._
 import JsonProtocol._
+import docLogger._
 
 import akka.dispatch.Await
 import akka.actor.{Actor,Props}
@@ -91,7 +92,7 @@ class Changes extends FunSuite with CouchSuiteHelpers {
           
         }
         case LastSeqResponse(seq) => {
-          val dl = SphinxDocLogger("dbChangesFeed")
+          val dl = MdDocLogger("dbChangesFeed")
           db.DbChangesActor.changesActorRef ! Continuous(since = Some(seq))
           db.createDocId("1" + uuid, Empty).flatMap{doc => db.deleteDoc(doc)}
           db.createDocId("2" + uuid, Empty).flatMap{doc => db.deleteDoc(doc)}

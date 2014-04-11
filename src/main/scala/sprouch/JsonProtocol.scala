@@ -186,10 +186,6 @@ trait SprouchJsonProtocol {
   case class BulkPut[A](docs:Seq[Document[A]])
   implicit def bulkPutFormat[A:RootJsonFormat] = jsonFormat1(BulkPut[A])
   
-  implicit val nothingFormat = new JsonFormat[Nothing] {
-    def read(js:JsValue) = throw new Exception("fields of type nothing should never be used")
-    def write(n:Nothing) = throw new Exception("fields of type nothing should never be used")
-  }
   implicit def toJsValue[A:JsonFormat](a:A) = implicitly[JsonFormat[A]].write(a)
   implicit def pairToJsPair[A:JsonFormat](ap:(A,A)) = {
     val f = implicitly[JsonFormat[A]]
@@ -244,6 +240,11 @@ trait SprouchJsonProtocol {
   case class MembershipResponse(cluster_nodes:Seq[String], all_nodes:Seq[String])
   implicit val membershipResponseFormat = jsonFormat2(MembershipResponse)
   
+  case class SearchAnalyzeResult(tokens:Seq[String])
+  implicit val searchAnalyzeResultFormat = jsonFormat1(SearchAnalyzeResult)
+  
+  case class SearchAnalyzeRequest(analyzer:String, text:String)
+  implicit val searchAnalyzeRequestFormat = jsonFormat2(SearchAnalyzeRequest)
 }
 
 

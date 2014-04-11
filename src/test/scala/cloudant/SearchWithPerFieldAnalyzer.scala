@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsObject
@@ -39,8 +40,8 @@ class SearchWithPerFieldAnalyzer extends FunSuite with CouchSuiteHelpers {
       val indexes = Indexes(Map("perField" -> perFieldIndex, "defaultAnalyzer" -> defaultAnalyzerIndex))
       val ddocName = "mySearches"
       val indexesDoc = new NewDocument(ddocName, indexes)
-      val dl = SphinxDocLogger("searchWithPerFieldAnalyzer")
-      val cidl = SphinxDocLogger("searchWithPerFieldAnalyzerDesignDoc")
+      val dl = MdDocLogger("searchWithPerFieldAnalyzer")
+      val cidl = MdDocLogger("searchWithPerFieldAnalyzerDesignDoc")
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc/*, docLogger = cidl*/)

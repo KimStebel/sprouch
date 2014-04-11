@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsObject
@@ -26,7 +27,7 @@ class Search extends FunSuite with CouchSuiteHelpers {
       val indexes = Indexes(Map("bar" -> index))
       val ddocName = "mysearches"
       val indexesDoc = new NewDocument(ddocName, indexes)
-      val dl = SphinxDocLogger("search")
+      val dl = MdDocLogger("search")
       for {
         db <- dbf
         view <- db.createIndexes(indexesDoc)

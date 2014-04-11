@@ -11,6 +11,7 @@ import spray.http.{ChunkedResponseStart, ChunkedMessageEnd, MessageChunk}
 import akka.actor.Props
 import spray.json._
 import JsonProtocol._
+import docLogger._
 
 trait ChangesJsonProtocol {
   self:DefaultJsonProtocol =>

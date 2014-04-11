@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsArray
@@ -46,7 +47,7 @@ class DbCopy extends FunSuite with CouchSuiteHelpers {
       val designDoc2 = new NewDocument(ddName2, designDocContent2)
       for {
         db <- dbf
-        view <- db.createDesign(designDoc, docLogger = SphinxDocLogger("dbCopyViewCreate"))
+        view <- db.createDesign(designDoc, docLogger = MdDocLogger("dbCopyViewCreate"))
         docs <- data.create
         _ <- pause(60000)
         dbcopy <- c.getDb(dbCopyDb)
@@ -57,14 +58,14 @@ class DbCopy extends FunSuite with CouchSuiteHelpers {
             stale = StaleOption.ok)
         queryRes <- dbcopy.allDocs[DbCopyContent[String, Int]](
             flags = ViewQueryFlag(include_docs = true),
-            docLogger = SphinxDocLogger("dbCopyAll"))
-        view2 <- dbcopy.createDesign(designDoc2, docLogger = SphinxDocLogger("dbCopyView2Create"))
+            docLogger = MdDocLogger("dbCopyAll"))
+        view2 <- dbcopy.createDesign(designDoc2, docLogger = MdDocLogger("dbCopyView2Create"))
         _ <- pause()
         chainedRes <- dbcopy.queryView[Int, String](
             ddName2,
             viewName2,
             flags = ViewQueryFlag(reduce = false),
-            docLogger = SphinxDocLogger("dbCopyView2Query")) 
+            docLogger = MdDocLogger("dbCopyView2Query")) 
       } yield {
         val expected = Seq("Amazon" -> 3, "Cloudant" -> 1, "Rackspace" -> 2, "total" -> 6)
         val viewActual = viewQueryRes.rows.map(r => r.key -> r.value)

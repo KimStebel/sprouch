@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 
 import sprouch._
 import JsonProtocol._
+import docLogger._
 
 import akka.dispatch.Await
 import akka.actor.{Actor,Props}
@@ -38,7 +39,7 @@ class GlobalChanges extends FunSuite with CouchSuiteHelpers {
           c.GlobalChangesActor.changesActorRef ! LastSeq()
         }
         case LastSeqResponse(seq) => {
-          val dl = SphinxDocLogger("globalChangesFeedContinuous")
+          val dl = MdDocLogger("globalChangesFeedContinuous")
           c.GlobalChangesActor.changesActorRef ! Continuous(since = Some(seq))
           for (dbName <- dbNames) {
             c.createDb(dbName).andThen{case _ => c.deleteDb(dbName)} 

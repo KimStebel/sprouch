@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsArray
@@ -22,7 +23,7 @@ class ViewQueries extends FunSuite with CouchSuiteHelpers {
         }
       """))))
       val designDoc = new NewDocument(ddname, designDocContent)
-      val dl = SphinxDocLogger("viewQueries")
+      val dl = MdDocLogger("viewQueries")
       val queries = Seq(
           ViewQuery(None, None, None, None, None),
           ViewQuery(Some(1), None, Some(2), None, None)

@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 
+import  org.apache.commons.codec.binary._
+
 object ApplicationBuild extends Build {
 
   val dependencies = Seq(
@@ -9,7 +11,9 @@ object ApplicationBuild extends Build {
     "io.spray" % "spray-client" % "1.0-RC3",
     "io.spray" %  "spray-json_2.9.3" % "1.2.5",
     "com.typesafe.akka" % "akka-actor" % "2.0.5",
-    "com.novocode" % "junit-interface" % "0.10-M1" % "test"
+    "com.novocode" % "junit-interface" % "0.10-M1" % "test",
+    "rhino" % "js" % "1.7R2",
+    "commons-codec" % "commons-codec" % "1.8"
   )
 
   val main = Project(id = "sprouch-cloudant", base = new File("."), settings = Project.defaultSettings ++ Seq(

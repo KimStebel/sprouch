@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsObject
@@ -16,8 +17,8 @@ class Shards extends FunSuite with CouchSuiteHelpers {
     implicit val dispatcher = actorSystem.dispatcher
         
     withNewDbFuture(implicit dbf => {
-      val dl = SphinxDocLogger("shards")
-      val dlid = SphinxDocLogger("shardForId")
+      val dl = MdDocLogger("shards")
+      val dlid = MdDocLogger("shardForId")
       for {
         db <- dbf
         val docId = "foo"

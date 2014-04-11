@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import akka.dispatch.Future
 import spray.json.JsonFormat
 import sprouch._
+import docLogger._
 import sprouch.dsl._
 import spray.json.JsonWriter
 import spray.json.JsObject
@@ -15,7 +16,7 @@ class Membership extends FunSuite with CouchSuiteHelpers {
   test("_membership") {
     implicit val dispatcher = actorSystem.dispatcher
         
-    val dl = SphinxDocLogger("membership")
+    val dl = MdDocLogger("membership")
     for {
       res <- c.membership(docLogger = dl)
     } yield {

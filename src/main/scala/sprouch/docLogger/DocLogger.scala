@@ -1,4 +1,4 @@
-package sprouch
+package sprouch.docLogger
 
 import spray.http.HttpRequest
 import spray.http.HttpResponse
@@ -14,17 +14,17 @@ import akka.event.Logging
 import spray.http.HttpResponsePart
 import ChunkedResponseLoggerActor._
 import spray.http.HttpHeader
+import spray.http.Uri.Path
 
 trait DocLogger {
   def logRequest(request:HttpRequest):Unit
   def logResponse(response:HttpResponse):Unit
-  
 }
 
-object SphinxDocLogger {
+object MdDocLogger {
   def apply(fileName:String) = {
     val baseName = System.getenv("TESTY_RESULT_DIR") + "/" + fileName
-    new SphinxDocLogger(baseName)
+    new MdDocLogger(baseName)
   }
 }
 
@@ -52,7 +52,7 @@ class ChunkedResponseLoggerActor extends Actor {
   
   def receive = {
     case e:HttpEvent => {
-      val dl = SphinxDocLogger(e.description)
+      val dl = MdDocLogger(e.description)
       e match {
         case  ResponseHeaders(_, resp) => {
           dl.logResponseHeaders(resp)
@@ -76,15 +76,39 @@ class ChunkedResponseLoggerActor extends Actor {
     }
   }
 }
-                             //suffix,append
-class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
+                          //suffix,append
+class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
+  val languages = Map(
+    "python" -> new PythonGenerator,
+    "javascript" -> new JsGenerator,
+    "bash" -> new CurlGenerator
+  )
+  
+  private def writeCode(request:HttpRequest) {
+    for ((language,generator) <- languages) {
+      storeDoc(language, generator.generateCode(request))
+    }
+  }
+  private def storeDoc(language:String, code:Seq[String]) {
+    withWriter("-" + language + ".md", false)(writer =>{
+      writer.write("```" + language)
+      writer.newLine()
+      for (line <- code) {
+        writer.write("    " + line)
+        writer.newLine()
+      }
+      writer.write("```")
+      writer.newLine()  
+    })  
+  }
+  
   private def this(fileName:String) {
     this((suffix,append) => 
       new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+suffix, append)))
     )
   }
   
-  def logRequestHeaders(req:HttpRequest) = {
+  private[docLogger] def logRequestHeaders(req:HttpRequest) = {
     withWriter(request, headers, false)(out => {
       logRequestStart(req, out)
       logHeaders(req.headers, out)
@@ -113,11 +137,11 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
   
   
   private def logHeaders(hs:Seq[HttpHeader], out:BufferedWriter) {
-    hs.filter(_.name != "Authorization").foreach(h => {
+    hs.foreach(h => {
       out.write("    " + h.name + ": " + h.value)
       out.newLine()
     })
-    out.newLine()
+    if (!md) { out.newLine() }
   }
   
   def logBody(bodyStr:String, out:BufferedWriter) {
@@ -130,22 +154,23 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     }
   }
   
-  def withWriter(reqOrResp:RoR, headersOrBody:HoB, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
-    def withWriter(suffix:String, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
-      val out = getOut(suffix,append)
-      try {
-        f(out)
-        out.flush()
-      } finally {
-        out.close()  
-      }
+  def withWriter(suffix:String, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
+    val out = getOut(suffix,append)
+    try {
+      f(out)
+      out.flush()
+    } finally {
+      out.close()
     }
-    withWriter("-" + reqOrResp + "-" + headersOrBody + ".inc", append)(f)
+  }
+  
+  def withWriter(reqOrResp:RoR, headersOrBody:HoB, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
+    withWriter("-" + reqOrResp + "-" + headersOrBody + (if (md) ".md" else ".inc"), append)(f)
   }
   
   def logBodyStart(out:BufferedWriter) {
-    out.write(".. code-block:: javascript")
-    out.newLine(); out.newLine()
+    out.write(codeBlockStart("javascript"))
+    out.newLine(); if (!md) { out.newLine() }
   }
   
   def logBodyPartJson(body:JsValue, out:BufferedWriter) {
@@ -157,35 +182,38 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     out.write(entityStr)
     out.newLine()
   }
-  
+    
   private def logRequestStart(req:HttpRequest, out:BufferedWriter) {
-    out.write(".. code-block:: http")
-    out.newLine(); out.newLine()
-    def prettyUri(uri:String) = {
-      if (uri.startsWith("/_")) uri else {
-        val parts = uri.split("/").toList
-        val replacedDbName = "db" :: parts.tail.tail
-        "/" + replacedDbName.mkString("/")
-      }
-    }
-    out.write("    " + req.method + " " + prettyUri(req.uri.toRelative.toString) + " " + req.protocol)
+    out.write(codeBlockStart("http"))
+    out.newLine(); if (!md) { out.newLine() }
+    out.write("    " + req.method + " " + req.uri.toRelative.toString + " " + req.protocol)
     out.newLine()
+  }
+  private def prettyPath(p:Path):Path = {
+    if (p.head.toString.startsWith("_")) p else (Path./("db") ++ p.tail.tail)
   }
   
   def logRequest(req:HttpRequest) = {
+    val redactedReq = HttpRequest(req.method, req.uri.withPath(prettyPath(req.uri.path)), req.headers.filter(_.name.toLowerCase != "authorization"), req.entity, req.protocol)
+    writeCode(redactedReq)
     withWriter(request, headers, false)(out => {
-      logRequestStart(req, out)
-      logHeaders(req.headers, out)
+      logRequestStart(redactedReq, out)
+      logHeaders(redactedReq.headers, out)
+      out.write("```")
+      out.newLine()
     })
     withWriter(request, body, false)(out => {
       logBodyStart(out)
-      logBody(req.entity.asString, out)
+      logBody(redactedReq.entity.asString, out)
+      out.write("```")
+      out.newLine()
     })
   }
-  
+  val md = true
+  def codeBlockStart(language:String) = if (md) "```" + language else ".. code-block:: " + language
   private def logResponseStart(out:BufferedWriter, resp:HttpResponse) = {
-    out.write(".. code-block:: http")
-    out.newLine(); out.newLine()
+    out.write(codeBlockStart("http"))
+    out.newLine(); if (!md) { out.newLine() }
     out.write("    " + resp.protocol.value + " " + resp.status.value)
     out.newLine()
     
@@ -194,16 +222,19 @@ class SphinxDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogge
     withWriter(response, headers, false)(out => {
       logResponseStart(out, resp)
       logHeaders(resp.headers, out)
+      out.write("```")
+      out.newLine()
     })
     withWriter(response, body, false)(out => {
       logBodyStart(out)
       logBody(resp.entity.asString, out)
+      out.write("```")
+      out.newLine()
     })
   }
 }
 
 object NopLogger extends DocLogger {
   def logRequest(req:HttpRequest) {}
-  def logResponse(resp:HttpResponse) {}
-  def logBody(reqOrResp:String, body:Seq[String]) {}
+  def logResponse(resp:HttpResponse) {}  
 }
