@@ -1,19 +1,11 @@
 package sprouch.docLogger
 
-import spray.http.HttpRequest
-import spray.http.HttpResponse
+import spray.http.{HttpHeader, HttpResponsePart, HttpMessage, HttpRequest, HttpResponse, ChunkedResponseStart, ChunkedMessageEnd, MessageChunk}
 import java.io._
-import spray.http.HttpMessage
 import spray.json._
-import akka.actor.ActorRef
-import akka.actor.Actor
-import spray.http.ChunkedResponseStart
-import spray.http.ChunkedMessageEnd
-import spray.http.MessageChunk
+import akka.actor.{ActorRef, Actor}
 import akka.event.Logging
-import spray.http.HttpResponsePart
 import ChunkedResponseLoggerActor._
-import spray.http.HttpHeader
 import spray.http.Uri.Path
 
 trait DocLogger {
@@ -81,7 +73,8 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
   val languages = Map(
     "python" -> new PythonGenerator,
     "javascript" -> new JsGenerator,
-    "bash" -> new CurlGenerator
+    "bash" -> new CurlGenerator,
+    "java" -> new JavaGenerator
   )
   
   private def writeCode(request:HttpRequest) {
@@ -89,15 +82,16 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
       storeDoc(language, generator.generateCode(request))
     }
   }
+  private lazy val filenameSuffix = if (md) ".md" else ".inc"
   private def storeDoc(language:String, code:Seq[String]) {
-    withWriter("-" + language + ".md", false)(writer =>{
-      writer.write("```" + language)
+    withWriter("-" + language + filenameSuffix, false)(writer => {
+      writer.write(codeBlockStart(language))
       writer.newLine()
       for (line <- code) {
         writer.write("    " + line)
         writer.newLine()
       }
-      writer.write("```")
+      writer.write(codeBlockEnd)
       writer.newLine()  
     })  
   }
@@ -135,7 +129,6 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
     })
   }
   
-  
   private def logHeaders(hs:Seq[HttpHeader], out:BufferedWriter) {
     hs.foreach(h => {
       out.write("    " + h.name + ": " + h.value)
@@ -165,12 +158,12 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
   }
   
   def withWriter(reqOrResp:RoR, headersOrBody:HoB, append:Boolean)(f:BufferedWriter=>Unit):Unit = {
-    withWriter("-" + reqOrResp + "-" + headersOrBody + (if (md) ".md" else ".inc"), append)(f)
+    withWriter("-" + reqOrResp + "-" + headersOrBody + filenameSuffix, append)(f)
   }
   
   def logBodyStart(out:BufferedWriter) {
     out.write(codeBlockStart("javascript"))
-    out.newLine(); if (!md) { out.newLine() }
+    out.newLine();
   }
   
   def logBodyPartJson(body:JsValue, out:BufferedWriter) {
@@ -185,12 +178,12 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
     
   private def logRequestStart(req:HttpRequest, out:BufferedWriter) {
     out.write(codeBlockStart("http"))
-    out.newLine(); if (!md) { out.newLine() }
+    out.newLine();
     out.write("    " + req.method + " " + req.uri.toRelative.toString + " " + req.protocol)
     out.newLine()
   }
   private def prettyPath(p:Path):Path = {
-    if (p.head.toString.startsWith("_")) p else (Path./("db") ++ p.tail.tail)
+    if (p.toString.startsWith("/_")) p else (Path./("db") ++ p.tail.tail)
   }
   
   def logRequest(req:HttpRequest) = {
@@ -199,21 +192,28 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
     withWriter(request, headers, false)(out => {
       logRequestStart(redactedReq, out)
       logHeaders(redactedReq.headers, out)
-      out.write("```")
+      out.write(codeBlockEnd)
       out.newLine()
     })
     withWriter(request, body, false)(out => {
       logBodyStart(out)
       logBody(redactedReq.entity.asString, out)
-      out.write("```")
+      out.write(codeBlockEnd)
       out.newLine()
     })
   }
-  val md = true
-  def codeBlockStart(language:String) = if (md) "```" + language else ".. code-block:: " + language
+  lazy val md = Seq("md", "markdown").contains(Option(System.getenv("SPROUCH_DOCLOGGER_OUTPUT_FORMAT")).getOrElse("").toLowerCase)
+  def codeBlockStart(language:String) = {
+    if (md) {
+      "```" + language
+    } else {
+      ".. code-block:: " + language + "\n"
+    }
+  }
+  lazy val codeBlockEnd = if (md) "```" else ""
   private def logResponseStart(out:BufferedWriter, resp:HttpResponse) = {
     out.write(codeBlockStart("http"))
-    out.newLine(); if (!md) { out.newLine() }
+    out.newLine();
     out.write("    " + resp.protocol.value + " " + resp.status.value)
     out.newLine()
     
@@ -222,13 +222,13 @@ class MdDocLogger(getOut: (String,Boolean)=>BufferedWriter) extends DocLogger {
     withWriter(response, headers, false)(out => {
       logResponseStart(out, resp)
       logHeaders(resp.headers, out)
-      out.write("```")
+      out.write(codeBlockEnd)
       out.newLine()
     })
     withWriter(response, body, false)(out => {
       logBodyStart(out)
       logBody(resp.entity.asString, out)
-      out.write("```")
+      out.write(codeBlockEnd)
       out.newLine()
     })
   }

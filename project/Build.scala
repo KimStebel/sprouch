@@ -19,6 +19,7 @@ object ApplicationBuild extends Build {
   val main = Project(id = "sprouch-cloudant", base = new File("."), settings = Project.defaultSettings ++ Seq(
     (scalaVersion := "2.9.3"),
     (libraryDependencies ++= dependencies),
+    (scalacOptions += "-deprecation"),
     (resolvers ++= Seq(
         "spray repo" at "http://repo.spray.io",
         "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"

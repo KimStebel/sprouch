@@ -7,7 +7,7 @@ class JsGenerator extends CodeGenerator {
   override def generateCode(request:HttpRequest):Seq[String] = {
     def renderFields(indent:Int, fields:Seq[(String, Any)]):String = {
       fields.map {
-        case (k, v:String) => indented(indent, singleQuoted(k) + ": " + singleQuoted(v))
+        case (k, v:String) => indented(indent, singleQuoted(k) + ": " + jsSingleQuoted(v))
         case (k, v:Int) => indented(indent, singleQuoted(k) + ": " + v)
         case (k, v:Seq[(String, Any)]) => indented(indent, singleQuoted(k) + ": {\n") + renderFields(indent + 1, v) + "\n" + indented(indent, "}")
       }.mkString(",\n")

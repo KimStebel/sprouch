@@ -18,9 +18,9 @@ class JavaGeneratorSuite extends FunSuite {
       uri = "https://user.cloudant.com/db/doc")
     val code = g.generateCode(request)
     val testCode = Seq(
-      """        if (httpGet.headers.get("Authorization") == null) throw new RuntimeException("Authorization header not set.");""",
+      """        if (request.headers.get("Authorization") == null) throw new RuntimeException("Authorization header not set.");""",
       """        if (!DefaultHttpClient.executeCalled) throw new RuntimeException("execute not called");""",
-      """        if (!"https://user.cloudant.com/db/doc".equals(httpGet.url)) throw new RuntimeException("url incorrect: " + httpGet.url);""")
+      """        if (!"https://user.cloudant.com/db/doc".equals(request.url)) throw new RuntimeException("url incorrect: " + request.url);""")
 
     runCode(code, testCode)
   }
