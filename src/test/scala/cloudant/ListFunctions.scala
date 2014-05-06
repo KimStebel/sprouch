@@ -43,7 +43,7 @@ class ListFunctions extends FunSuite with CouchSuiteHelpers {
       } yield {
         assert(queryRes.entity.asString === "<ul>" + (docs.map(_.data.foo).map("<li>"+_+"</li>").mkString) + "</ul>")
         assert(queryRes.headers.find(_.name.toLowerCase == "content-type").get.value === "text/html")
-        assert(queryRes.status.value  === 200)
+        assert(queryRes.status.intValue  === 200)
       }
     })
   }

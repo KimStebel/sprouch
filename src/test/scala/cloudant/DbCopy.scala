@@ -49,7 +49,7 @@ class DbCopy extends FunSuite with CouchSuiteHelpers {
         db <- dbf
         view <- db.createDesign(designDoc, docLogger = MdDocLogger("dbCopyViewCreate"))
         docs <- data.create
-        _ <- pause(60000)
+        _ <- pause(6000)
         dbcopy <- c.getDb(dbCopyDb)
         viewQueryRes <- db.queryView[String, Int](
             ddName,
