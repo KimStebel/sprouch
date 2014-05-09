@@ -13,7 +13,7 @@ class JavaGenerator extends CodeGenerator {
     }
     Seq(
       """DefaultHttpClient httpClient = new DefaultHttpClient();""",
-      """Http""" + methodUpperCamel + """ request = new Http""" + methodUpperCamel + "(" + doubleQuoted(url) + ");",
+      """Http""" + methodUpperCamel + """ request = new Http""" + methodUpperCamel + "(" + doubleQuoted("https://") + " + user + " + doubleQuoted(".cloudant.com" + url) + ");",
       """String encodedCreds = new String(Base64.encodeBase64((user + ":" + pass).getBytes()));""",
       """request.setHeader("Authorization", "Basic " + encodedCreds);""") ++
     ( if (request.entity.isEmpty) Seq() else Seq(

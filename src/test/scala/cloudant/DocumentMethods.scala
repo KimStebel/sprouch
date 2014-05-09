@@ -6,7 +6,7 @@ import spray.json.JsonFormat
 import sprouch._
 import docLogger._
 
-class DocumentMethods extends FunSuite with CouchSuiteHelpers {
+class DocumentMethodsSuite extends FunSuite with CouchSuiteHelpers {
   import JsonProtocol._
   implicit val dispatcher = actorSystem.dispatcher
   
