@@ -245,6 +245,9 @@ trait SprouchJsonProtocol {
   
   case class SearchAnalyzeRequest(analyzer:String, text:String)
   implicit val searchAnalyzeRequestFormat = jsonFormat2(SearchAnalyzeRequest)
+  
+  case class CodeSample(text:String, `type`:String, language:String)
+  implicit val codeSampleFormat = jsonFormat3(CodeSample)
 }
 
 

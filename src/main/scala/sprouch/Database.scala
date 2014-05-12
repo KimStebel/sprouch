@@ -98,8 +98,8 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
   /**
     * Deletes a document.
     */
-  def deleteDoc[A](doc:RevedDocument[A]):Future[OkResponse] = {
-    val p = pipeline[OkResponse]
+  def deleteDoc[A](doc:RevedDocument[A], docLogger:DocLogger=NopLogger):Future[OkResponse] = {
+    val p = pipeline[OkResponse](docLogger = docLogger)
     p(Delete(docUriRev(doc)))
   }
   
@@ -125,7 +125,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     * Creates a new document with the id given in the doc parameter.
     */
   def createDoc[A:RootJsonFormat](doc:NewDocument[A], docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
-    val p = pipeline[CreateResponse]
+    val p = pipeline[CreateResponse](docLogger = docLogger)
     val response = p(Put(docUri(doc), doc))
     response.map(cr => doc.setRev(cr.rev))
   }
@@ -141,7 +141,7 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     * Creates a new document with the given id.
     */
   def createDocId[A:RootJsonFormat](id:String, data:A, docLogger:DocLogger = NopLogger):Future[RevedDocument[A]] = {
-    createDoc(new NewDocument(id, data, Map()), docLogger)
+    createDoc(new NewDocument(id, data, Map()), docLogger = docLogger)
   }
   
   /**
