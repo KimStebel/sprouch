@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dburl='https://kimstebel:thispasswordisweak@kimstebel.cloudant.com/code-samples'
+curl -X DELETE "$dburl"
+curl -X PUT "$dburl"
+curl -X PUT "$dburl/_security" -d '{"cloudant":{"istralkentleadidledeguen": ["_reader"]}}'
+cd testy-output
+for file in `ls Document* | grep code`; do
+    id=`echo $file | sed 's/_/%2F/g' | sed 's/\\.inc$//g'`
+    curl -X PUT "$dburl/$id" -H 'application/json' -d "$(cat $file)"
+done
