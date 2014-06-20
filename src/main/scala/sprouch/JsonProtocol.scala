@@ -68,6 +68,8 @@ trait SprouchJsonProtocol {
   case class CreateResponse(ok:Option[Boolean], id:String, rev:String)
   case class ErrorResponse(status:Int, body:Option[ErrorResponseBody])
   case class ErrorResponseBody(error:String, reason:Option[String])
+  case class IdErrorResponse(error:String, reason:Option[String], id:String)
+  implicit val IdErrorResponseFormat = jsonFormat3(IdErrorResponse)
   case object Empty
   
   implicit val emptyFormat = new RootJsonFormat[Empty.type] {

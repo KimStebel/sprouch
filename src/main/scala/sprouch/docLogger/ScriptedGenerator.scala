@@ -16,7 +16,6 @@ class ScriptedGenerator(script:String) extends CodeGenerator {
     sw.toString.split("\\n").toSeq
   }
   
-  
   private def executeJs(request:HttpRequest, writer:BufferedWriter, code:String):Any = {
     import org.mozilla.javascript._
     val cx = Context.enter()

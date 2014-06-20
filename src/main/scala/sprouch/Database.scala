@@ -81,9 +81,12 @@ class Database private[sprouch](val name:String, protected[this] val pipelines:P
     * Creates or updates Documents in Bulk.
     */
   def bulkPut[A:RootJsonFormat](docs:Seq[Document[A]], docLogger:DocLogger=NopLogger):Future[Seq[RevedDocument[A]]] = {
-    val p = pipeline[Seq[CreateResponse]](docLogger = docLogger)
+    val p = pipeline[Seq[Either[CreateResponse,IdErrorResponse]]](docLogger = docLogger)
     p(Post(bulkUri, BulkPut(docs))).map(crs => {
-      crs.zip(docs).map { case (cr, doc) => doc.setRev(cr.rev) }
+      crs.zip(docs).map {
+        case (Left(cr), doc) => doc.setRev(cr.rev)
+        case (_, doc) => doc.asInstanceOf[RevedDocument[A]] //todo: change return type to Document and fix callers
+      }
     })
   }
   
